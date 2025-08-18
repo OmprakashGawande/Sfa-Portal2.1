@@ -1,9 +1,338 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/mis/MainMaster.master" AutoEventWireup="true" CodeFile="TaskAllocation.aspx.cs" Inherits="mis_DailyTask_TaskAllocation" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="ContentHeader" Runat="Server">
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentHeader" runat="Server">
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentBody" Runat="Server">
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentBody" runat="Server">
+    <asp:ValidationSummary ID="ValidationSummary1" runat="server" ValidationGroup="Save" ShowMessageBox="true" ShowSummary="false" />
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div>
+                    <asp:Label ID="lblMsg" runat="server" Text=""></asp:Label>
+                    <div class="card mt-3  border-warning">
+                        <div class="card-header">
+                            <h4>Allocation</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-xl-3 col-sm-6 position-relative">
+                                    <div class="form-group">
+                                        <span class="fa-pull-right">
+                                            <asp:RequiredFieldValidator
+                                                ID="rfvEmployeeName"
+                                                ValidationGroup="Save"
+                                                ErrorMessage="Please Select Employee Name."
+                                                ForeColor="Red"
+                                                Text="<i class='fa fa-exclamation-circle' title='Please Select Employee Name.'></i>"
+                                                ControlToValidate="ddlEmployee"
+                                                InitialValue="0"
+                                                Display="Dynamic"
+                                                runat="server" />
+                                        </span>
+                                        <label runat="server">Employee<span style="color: red;">*</span></label>
+                                        <asp:DropDownList runat="server" ID="ddlEmployee" CssClass="form-select select2">
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-3 col-sm-6 position-relative">
+                                    <div class="form-group">
+                                        <span class="fa-pull-right">
+                                            <asp:RequiredFieldValidator
+                                                ID="rfvProjectName"
+                                                ValidationGroup="Save"
+                                                ErrorMessage="Please Select Project Name."
+                                                ForeColor="Red"
+                                                Text="<i class='fa fa-exclamation-circle' title='Please Select Project Name.'></i>"
+                                                ControlToValidate="ddlProject"
+                                                InitialValue="0"
+                                                Display="Dynamic"
+                                                runat="server" />
+                                        </span>
+                                        <label runat="server">Project<span style="color: red;">*</span></label>
+                                        <asp:DropDownList runat="server" ID="ddlProject" CssClass="form-select select2">
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-3 col-sm-6 position-relative">
+                                    <div class="form-group">
+                                        <span class="fa-pull-right">
+                                            <asp:RequiredFieldValidator
+                                                ID="rfvAllocationDate"
+                                                ValidationGroup="Save"
+                                                ErrorMessage="Please Select Allocation Date."
+                                                ForeColor="Red"
+                                                Text="<i class='fa fa-exclamation-circle' title='Please Select Allocation Date.'></i>"
+                                                ControlToValidate="txtAllocationDate"
+                                                Display="Dynamic"
+                                                runat="server" />
+                                        </span>
+                                        <label>Allocation Date<span style="color: red;">*</span></label>
+                                        <asp:TextBox ID="txtAllocationDate" runat="server" placeholder="DD/MM/YYYY" autocomplete="off"
+                                            data-date-format="dd/mm/yyyy" data-date-autoclose="true" CssClass="form-control datetime-local" />
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-3 col-sm-6 position-relative">
+                                    <div class="form-group">
+                                        <span class="fa-pull-right">
+                                            <asp:RequiredFieldValidator
+                                                ID="rfvAllocationTime"
+                                                ValidationGroup="Save"
+                                                ErrorMessage="Please Select Allocation Time."
+                                                ForeColor="Red"
+                                                Text="<i class='fa fa-exclamation-circle' title='Please Select Allocation Time.'></i>"
+                                                ControlToValidate="txtAllocationTime"
+                                                Display="Dynamic"
+                                                runat="server" />
+                                        </span>
+                                        <label>Task Duration<span style="color: red;">*</span></label>
+                                        <asp:TextBox ID="txtAllocationTime" placeholder="HH:MM" runat="server" CssClass="form-control" autocomplete="off" />
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-3 col-sm-6 position-relative">
+                                    <div class="form-group">
+                                        <span class="fa-pull-right">
+                                            <asp:RequiredFieldValidator
+                                                ID="rfvTaskName"
+                                                ValidationGroup="Save"
+                                                ErrorMessage="Please Enter Task Name."
+                                                ForeColor="Red"
+                                                Text="<i class='fa fa-exclamation-circle' title='Please Enter Task Name.'></i>"
+                                                ControlToValidate="txtTaskName"
+                                                Display="Dynamic"
+                                                runat="server" />
+                                        </span>
+                                        <label runat="server">Task Name<span style="color: red;">*</span></label>
+                                        <asp:TextBox autocomplete="off" MaxLength="200" oninput="sanitizeInput(this)" ID="txtTaskName" runat="server" placeholder="Enter Task Name" CssClass="form-control"></asp:TextBox>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-9 col-sm-9 position-relative">
+                                    <div class="form-group">
+                                        <span class="fa-pull-right">
+                                            <asp:RequiredFieldValidator
+                                                ID="rfvTaskDescription"
+                                                ValidationGroup="Save"
+                                                ErrorMessage="Please Enter Description."
+                                                ForeColor="Red"
+                                                Text="<i class='fa fa-exclamation-circle' title='Please Enter Task Description.'></i>"
+                                                ControlToValidate="txtTaskDescription"
+                                                Display="Dynamic"
+                                                runat="server" />
+                                        </span>
+                                        <label>Task Description <span style="color: red;">*</span></label>
+                                        <textarea
+                                            autocomplete="off"
+                                            maxlength="2000"
+                                            oninput="sanitizeInput(this)"
+                                            id="txtTaskDescription"
+                                            runat="server"
+                                            class="form-control"
+                                            rows="2" placeholder="Enter Description"></textarea>
+                                        <%--oninput="autoResizeTextarea(this)"--%>
+                                        <asp:Label runat="server" ForeColor="Red" ID="lblCounter"></asp:Label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-xl-3">
+                                    <div class="form-group">
+                                        <asp:Button runat="server" Style="margin-top: 22px;" CssClass="btn btn-block btn-outline-success" ValidationGroup="Save" ID="btnSave" Text="Save" OnClick="btnSave_Click" />
+                                        <a href="TaskAllocation.aspx" style="margin-top: 22px;" class="btn btn-block   btn-outline-danger">Clear</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+
+                    <%--grid--%>
+                    <div class="card border-warning">
+                        <div class="card-header">
+                            <h4>Details</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" style="padding: 0px 9px 2px 15px;" id="div1" runat="server">
+                                <div class="table-responsive dt-ext ">
+                                    <div class="col-md-12">
+                                        <asp:GridView runat="server" AutoGenerateColumns="false" ID="gvTaskDetails" OnRowCommand="gvTaskDetails_RowCommand"
+                                            CssClass="table table-bordered table-hover" DataKeyNames="AllocationId">
+                                            <Columns>
+                                                <asp:TemplateField HeaderText="S. No." ItemStyle-HorizontalAlign="Center" ItemStyle-Width="70px">
+                                                    <ItemTemplate>
+                                                        <asp:Label runat="server" Text="<%# Container.DataItemIndex + 1 %>"></asp:Label>
+                                                        <asp:Label runat="server" ID="lblAllocationId" Text='<%#Eval("AllocationId").ToString() %>' Visible="false"></asp:Label>
+                                                        <asp:Label runat="server" ID="lblEmp_ID" Text='<%#Eval("Emp_ID").ToString() %>' Visible="false"></asp:Label>
+                                                        <asp:Label runat="server" ID="lblProject_ID" Text='<%#Eval("Project_ID").ToString() %>' Visible="false"></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="Employee" ItemStyle-CssClass="center-grid">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblEmployee_Name" runat="server" Text='<%# Eval("Employee_Name") %>'></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="Project" ItemStyle-CssClass="center-grid">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblProject_Name" runat="server" Text='<%# Eval("Project_Name") %>'></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="Allocation Date" ItemStyle-CssClass="center-grid">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblAllocationDate" runat="server" Text='<%# Eval("AllocationDate") %>'></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="Task Duration" ItemStyle-CssClass="center-grid">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblTaskDuration" runat="server" Text='<%# Eval("TaskDuration") %>'></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="Task Name" ItemStyle-CssClass="center-grid">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblTaskName" runat="server" Text='<%# Eval("TaskName") %>'></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="TaskDescription" ItemStyle-CssClass="center-grid">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblTaskDescription" runat="server" Text='<%# Eval("TaskDescription") %>'></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="Delete" ItemStyle-Width="100px">
+                                                    <ItemTemplate>
+                                                        <asp:LinkButton ID="linkdelete" runat="server"   CommandArgument='<%# Eval("AllocationId") %>' OnClientClick="return confirm('Are you sure you want to delete this task?');" CommandName="RecordDelete" ToolTip="Delete" CssClass="btn btn-danger"><i class="fa fa-trash"></i></asp:LinkButton>
+                                                    </ItemTemplate>
+                                                    <ItemStyle HorizontalAlign="Center" />
+                                                </asp:TemplateField>
+                                            </Columns>
+                                        </asp:GridView>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </asp:Content>
-<asp:Content ID="Content3" ContentPlaceHolderID="ContentFooter" Runat="Server">
+<asp:Content ID="Content3" ContentPlaceHolderID="ContentFooter" runat="Server">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            flatpickr("#<%= txtAllocationTime.ClientID %>", {
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "H:i",       // 24-hour format, like 01:30
+                time_24hr: true,
+                minuteIncrement: 6,      // 0.1 hour = 6 minutes step
+                defaultHour: 0,
+                minTime: "00:06",        // minimum 6 minutes (0.1 hour)
+                maxTime: "09:00",        // maximum 9 hours
+                disableMobile: "true"    // force desktop version on mobile for consistent UI
+            });
+        });
+
+        function sanitizeInput(el) {
+            let val = el.value;
+            val = val.replace(/[^a-zA-Z0-9 ,.!()]/g, '');
+            val = val.replace(/\s+/g, ' ');
+            val = val.trimStart();
+            el.value = val;
+        }
+    </script>
+
+    <%-- <script>
+        const txtDiscription = document.getElementById('<%=txtDiscription.ClientID%>');
+        const txtTaskDescription = document.getElementById('<%=txtTaskDescription.ClientID%>');
+        const lblCount1 = document.getElementById('<%=lblCounter.ClientID%>'); // assuming this is for txtDiscription
+        const lblCount2 = document.getElementById('<%=lblCounter2.ClientID%>'); // for txtTaskDescription
+
+        // Add keyup event listeners
+        txtDiscription.addEventListener("keyup", () => CharactersCount(txtDiscription, lblCount1, 150));
+        txtTaskDescription.addEventListener("keyup", () => CharactersCount(txtTaskDescription, lblCount2, 150));
+
+        // Character counter function (reusable for any textbox/label)
+        function CharactersCount(textbox, label, maxLength) {
+            if (textbox.value.length > maxLength) {
+                textbox.value = textbox.value.substring(0, maxLength);
+            }
+            const remaining = maxLength - textbox.value.length;
+            label.innerHTML = `${remaining} characters remaining`;
+        }
+
+        // Prevent input beyond max length
+        function checkTextAreaMaxLength(textBox, e, length) {
+            var mLen = textBox["MaxLength"] || length;
+            var maxLength = parseInt(mLen);
+            if (!checkSpecialKeys(e)) {
+                if (textBox.value.length > maxLength - 1) {
+                    if (window.event) // IE
+                        e.returnValue = false;
+                    else // Firefox/Chrome/Edge
+                        e.preventDefault();
+                }
+            }
+        }
+
+        function checkSpecialKeys(e) {
+            return [8, 46, 37, 38, 39, 40].includes(e.keyCode);
+        }
+
+        // Initial call to set remaining count on page load
+        CharactersCount(txtDiscription, lblCount1, 150);
+        CharactersCount(txtTaskDescription, lblCount2, 150);
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Main page DataTable
+            initCustomDataTable('.datatable', 'Project Detail', 'Project Detail', [9, 10, 11, 12]);
+
+            //Module Modal DataTable
+            $('#AddModuleModal').on('shown.bs.modal', function () {
+                // Destroy if already initialized
+                if ($.fn.DataTable.isDataTable('.datatable2')) {
+                    $('.datatable2').DataTable().destroy();
+                }
+
+                // Initialize DataTable in modal
+                initCustomDataTable('.datatable2', 'Module Detail', 'Module Detail', [3]);
+
+                // Adjust columns after showing
+                $('.datatable2').DataTable().columns.adjust();
+            });
+
+            //ManPower Modal DataTable
+            $('#exampleModal').on('shown.bs.modal', function () {
+                // Destroy if already initialized
+                if ($.fn.DataTable.isDataTable('.datatable3')) {
+                    $('.datatable3').DataTable().destroy();
+                }
+
+                // Initialize DataTable in modal
+                initCustomDataTable('.datatable3', 'Man Power Detail', 'Man Power Detail', [7]);
+
+                // Adjust columns after showing
+                $('.datatable3').DataTable().columns.adjust();
+            });
+
+            //Task Modal DataTable
+            $('#exampleModal2').on('shown.bs.modal', function () {
+                // Destroy if already initialized
+                if ($.fn.DataTable.isDataTable('.datatable4')) {
+                    $('.datatable3').DataTable().destroy();
+                }
+
+                // Initialize DataTable in modal
+                initCustomDataTable('.datatable4', 'Task Detail', 'Task Detail', [7]);
+
+                // Adjust columns after showing
+                $('.datatable4').DataTable().columns.adjust();
+            });
+        });
+    </script>--%>
 </asp:Content>
+
 
