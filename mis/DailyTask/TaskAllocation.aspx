@@ -167,6 +167,7 @@
                                                         <asp:Label runat="server" ID="lblAllocationId" Text='<%#Eval("AllocationId").ToString() %>' Visible="false"></asp:Label>
                                                         <asp:Label runat="server" ID="lblEmp_ID" Text='<%#Eval("Emp_ID").ToString() %>' Visible="false"></asp:Label>
                                                         <asp:Label runat="server" ID="lblProject_ID" Text='<%#Eval("Project_ID").ToString() %>' Visible="false"></asp:Label>
+                                                        <asp:Label runat="server" ID="lblAllocationTime" Text='<%#Eval("AllocationTime").ToString() %>' Visible="false"></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                                 <asp:TemplateField HeaderText="Employee" ItemStyle-CssClass="center-grid">
@@ -199,9 +200,10 @@
                                                         <asp:Label ID="lblTaskDescription" runat="server" Text='<%# Eval("TaskDescription") %>'></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="Delete" ItemStyle-Width="100px">
+                                                <asp:TemplateField HeaderText="Action" ItemStyle-Width="180px">
                                                     <ItemTemplate>
-                                                        <asp:LinkButton ID="linkdelete" runat="server"   CommandArgument='<%# Eval("AllocationId") %>' OnClientClick="return confirm('Are you sure you want to delete this requirement?');" CommandName="RecordDelete" ToolTip="Delete" CssClass="btn btn-danger"><i class="fa fa-trash"></i></asp:LinkButton>
+                                                        <asp:LinkButton ID="linkedit" runat="server" CommandArgument='<%# Eval("AllocationId") %>' OnClientClick="return confirm('Are you sure you want to edit this requirement?');" CommandName="RecordEdit" ToolTip="Edit" CssClass="btn btn-info btn-sm"><i class="fa fa-edit"></i></asp:LinkButton>
+                                                        <asp:LinkButton ID="linkdelete" runat="server" CommandArgument='<%# Eval("AllocationId") %>' OnClientClick="return confirm('Are you sure you want to delete this requirement?');" CommandName="RecordDelete" ToolTip="Delete" CssClass="btn btn-danger btn-sm"><i class="fa fa-trash"></i></asp:LinkButton>
                                                     </ItemTemplate>
                                                     <ItemStyle HorizontalAlign="Center" />
                                                 </asp:TemplateField>

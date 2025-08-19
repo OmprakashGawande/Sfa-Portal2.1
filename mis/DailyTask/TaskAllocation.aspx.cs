@@ -9,6 +9,7 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
     APIProcedure objdb = new APIProcedure();
     CultureInfo cult = new CultureInfo("gu-IN", true);
     DataSet ds = new DataSet();
+    private static string taskAllocationId = string.Empty;
     protected void Page_Load(object sender, EventArgs e)
     {
         try
@@ -63,6 +64,7 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
         txtTaskName.Text = string.Empty;
         txtTaskDescription.InnerHtml = string.Empty;
         FillGrid();
+        btnSave.Text = "Save";
     }
 
     private void Initials()
@@ -173,19 +175,36 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
                 else
                 {
                     string allocationDate = txtAllocationDate.Text != "" ? Convert.ToDateTime(txtAllocationDate.Text, cult).ToString("yyyy/MM/dd") : "";
-
-                    ds = USP_TaskAllocation(
-                        new string[] { "Flag", "EmployeeId", "ProjectId", "AllocationDate", "AllocationTime", "TaskName", "TaskDescription", "CreatedBy", "CreatedByIp" },
-                        new string[] { "3", ddlEmployee.SelectedValue, ddlProject.SelectedValue, Convert.ToString(allocationDate), txtAllocationTime.Text, txtTaskName.Text, txtTaskDescription.InnerText, Convert.ToString(ViewState["Emp_ID"]), objdb.GetLocalIPAddress() });
-
-                    if (IsNullDataSet(ds) && Convert.ToString(ds.Tables[0].Rows[0]["Stat"]).Equals("Ok"))
+                    string flag = string.Empty;
+                    if (btnSave.Text.Equals("Save"))
                     {
-                        SuccessMsg(Convert.ToString(ds.Tables[0].Rows[0]["Msg"]));
-                        Clear();
+                        taskAllocationId = string.Empty;
+                        flag = "3";
                     }
-                    else
+                    else if (btnSave.Text.Equals("Update"))
+                    {
+                        flag = "6";
+                    }
+                    if (string.IsNullOrEmpty(flag))
                     {
                         WarningMsg(Convert.ToString(ds.Tables[0].Rows[0]["Msg"]));
+                        return;
+                    }
+
+                    ds = USP_TaskAllocation(
+                          new string[] { "Flag", "AllocationId", "EmployeeId", "ProjectId", "AllocationDate", "AllocationTime", "TaskName", "TaskDescription", "CreatedBy", "CreatedByIp" },
+                          new string[] { flag, taskAllocationId, ddlEmployee.SelectedValue, ddlProject.SelectedValue, Convert.ToString(allocationDate), txtAllocationTime.Text, txtTaskName.Text, txtTaskDescription.InnerText, Convert.ToString(ViewState["Emp_ID"]), objdb.GetLocalIPAddress() });
+                    if (IsNullDataSet(ds))
+                    {
+                        if (Convert.ToString(ds.Tables[0].Rows[0]["Stat"]).Equals("Ok"))
+                        {
+                            SuccessMsg(Convert.ToString(ds.Tables[0].Rows[0]["Msg"]));
+                            Clear();
+                        }
+                        else
+                        {
+                            WarningMsg(Convert.ToString(ds.Tables[0].Rows[0]["Msg"]));
+                        }
                     }
                 }
             }
@@ -200,22 +219,46 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
     {
         try
         {
+            lblMsg.Text = string.Empty;
             GridViewRow row = (GridViewRow)(((LinkButton)e.CommandSource).NamingContainer);
-            string taskAllocationId = e.CommandArgument.ToString();
+            taskAllocationId = e.CommandArgument.ToString();
 
             if (e.CommandName == "RecordDelete")
             {
                 DataSet ds = new DataSet();
                 ds = USP_TaskAllocation(new string[] { "Flag", "EmployeeId", "AllocationId" }, new string[] { "5", Convert.ToString(ViewState["Emp_ID"]), taskAllocationId });
-                if (IsNullDataSet(ds) && Convert.ToString(ds.Tables[0].Rows[0]["Stat"]).Equals("Ok"))
+                if (IsNullDataSet(ds))
                 {
-                    SuccessMsg(Convert.ToString(ds.Tables[0].Rows[0]["Msg"]));
-                    Clear();
+                    if (Convert.ToString(ds.Tables[0].Rows[0]["Stat"]).Equals("Ok"))
+                    {
+                        SuccessMsg(Convert.ToString(ds.Tables[0].Rows[0]["Msg"]));
+                        Clear();
+                    }
+                    else
+                    {
+                        WarningMsg(Convert.ToString(ds.Tables[0].Rows[0]["Msg"]));
+                    }
                 }
-                else
-                {
-                    WarningMsg(Convert.ToString(ds.Tables[0].Rows[0]["Msg"]));
-                }
+            }
+            else if (e.CommandName == "RecordEdit")
+            {
+                Label lblEmp_ID = (Label)row.FindControl("lblEmp_ID");
+                Label lblProject_ID = (Label)row.FindControl("lblProject_ID");
+                Label lblAllocationDate = (Label)row.FindControl("lblAllocationDate");
+                Label lblTaskDuration = (Label)row.FindControl("lblAllocationTime");
+                Label lblTaskName = (Label)row.FindControl("lblTaskName");
+                Label lblTaskDescription = (Label)row.FindControl("lblTaskDescription");
+
+                ddlEmployee.ClearSelection();
+                ddlEmployee.Items.FindByValue(lblEmp_ID.Text).Selected = true;
+                ddlProject.ClearSelection();
+                ddlProject.Items.FindByValue(lblProject_ID.Text).Selected = true;
+                txtAllocationDate.Text = lblAllocationDate.Text;
+                txtAllocationTime.Text = lblTaskDuration.Text;
+                txtTaskName.Text = lblTaskName.Text;
+                txtTaskDescription.InnerText = lblTaskDescription.Text;
+
+                btnSave.Text = "Update";
             }
         }
         catch (Exception ex)
