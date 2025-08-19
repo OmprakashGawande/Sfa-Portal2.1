@@ -243,6 +243,16 @@
             val = val.trimStart();
             el.value = val;
         }
+        $(document).ready(function () {
+
+            flatpickr(".datetime-local", {
+                dateFormat: "d/m/Y",   // aapka display format
+                minDate: "today",       // past dates disable
+                enableTime: false,      // agar time nahi chahiye
+                // altInput: true, // optional, agar human friendly input chahiye
+            });
+
+        });
     </script>
 
     <%-- <script>

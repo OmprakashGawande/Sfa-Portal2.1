@@ -10,7 +10,8 @@
                 <asp:Label ID="lblMsg" runat="server" Text=""></asp:Label>
                 <div class="card mt-3  border-warning">
                     <div class="card-header">
-                        <h4>Fill Requirement</h4>
+                        <h4>Fill Requirement </h4> <h6 class="float-end text-white"> <asp:Label runat="server" ID="lblCurrentTaskCount"></asp:Label></h6>
+                        
                     </div>
                     <div class="card-body">
                         <div class="row g-3 needs-validation custom-input">
@@ -106,9 +107,9 @@
                                 <div class="form-group">
                                     <span class="fa-pull-right">
                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator1" ValidationGroup="Save"
-                                            ErrorMessage="Select Task" ForeColor="Red"
-                                            Text="<i class='fa fa-exclamation-circle' title='Enter Task !'></i>"
-                                            ControlToValidate="ddlTaskName" Display="Dynamic" runat="server" InitialValue="0">
+                                            ErrorMessage="Select Status" ForeColor="Red"
+                                            Text="<i class='fa fa-exclamation-circle' title='Select Status !'></i>"
+                                            ControlToValidate="ddlTaskStatus" Display="Dynamic" runat="server" InitialValue="0">
                                         </asp:RequiredFieldValidator>
                                     </span>
                                     <label runat="server">Status<span style="color: red;">*</span></label>
@@ -118,7 +119,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-xl-2 col-sm-6 position-relative" runat="server">
+                            <div class="col-xl-2 col-sm-6 position-relative" style="text-align:center" runat="server">
                                 <div class="form-check mt-4">
                                     <asp:CheckBox
                                         ID="chkFwdToQa"
@@ -137,7 +138,7 @@
                             <hr />
                             <div class="col-xl-3">
                                 <div class="form-group">
-                                    <asp:Button runat="server" CssClass="btn btn-block btn-outline-success" ID="btnSave" Text="Save" ValidationGroup="Save" />
+                                    <asp:Button runat="server" CssClass="btn btn-block btn-outline-success" ID="btnSave" OnClick="btnSave_Click" Text="Save" ValidationGroup="Save" />
                                     <a href="TaskFilling.aspx" class="btn btn-block   btn-outline-danger">Clear</a>
                                 </div>
                             </div>
