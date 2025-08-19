@@ -57,21 +57,50 @@ public partial class mis_DailyTask_TaskFilling : System.Web.UI.Page
         GetProjects();
         GetTaskStatus();
         GetTaskName();
+        FillGrid();
 
         txtDate.Enabled = false;
         txtDate.Attributes.Add("readonly", "readonly");
         DateTime dd = DateTime.Now;
         txtDate.Text = (Convert.ToDateTime(dd, cult).ToString("dd/MM/yyyy"));
-        lblMsg.Text = string.Empty;
+        //lblMsg.Text = string.Empty;
 
         string currentPath = Request.Url.AbsolutePath.Substring(Request.Url.AbsolutePath.LastIndexOf("/") + 1);
         ((MainMaster)this.Master).GenerateBreadcrumb(currentPath);
     }
 
+
+    private void FillGrid()
+    {
+        GrvDailyTaskDetail.DataSource = ds.Tables[0];
+        GrvDailyTaskDetail.DataBind();
+
+        ds = objdb.ByProcedure("Usp_GetDailyTaskDetail", new string[] { "Emp_id" }, new string[] {Convert.ToString(ViewState["Emp_ID"]) }, "dataset");
+
+        if (IsNullDataSet(ds))
+        {
+            GrvDailyTaskDetail.DataSource = ds.Tables[0];
+            GrvDailyTaskDetail.DataBind();
+            Div_DailyTaskDetail.Visible = true;
+        }
+    }
     private void Clear()
     {
         Initials();
         txtRemark.Text = string.Empty;
+        txtTaskRemark.Text = string.Empty;
+
+        grvTaskDis.DataSource = null;
+        grvTaskDis.DataBind();
+        divTaskDis.Visible = false;
+        Div_Status.Visible = false;
+        Div_FwdToQa.Visible = false;
+        Div_Remark.Visible = false;
+        Div_OtherTask.Visible = false;
+        Div_button.Visible = false;
+        GetTaskStatus();
+        txtRemark.Text = string.Empty;
+
     }
     private void GetCurrentTaskCount()
     {
@@ -166,6 +195,11 @@ public partial class mis_DailyTask_TaskFilling : System.Web.UI.Page
             grvTaskDis.DataSource = null;
             grvTaskDis.DataBind();
             divTaskDis.Visible = false;
+            Div_Status.Visible = false;
+            Div_FwdToQa.Visible = false;
+            Div_Remark.Visible = false;
+            Div_OtherTask.Visible = false;
+            Div_button.Visible = false;
             GetTaskStatus();
             txtRemark.Text = string.Empty;
             lblMsg.Text = string.Empty;
@@ -176,6 +210,11 @@ public partial class mis_DailyTask_TaskFilling : System.Web.UI.Page
                 grvTaskDis.DataSource = ds.Tables[0];
                 grvTaskDis.DataBind();
                 divTaskDis.Visible = true;
+                Div_Status.Visible = true;
+                Div_FwdToQa.Visible = true;
+                Div_Remark.Visible = true;
+                Div_OtherTask.Visible = true;
+                Div_button.Visible = true;
             }
         }
         catch (Exception ex)
@@ -194,6 +233,11 @@ public partial class mis_DailyTask_TaskFilling : System.Web.UI.Page
                 grvTaskDis.DataSource = null;
                 grvTaskDis.DataBind();
                 divTaskDis.Visible = false;
+                Div_Status.Visible = false;
+                Div_FwdToQa.Visible = false;
+                Div_Remark.Visible = false;
+                Div_OtherTask.Visible = false;
+                Div_button.Visible = false;
             }
             GetTaskName();
         }
@@ -250,8 +294,8 @@ public partial class mis_DailyTask_TaskFilling : System.Web.UI.Page
                             fwdToQA = "0";
                         }
                         ds = objdb.ByProcedure("Usp_InsertTask",
-                            new string[] { "ProjectId", "EmployeeId", "AllocationId", "TastStatusId", "FwdtoQA", "OtherTaskAndRemark", "CreatedBy", "CreatedByIp" },
-                            new string[] { ddlProject.SelectedValue, Convert.ToString(ViewState["Emp_ID"]), ddlTaskName.SelectedValue, ddlTaskStatus.SelectedValue, fwdToQA, txtRemark.Text, Convert.ToString(ViewState["Emp_ID"]), objdb.GetLocalIPAddress() }, "dataset");
+                            new string[] { "ProjectId", "EmployeeId", "AllocationId", "TastStatusId", "FwdtoQA", "TaskRemark", "OtherTaskAndRemark", "CreatedBy", "CreatedByIp" },
+                            new string[] { ddlProject.SelectedValue, Convert.ToString(ViewState["Emp_ID"]), ddlTaskName.SelectedValue, ddlTaskStatus.SelectedValue, fwdToQA, txtTaskRemark.Text, txtRemark.Text, Convert.ToString(ViewState["Emp_ID"]), objdb.GetLocalIPAddress() }, "dataset");
                         if (IsNullDataSet(ds))
                         {
                             if (Convert.ToString(ds.Tables[0].Rows[0]["Stat"]).Equals("Ok"))

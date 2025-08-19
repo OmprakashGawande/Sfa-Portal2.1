@@ -3,7 +3,6 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentHeader" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentBody" runat="Server">
-    <asp:ValidationSummary ID="ValidationSummary1" runat="server" ValidationGroup="Save" ShowMessageBox="true" ShowSummary="false" />
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
@@ -272,104 +271,16 @@
         $(document).ready(function () {
 
             flatpickr(".datetime-local", {
-                dateFormat: "d/m/Y",   // aapka display format
-                minDate: "today",       // past dates disable
-                enableTime: false,      // agar time nahi chahiye
-                // altInput: true, // optional, agar human friendly input chahiye
+                dateFormat: "d/m/Y",   
+                minDate: "today",      
+                enableTime: false,     
+                
             });
 
         });
     </script>
 
-    <%-- <script>
-        const txtDiscription = document.getElementById('<%=txtDiscription.ClientID%>');
-        const txtTaskDescription = document.getElementById('<%=txtTaskDescription.ClientID%>');
-        const lblCount1 = document.getElementById('<%=lblCounter.ClientID%>'); // assuming this is for txtDiscription
-        const lblCount2 = document.getElementById('<%=lblCounter2.ClientID%>'); // for txtTaskDescription
 
-        // Add keyup event listeners
-        txtDiscription.addEventListener("keyup", () => CharactersCount(txtDiscription, lblCount1, 150));
-        txtTaskDescription.addEventListener("keyup", () => CharactersCount(txtTaskDescription, lblCount2, 150));
-
-        // Character counter function (reusable for any textbox/label)
-        function CharactersCount(textbox, label, maxLength) {
-            if (textbox.value.length > maxLength) {
-                textbox.value = textbox.value.substring(0, maxLength);
-            }
-            const remaining = maxLength - textbox.value.length;
-            label.innerHTML = `${remaining} characters remaining`;
-        }
-
-        // Prevent input beyond max length
-        function checkTextAreaMaxLength(textBox, e, length) {
-            var mLen = textBox["MaxLength"] || length;
-            var maxLength = parseInt(mLen);
-            if (!checkSpecialKeys(e)) {
-                if (textBox.value.length > maxLength - 1) {
-                    if (window.event) // IE
-                        e.returnValue = false;
-                    else // Firefox/Chrome/Edge
-                        e.preventDefault();
-                }
-            }
-        }
-
-        function checkSpecialKeys(e) {
-            return [8, 46, 37, 38, 39, 40].includes(e.keyCode);
-        }
-
-        // Initial call to set remaining count on page load
-        CharactersCount(txtDiscription, lblCount1, 150);
-        CharactersCount(txtTaskDescription, lblCount2, 150);
-    </script>
-    <script>
-        $(document).ready(function () {
-            // Main page DataTable
-            initCustomDataTable('.datatable', 'Project Detail', 'Project Detail', [9, 10, 11, 12]);
-
-            //Module Modal DataTable
-            $('#AddModuleModal').on('shown.bs.modal', function () {
-                // Destroy if already initialized
-                if ($.fn.DataTable.isDataTable('.datatable2')) {
-                    $('.datatable2').DataTable().destroy();
-                }
-
-                // Initialize DataTable in modal
-                initCustomDataTable('.datatable2', 'Module Detail', 'Module Detail', [3]);
-
-                // Adjust columns after showing
-                $('.datatable2').DataTable().columns.adjust();
-            });
-
-            //ManPower Modal DataTable
-            $('#exampleModal').on('shown.bs.modal', function () {
-                // Destroy if already initialized
-                if ($.fn.DataTable.isDataTable('.datatable3')) {
-                    $('.datatable3').DataTable().destroy();
-                }
-
-                // Initialize DataTable in modal
-                initCustomDataTable('.datatable3', 'Man Power Detail', 'Man Power Detail', [7]);
-
-                // Adjust columns after showing
-                $('.datatable3').DataTable().columns.adjust();
-            });
-
-            //Task Modal DataTable
-            $('#exampleModal2').on('shown.bs.modal', function () {
-                // Destroy if already initialized
-                if ($.fn.DataTable.isDataTable('.datatable4')) {
-                    $('.datatable3').DataTable().destroy();
-                }
-
-                // Initialize DataTable in modal
-                initCustomDataTable('.datatable4', 'Task Detail', 'Task Detail', [7]);
-
-                // Adjust columns after showing
-                $('.datatable4').DataTable().columns.adjust();
-            });
-        });
-    </script>--%>
 </asp:Content>
 
 
