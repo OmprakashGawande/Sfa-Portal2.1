@@ -50175,7 +50175,7 @@ table.table-bordered thead tr th p {
 }
 
 .page-wrapper.compact-wrapper .page-body-wrapper div.sidebar-wrapper .sidebar-main .sidebar-links .simplebar-wrapper .simplebar-mask .simplebar-content-wrapper .simplebar-content > li .mega-menu-container .mega-box .link-section .submenu-title h5::before, .page-wrapper.compact-wrapper .page-body-wrapper div.sidebar-wrapper .sidebar-main .sidebar-links .simplebar-wrapper .simplebar-mask .simplebar-content-wrapper .simplebar-content > li .sidebar-submenu li a::before {
-    position: absolute;
+/*    position: absolute;
     content: "";
     width: 5px;
     height: 5px;
@@ -50184,7 +50184,7 @@ table.table-bordered thead tr th p {
     transform: translateY(-50%);
     left: 32px;
     border-radius: 100%;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.5);*/
 }
 
 [dir=rtl] .page-wrapper.compact-wrapper .page-body-wrapper div.sidebar-wrapper .sidebar-main .sidebar-links .simplebar-wrapper .simplebar-mask .simplebar-content-wrapper .simplebar-content > li .mega-menu-container .mega-box .link-section .submenu-title h5::before, .page-wrapper.compact-wrapper .page-body-wrapper div.sidebar-wrapper .sidebar-main .sidebar-links .simplebar-wrapper .simplebar-mask .simplebar-content-wrapper .simplebar-content > li .mega-menu-container .mega-box .link-section .submenu-title [dir=rtl] h5::before, [dir=rtl] .page-wrapper.compact-wrapper .page-body-wrapper div.sidebar-wrapper .sidebar-main .sidebar-links .simplebar-wrapper .simplebar-mask .simplebar-content-wrapper .simplebar-content > li .sidebar-submenu li a::before, .page-wrapper.compact-wrapper .page-body-wrapper div.sidebar-wrapper .sidebar-main .sidebar-links .simplebar-wrapper .simplebar-mask .simplebar-content-wrapper .simplebar-content > li .sidebar-submenu li [dir=rtl] a::before {
@@ -52042,7 +52042,8 @@ table.table-bordered thead tr th p {
         font-weight: 500;
         -webkit-transition: all 0.3s ease;
         transition: all 0.3s ease;
-        white-space: nowrap;
+        /*white-space: nowrap;*/
+        white-space: normal !important;
         overflow: hidden;
         text-overflow: ellipsis;
     }
