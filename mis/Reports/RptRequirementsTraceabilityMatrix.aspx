@@ -16,22 +16,6 @@
                             <div class="row g-3">
                                 <div class="col-xl-3 col-sm-6 position-relative">
                                     <div class="form-group">
-
-                                        <label runat="server">Employee</label>
-                                        <asp:DropDownList runat="server" ID="ddlEmp" CssClass="form-select select2">
-                                        </asp:DropDownList>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3 col-sm-6 position-relative">
-                                    <div class="form-group">
-
-                                        <label runat="server">Project</label>
-                                        <asp:DropDownList runat="server" ID="ddlProject" CssClass="form-select select2">
-                                        </asp:DropDownList>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3 col-sm-6 position-relative">
-                                    <div class="form-group">
                                         <span class="fa-pull-right">
                                             <asp:RequiredFieldValidator
                                                 ID="rfvAllocationDate"
@@ -48,6 +32,23 @@
                                             data-date-format="dd/mm/yyyy" data-date-autoclose="true" CssClass="form-control datetime-local" AutoPostBack="true" OnTextChanged="txtAllocationDate_TextChanged" />
                                     </div>
                                 </div>
+                                <div class="col-xl-3 col-sm-6 position-relative">
+                                    <div class="form-group">
+
+                                        <label runat="server">Employee</label>
+                                        <asp:DropDownList runat="server" ID="ddlEmp" CssClass="form-select select2">
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-sm-6 position-relative">
+                                    <div class="form-group">
+
+                                        <label runat="server">Project</label>
+                                        <asp:DropDownList runat="server" ID="ddlProject" CssClass="form-select select2">
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+
                             </div>
                             <hr />
                             <div class="row">
@@ -132,7 +133,7 @@
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
 
-                                                    <asp:TemplateField HeaderText="Other Task" ItemStyle-CssClass="center-grid">
+                                                <asp:TemplateField HeaderText="Other Task" ItemStyle-CssClass="center-grid">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblOtherTask" runat="server" Text='<%# Eval("OtherTask") %>'></asp:Label>
                                                     </ItemTemplate>
