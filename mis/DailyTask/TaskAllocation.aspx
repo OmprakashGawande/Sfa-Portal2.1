@@ -11,7 +11,7 @@
                     <asp:Label ID="lblMsg" runat="server" Text=""></asp:Label>
                     <div class="card mt-3  border-warning">
                         <div class="card-header">
-                            <h4>Allocation</h4>
+                            <h4>Requirement Allocation</h4>
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
@@ -29,7 +29,7 @@
                                                 Display="Dynamic"
                                                 runat="server" />
                                         </span>
-                                        <label runat="server">Employee<span style="color: red;">*</span></label>
+                                        <label runat="server">To Employee<span style="color: red;">*</span></label>
                                         <asp:DropDownList runat="server" ID="ddlEmployee" CssClass="form-select select2">
                                         </asp:DropDownList>
                                     </div>
@@ -74,7 +74,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-xl-3 col-sm-6 position-relative">
+                                <div class="col-xl-2 col-sm-6 position-relative">
                                     <div class="form-group">
                                         <span class="fa-pull-right">
                                             <asp:RequiredFieldValidator
@@ -110,7 +110,27 @@
                                     </div>
                                 </div>
 
-                                <div class="col-xl-9 col-sm-9 position-relative">
+                                <div class="col-xl-3 col-sm-6 position-relative">
+                                    <div class="form-group">
+                                        <span class="fa-pull-right">
+                                            <asp:RequiredFieldValidator
+                                                ID="rfvPriorityType"
+                                                ValidationGroup="Save"
+                                                ErrorMessage="Please Select Priority."
+                                                ForeColor="Red"
+                                                Text="<i class='fa fa-exclamation-circle' title='Please Select Priority.'></i>"
+                                                ControlToValidate="ddlPriorityType"
+                                                InitialValue="0"
+                                                Display="Dynamic"
+                                                runat="server" />
+                                        </span>
+                                        <label runat="server">Priority<span style="color: red;">*</span></label>
+                                        <asp:DropDownList runat="server" ID="ddlPriorityType" CssClass="form-select select2">
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-6 col-sm-9 position-relative">
                                     <div class="form-group">
                                         <span class="fa-pull-right">
                                             <asp:RequiredFieldValidator
@@ -168,6 +188,7 @@
                                                         <asp:Label runat="server" ID="lblEmp_ID" Text='<%#Eval("Emp_ID").ToString() %>' Visible="false"></asp:Label>
                                                         <asp:Label runat="server" ID="lblProject_ID" Text='<%#Eval("Project_ID").ToString() %>' Visible="false"></asp:Label>
                                                         <asp:Label runat="server" ID="lblAllocationTime" Text='<%#Eval("AllocationTime").ToString() %>' Visible="false"></asp:Label>
+                                                        <asp:Label runat="server" ID="lblPriorityTypeId" Text='<%#Eval("PriorityTypeId").ToString() %>' Visible="false"></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                                 <asp:TemplateField HeaderText="Employee" ItemStyle-CssClass="center-grid">
@@ -193,6 +214,11 @@
                                                 <asp:TemplateField HeaderText="Requirement Point" ItemStyle-CssClass="center-grid">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblTaskName" runat="server" Text='<%# Eval("TaskName") %>'></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="Priority" ItemStyle-CssClass="center-grid">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblPriorityType" runat="server" Text='<%# Eval("PriorityType") %>'></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                                 <asp:TemplateField HeaderText="Description" ItemStyle-CssClass="center-grid">

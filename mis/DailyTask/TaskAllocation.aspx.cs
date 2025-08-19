@@ -57,8 +57,9 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
 
     private void Clear()
     {
-        ddlEmployee.SelectedIndex = 0;
-        ddlProject.SelectedIndex = 0;
+        ddlEmployee.ClearSelection();
+        ddlProject.ClearSelection();
+        ddlPriorityType.ClearSelection();
         txtAllocationDate.Text = string.Empty;
         txtAllocationTime.Text = string.Empty;
         txtTaskName.Text = string.Empty;
@@ -72,11 +73,11 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
         try
         {
             ViewState["Emp_ID"] = Session["Emp_ID"].ToString();
-            ViewState["Office_ID"] = Session["Office_ID"].ToString();
 
             FillEmployee();
             FillProject();
             FillGrid();
+            FillPriorityType();
 
             txtAllocationDate.Attributes.Add("readonly", "readonly");
             //fill breadcrumb.
@@ -132,6 +133,27 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
         }
     }
 
+    private void FillPriorityType()
+    {
+        try
+        {
+            ddlPriorityType.Items.Clear();
+            ds = USP_TaskAllocation(new string[] { "Flag" }, new string[] { "7" });
+            if (IsNullDataSet(ds))
+            {
+                ddlPriorityType.DataTextField = "PriorityType";
+                ddlPriorityType.DataValueField = "PriorityTypeId";
+                ddlPriorityType.DataSource = ds.Tables[0];
+                ddlPriorityType.DataBind();
+            }
+            ddlPriorityType.Items.Insert(0, new ListItem("Select", "0"));
+        }
+        catch (Exception ex)
+        {
+            ErrorMsg(ex);
+        }
+    }
+
     private void FillGrid()
     {
         try
@@ -163,6 +185,7 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
 
                 if (ddlEmployee.SelectedValue == "0") { ErrorMsg += "Please Select Employee Name.\\n"; }
                 if (ddlProject.SelectedValue == "0") { ErrorMsg += "Please Select Project Name.\\n"; }
+                if (ddlPriorityType.SelectedValue == "0") { ErrorMsg += "Please Select Priority.\\n"; }
                 if (txtAllocationDate.Text == "") { ErrorMsg += "Please Select Allocation Date.\\n"; }
                 if (txtAllocationTime.Text == "") { ErrorMsg += "Please Select Allocation Time.\\n"; }
                 if (txtTaskName.Text == "") { ErrorMsg += "Please Enter Task Name.\\n"; }
@@ -192,8 +215,35 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
                     }
 
                     ds = USP_TaskAllocation(
-                          new string[] { "Flag", "AllocationId", "EmployeeId", "ProjectId", "AllocationDate", "AllocationTime", "TaskName", "TaskDescription", "CreatedBy", "CreatedByIp" },
-                          new string[] { flag, taskAllocationId, ddlEmployee.SelectedValue, ddlProject.SelectedValue, Convert.ToString(allocationDate), txtAllocationTime.Text, txtTaskName.Text, txtTaskDescription.InnerText, Convert.ToString(ViewState["Emp_ID"]), objdb.GetLocalIPAddress() });
+                          new string[]
+                          {
+                              "Flag",
+                              "AllocationId",
+                              "EmployeeId",
+                              "ProjectId",
+                              "AllocationDate",
+                              "AllocationTime",
+                              "TaskName",
+                              "TaskDescription",
+                              "CreatedBy",
+                              "CreatedByIp",
+                              "PriorityTypeId"
+                          },
+                          new string[]
+                          {
+                              flag,
+                              taskAllocationId,
+                              ddlEmployee.SelectedValue,
+                              ddlProject.SelectedValue,
+                              Convert.ToString(allocationDate),
+                              txtAllocationTime.Text,
+                              txtTaskName.Text,
+                              txtTaskDescription.InnerText,
+                              Convert.ToString(ViewState["Emp_ID"]),
+                              objdb.GetLocalIPAddress(),
+                              ddlPriorityType.SelectedValue
+                          });
+
                     if (IsNullDataSet(ds))
                     {
                         if (Convert.ToString(ds.Tables[0].Rows[0]["Stat"]).Equals("Ok"))
@@ -248,11 +298,14 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
                 Label lblTaskDuration = (Label)row.FindControl("lblAllocationTime");
                 Label lblTaskName = (Label)row.FindControl("lblTaskName");
                 Label lblTaskDescription = (Label)row.FindControl("lblTaskDescription");
+                Label lblPriorityTypeId = (Label)row.FindControl("lblPriorityTypeId");
 
                 ddlEmployee.ClearSelection();
                 ddlEmployee.Items.FindByValue(lblEmp_ID.Text).Selected = true;
                 ddlProject.ClearSelection();
                 ddlProject.Items.FindByValue(lblProject_ID.Text).Selected = true;
+                ddlPriorityType.ClearSelection();
+                ddlPriorityType.Items.FindByValue(lblPriorityTypeId.Text).Selected = true;
                 txtAllocationDate.Text = lblAllocationDate.Text;
                 txtAllocationTime.Text = lblTaskDuration.Text;
                 txtTaskName.Text = lblTaskName.Text;
