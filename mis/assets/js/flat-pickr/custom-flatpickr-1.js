@@ -57,7 +57,7 @@
   });
 
   // 10. 24-hour Time Picker
-  flatpickr("#twenty-four-hour", {
+  flatpickr("#txtTime", {
     enableTime: true,
     noCalendar: true,
     dateFormat: "H:i",

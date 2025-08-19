@@ -4016,6 +4016,7 @@ input:focus {
 label {
     margin-bottom: 0.5rem;
     font-weight: 700;
+    font-size: 1.0rem;
 }
 
 .media-widgets .media-body {
@@ -52233,7 +52234,7 @@ table.table-bordered thead tr th p {
     }
 
 .page-wrapper.compact-wrapper .page-body-wrapper .page-body {
-    min-height: calc(100vh - 80px);
+    min-height: calc(100vh - 110px);
     margin-top: 56px;
     margin-left: 265px;
 }

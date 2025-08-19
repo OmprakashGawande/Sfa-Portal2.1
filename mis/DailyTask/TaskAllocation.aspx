@@ -80,14 +80,14 @@
                                             <asp:RequiredFieldValidator
                                                 ID="rfvAllocationTime"
                                                 ValidationGroup="Save"
-                                                ErrorMessage="Please Select Allocation Time."
+                                                ErrorMessage="Please Select Requirement Duration."
                                                 ForeColor="Red"
-                                                Text="<i class='fa fa-exclamation-circle' title='Please Select Allocation Time.'></i>"
+                                                Text="<i class='fa fa-exclamation-circle' title='Please Select Requirement Duration.'></i>"
                                                 ControlToValidate="txtAllocationTime"
                                                 Display="Dynamic"
                                                 runat="server" />
                                         </span>
-                                        <label>Task Duration<span style="color: red;">*</span></label>
+                                        <label>Requirement Duration<span style="color: red;">*</span></label>
                                         <asp:TextBox ID="txtAllocationTime" placeholder="HH:MM" runat="server" CssClass="form-control" autocomplete="off" />
                                     </div>
                                 </div>
@@ -98,15 +98,15 @@
                                             <asp:RequiredFieldValidator
                                                 ID="rfvTaskName"
                                                 ValidationGroup="Save"
-                                                ErrorMessage="Please Enter Task Name."
+                                                ErrorMessage="Please Enter Requirement Point."
                                                 ForeColor="Red"
-                                                Text="<i class='fa fa-exclamation-circle' title='Please Enter Task Name.'></i>"
+                                                Text="<i class='fa fa-exclamation-circle' title='Please Enter Requirement Point.'></i>"
                                                 ControlToValidate="txtTaskName"
                                                 Display="Dynamic"
                                                 runat="server" />
                                         </span>
-                                        <label runat="server">Task Name<span style="color: red;">*</span></label>
-                                        <asp:TextBox autocomplete="off" MaxLength="200" oninput="sanitizeInput(this)" ID="txtTaskName" runat="server" placeholder="Enter Task Name" CssClass="form-control"></asp:TextBox>
+                                        <label runat="server">Requirement Point<span style="color: red;">*</span></label>
+                                        <asp:TextBox autocomplete="off" MaxLength="200" oninput="sanitizeInput(this)" ID="txtTaskName" runat="server" placeholder="Enter Requirement Point" CssClass="form-control"></asp:TextBox>
                                     </div>
                                 </div>
 
@@ -123,7 +123,7 @@
                                                 Display="Dynamic"
                                                 runat="server" />
                                         </span>
-                                        <label>Task Description <span style="color: red;">*</span></label>
+                                        <label>Description <span style="color: red;">*</span></label>
                                         <textarea
                                             autocomplete="off"
                                             maxlength="2000"
@@ -132,7 +132,6 @@
                                             runat="server"
                                             class="form-control"
                                             rows="2" placeholder="Enter Description"></textarea>
-                                        <%--oninput="autoResizeTextarea(this)"--%>
                                         <asp:Label runat="server" ForeColor="Red" ID="lblCounter"></asp:Label>
                                     </div>
                                 </div>
@@ -185,24 +184,24 @@
                                                         <asp:Label ID="lblAllocationDate" runat="server" Text='<%# Eval("AllocationDate") %>'></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="Task Duration" ItemStyle-CssClass="center-grid">
+                                                <asp:TemplateField HeaderText="Requirement Duration" ItemStyle-CssClass="center-grid">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblTaskDuration" runat="server" Text='<%# Eval("TaskDuration") %>'></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="Task Name" ItemStyle-CssClass="center-grid">
+                                                <asp:TemplateField HeaderText="Requirement Point" ItemStyle-CssClass="center-grid">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblTaskName" runat="server" Text='<%# Eval("TaskName") %>'></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="TaskDescription" ItemStyle-CssClass="center-grid">
+                                                <asp:TemplateField HeaderText="Description" ItemStyle-CssClass="center-grid">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblTaskDescription" runat="server" Text='<%# Eval("TaskDescription") %>'></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                                 <asp:TemplateField HeaderText="Delete" ItemStyle-Width="100px">
                                                     <ItemTemplate>
-                                                        <asp:LinkButton ID="linkdelete" runat="server"   CommandArgument='<%# Eval("AllocationId") %>' OnClientClick="return confirm('Are you sure you want to delete this task?');" CommandName="RecordDelete" ToolTip="Delete" CssClass="btn btn-danger"><i class="fa fa-trash"></i></asp:LinkButton>
+                                                        <asp:LinkButton ID="linkdelete" runat="server"   CommandArgument='<%# Eval("AllocationId") %>' OnClientClick="return confirm('Are you sure you want to delete this requirement?');" CommandName="RecordDelete" ToolTip="Delete" CssClass="btn btn-danger"><i class="fa fa-trash"></i></asp:LinkButton>
                                                     </ItemTemplate>
                                                     <ItemStyle HorizontalAlign="Center" />
                                                 </asp:TemplateField>

@@ -326,6 +326,9 @@
             <script src="../assets/js/datatable/datatable-extension/dataTables.scroller.min-1.js" asp-append-version="true"></script>
             <script src="../assets/js/datatable/datatable-extension/custom-1.js" asp-append-version="true"></script>--%>
             <!-- Plugins JS Ends-->
+
+            <script src="../assets/js/flat-pickr/flatpickr-1.js"></script>
+            <script src="../assets/js/flat-pickr/custom-flatpickr-1.js"></script>
             <!-- Theme js-->
             <script src="../assets/js/script.js" asp-append-version="true"></script>
             <script src="../assets/js/theme-customizer/customizer.js" asp-append-version="true"></script>

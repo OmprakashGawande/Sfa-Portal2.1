@@ -172,7 +172,8 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
                 }
                 else
                 {
-                    DateTime allocationDate = Convert.ToDateTime(txtAllocationDate.Text, cult);
+                    string allocationDate = txtAllocationDate.Text != "" ? Convert.ToDateTime(txtAllocationDate.Text, cult).ToString("yyyy/MM/dd") : "";
+
                     ds = USP_TaskAllocation(
                         new string[] { "Flag", "EmployeeId", "ProjectId", "AllocationDate", "AllocationTime", "TaskName", "TaskDescription", "CreatedBy", "CreatedByIp" },
                         new string[] { "3", ddlEmployee.SelectedValue, ddlProject.SelectedValue, Convert.ToString(allocationDate), txtAllocationTime.Text, txtTaskName.Text, txtTaskDescription.InnerText, Convert.ToString(ViewState["Emp_ID"]), objdb.GetLocalIPAddress() });
