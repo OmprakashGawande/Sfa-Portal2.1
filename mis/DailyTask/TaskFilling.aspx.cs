@@ -276,6 +276,7 @@ public partial class mis_DailyTask_TaskFilling : System.Web.UI.Page
                 if (ddlProject.SelectedValue == "0") { ErrorMsg += "Please Select Project Name.\\n"; }
                 if (ddlTaskName.Text == "") { ErrorMsg += "Please Select Allocation Date.\\n"; }
                 if (ddlTaskStatus.Text == "") { ErrorMsg += "Please Select Allocation Time.\\n"; }
+                if (chkQualityCheck.Checked == false) { ErrorMsg += "Please confirm you have checked your development quality as per the checklist.\\n"; }
 
                 if (!string.IsNullOrEmpty(ErrorMsg))
                 {
@@ -317,4 +318,9 @@ public partial class mis_DailyTask_TaskFilling : System.Web.UI.Page
             ErrorMsg(ex);
         }
     }
+    protected void cvChkAgree_ServerValidate(object source, ServerValidateEventArgs args)
+    {
+        args.IsValid = chkQualityCheck.Checked;
+    }
+
 }

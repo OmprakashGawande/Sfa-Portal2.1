@@ -16,7 +16,14 @@
                     </div>
                     <div class="card-body">
                         <div class="row g-3 needs-validation custom-input">
-                            <div class="col-xl-1 col-sm-6 position-relative">
+
+                            <div class="col-xl-12 col-sm-6 position-relative text-end">
+                                <div class="form-group">
+                                    <asp:LinkButton runat="server" href="../DailyTaskDoc/CodingStandardChecklist/CodingStandardChecklist.pdf" download="CodingStandardChecklist" class="btn btn-sm btn-info">Download Coding Standard Checklist</asp:LinkButton>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-2 col-sm-6 position-relative">
                                 <label runat="server">
                                     Date 
                                 </label>
@@ -60,7 +67,7 @@
                                     </asp:DropDownList>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-sm-6 position-relative" runat="server" id="Div_Status" visible="false">
+                            <div class="col-xl-2 col-sm-6 position-relative" runat="server" id="Div_Status" visible="false">
                                 <div class="form-group">
                                     <span class="fa-pull-right">
                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator1" ValidationGroup="Save"
@@ -146,11 +153,25 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-xl-12 col-sm-6 position-relative">
+                                <div class="form-check">
+                                    <asp:CheckBox onclick="hideErrorMsg()" runat="server" ID="chkQualityCheck" />
+
+                                    <label class="form-check-label" for="<%= chkQualityCheck.ClientID %>">
+                                        I have checked my development quality &amp; it's proper as per checklist.
+                                    </label>
+
+                                    <div id="errorMsg" style="color: red; display: none; margin-top: 5px;">
+                                        Please confirm you have checked your development quality as per the checklist.
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <hr />
+
                         <div class="col-xl-3" runat="server" id="Div_button" visible="false">
                             <div class="form-group">
-                                <asp:Button runat="server" CssClass="btn btn-block btn-outline-success" ID="btnSave" OnClick="btnSave_Click" Text="Save" ValidationGroup="Save" />
+                                <asp:Button runat="server" OnClientClick="return validateCheckbox();" CssClass="btn btn-block btn-outline-success" ID="btnSave" OnClick="btnSave_Click" Text="Save" ValidationGroup="Save" />
                                 <a href="TaskFilling.aspx" class="btn btn-block   btn-outline-danger">Clear</a>
                             </div>
                         </div>
@@ -259,5 +280,25 @@
             el.value = val;
         }
     </script>
+    <script type="text/javascript">
+        function validateCheckbox() {
+            debugger;
+            var checkbox = document.getElementById('<%= chkQualityCheck.ClientID %>');
+            var errorMsg = document.getElementById('errorMsg');
+
+            if (!checkbox.checked) {
+                errorMsg.style.display = 'block';
+                return false;
+            } else {
+                errorMsg.style.display = 'none';
+                return true;
+            }
+        }
+        function hideErrorMsg() {
+            var errorMsg = document.getElementById('errorMsg');
+            errorMsg.style.display = 'none';
+        }
+    </script>
+
 </asp:Content>
 

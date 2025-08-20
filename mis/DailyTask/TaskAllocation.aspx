@@ -28,7 +28,7 @@
                                                 Display="Dynamic"
                                                 runat="server" />
                                         </span>
-                                        <label runat="server">To Employee<span style="color: red;">*</span></label>
+                                        <label runat="server">Allocation to<span style="color: red;">*</span></label>
                                         <asp:DropDownList runat="server" ID="ddlEmployee" CssClass="form-select select2">
                                         </asp:DropDownList>
                                     </div>
@@ -91,7 +91,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-xl-3 col-sm-6 position-relative">
+                                <div class="col-xl-12 col-sm-6 position-relative">
                                     <div class="form-group">
                                         <span class="fa-pull-right">
                                             <asp:RequiredFieldValidator
@@ -109,7 +109,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-xl-3 col-sm-6 position-relative">
+                                <div class="col-xl-2 col-sm-6 position-relative">
                                     <div class="form-group">
                                         <span class="fa-pull-right">
                                             <asp:RequiredFieldValidator
@@ -129,7 +129,17 @@
                                     </div>
                                 </div>
 
-                                <div class="col-xl-6 col-sm-9 position-relative">
+                                <div class="col-xl-2 col-sm-6 position-relative">
+                                    <div class="form-group">
+                                        <label runat="server">
+                                            QA
+                                        </label>
+                                        <asp:DropDownList runat="server" ID="ddlQA" CssClass="form-select select2">
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-8 col-sm-9 position-relative">
                                     <div class="form-group">
                                         <span class="fa-pull-right">
                                             <asp:RequiredFieldValidator
@@ -188,6 +198,7 @@
                                                         <asp:Label runat="server" ID="lblProject_ID" Text='<%#Eval("Project_ID").ToString() %>' Visible="false"></asp:Label>
                                                         <asp:Label runat="server" ID="lblAllocationTime" Text='<%#Eval("AllocationTime").ToString() %>' Visible="false"></asp:Label>
                                                         <asp:Label runat="server" ID="lblPriorityTypeId" Text='<%#Eval("PriorityTypeId").ToString() %>' Visible="false"></asp:Label>
+                                                        <asp:Label runat="server" ID="lblEmployeeId_QA" Text='<%#Eval("EmployeeId_QA").ToString() %>' Visible="false"></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                                 <asp:TemplateField HeaderText="Employee" ItemStyle-CssClass="center-grid">
@@ -217,12 +228,20 @@
                                                 </asp:TemplateField>
                                                 <asp:TemplateField HeaderText="Priority" ItemStyle-CssClass="center-grid">
                                                     <ItemTemplate>
-                                                        <asp:Label ID="lblPriorityType" runat="server" Text='<%# Eval("PriorityType") %>'></asp:Label>
+                                                        <asp:Label ID="lblPriorityType" runat="server" Text='<%# Eval("PriorityType") %>' Font-Bold="true"
+                                                            ForeColor='<%#Eval("PriorityTypeId").ToString() == "1" ? System.Drawing.Color.Red : 
+                                                                                       Eval("PriorityTypeId").ToString() == "2" ? System.Drawing.Color.Orange : 
+                                                                                       System.Drawing.Color.Black %>'>></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                                 <asp:TemplateField HeaderText="Description" ItemStyle-CssClass="center-grid">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblTaskDescription" runat="server" Text='<%# Eval("TaskDescription") %>'></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="QA" ItemStyle-CssClass="center-grid">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblEmployee_Name_QA" runat="server" Text='<%# Eval("Employee_Name_QA") %>'></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                                 <asp:TemplateField HeaderText="Action" ItemStyle-Width="180px">
@@ -245,7 +264,6 @@
     </div>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentFooter" runat="Server">
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             flatpickr("#<%= txtAllocationTime.ClientID %>", {
@@ -259,28 +277,21 @@
                 maxTime: "09:00",        // maximum 9 hours
                 disableMobile: "true"    // force desktop version on mobile for consistent UI
             });
+            flatpickr(".datetime-local", {
+                dateFormat: "d/m/Y",
+                minDate: "today",
+                enableTime: false,
+            });
         });
 
         function sanitizeInput(el) {
             let val = el.value;
-            val = val.replace(/[^a-zA-Z0-9 ,.!()]/g, '');
+            val = val.replace(/[^a-zA-Z0-9 ,.!()-/&]/g, '');
             val = val.replace(/\s+/g, ' ');
             val = val.trimStart();
             el.value = val;
         }
-        $(document).ready(function () {
-
-            flatpickr(".datetime-local", {
-                dateFormat: "d/m/Y",   
-                minDate: "today",      
-                enableTime: false,     
-                
-            });
-
-        });
     </script>
-
-
 </asp:Content>
 
 

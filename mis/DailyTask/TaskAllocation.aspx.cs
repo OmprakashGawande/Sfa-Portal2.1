@@ -60,6 +60,7 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
         ddlEmployee.ClearSelection();
         ddlProject.ClearSelection();
         ddlPriorityType.ClearSelection();
+        ddlQA.ClearSelection();
         txtAllocationDate.Text = string.Empty;
         txtAllocationTime.Text = string.Empty;
         txtTaskName.Text = string.Empty;
@@ -78,6 +79,7 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
             FillProject();
             FillGrid();
             FillPriorityType();
+            FillQA();
 
             txtAllocationDate.Attributes.Add("readonly", "readonly");
             //fill breadcrumb.
@@ -147,6 +149,27 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
                 ddlPriorityType.DataBind();
             }
             ddlPriorityType.Items.Insert(0, new ListItem("Select", "0"));
+        }
+        catch (Exception ex)
+        {
+            ErrorMsg(ex);
+        }
+    }
+
+    private void FillQA()
+    {
+        try
+        {
+            ddlQA.Items.Clear();
+            ds = USP_TaskAllocation(new string[] { "Flag" }, new string[] { "8" });
+            if (IsNullDataSet(ds))
+            {
+                ddlQA.DataTextField = "Emp_Name";
+                ddlQA.DataValueField = "Emp_ID";
+                ddlQA.DataSource = ds.Tables[0];
+                ddlQA.DataBind();
+            }
+            ddlQA.Items.Insert(0, new ListItem("Select", "0"));
         }
         catch (Exception ex)
         {
@@ -227,7 +250,8 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
                               "TaskDescription",
                               "CreatedBy",
                               "CreatedByIp",
-                              "PriorityTypeId"
+                              "PriorityTypeId",
+                              "EmployeeId_QA"
                           },
                           new string[]
                           {
@@ -241,7 +265,8 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
                               txtTaskDescription.InnerText,
                               Convert.ToString(ViewState["Emp_ID"]),
                               objdb.GetLocalIPAddress(),
-                              ddlPriorityType.SelectedValue
+                              ddlPriorityType.SelectedValue,
+                              ddlQA.SelectedValue
                           });
 
                     if (IsNullDataSet(ds))
@@ -299,17 +324,39 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
                 Label lblTaskName = (Label)row.FindControl("lblTaskName");
                 Label lblTaskDescription = (Label)row.FindControl("lblTaskDescription");
                 Label lblPriorityTypeId = (Label)row.FindControl("lblPriorityTypeId");
+                Label lblEmployeeId_QA = (Label)row.FindControl("lblEmployeeId_QA");
 
-                ddlEmployee.ClearSelection();
-                ddlEmployee.Items.FindByValue(lblEmp_ID.Text).Selected = true;
-                ddlProject.ClearSelection();
-                ddlProject.Items.FindByValue(lblProject_ID.Text).Selected = true;
-                ddlPriorityType.ClearSelection();
-                ddlPriorityType.Items.FindByValue(lblPriorityTypeId.Text).Selected = true;
-                txtAllocationDate.Text = lblAllocationDate.Text;
-                txtAllocationTime.Text = lblTaskDuration.Text;
-                txtTaskName.Text = lblTaskName.Text;
-                txtTaskDescription.InnerText = lblTaskDescription.Text;
+                if (lblEmp_ID != null && ddlEmployee.Items.FindByValue(lblEmp_ID.Text) != null)
+                {
+                    ddlEmployee.ClearSelection();
+                    ddlEmployee.Items.FindByValue(lblEmp_ID.Text).Selected = true;
+                }
+                if (lblProject_ID != null && ddlProject.Items.FindByValue(lblProject_ID.Text) != null)
+                {
+                    ddlProject.ClearSelection();
+                    ddlProject.Items.FindByValue(lblProject_ID.Text).Selected = true;
+                }
+                if (lblPriorityTypeId != null && ddlPriorityType.Items.FindByValue(lblPriorityTypeId.Text) != null)
+                {
+                    ddlPriorityType.ClearSelection();
+                    ddlPriorityType.Items.FindByValue(lblPriorityTypeId.Text).Selected = true;
+                }
+                if (lblEmployeeId_QA != null && ddlQA.Items.FindByValue(lblEmployeeId_QA.Text) != null)
+                {
+                    ddlQA.ClearSelection();
+                    ddlQA.Items.FindByValue(lblEmployeeId_QA.Text).Selected = true;
+                }
+                if (lblAllocationDate != null)
+                    txtAllocationDate.Text = lblAllocationDate.Text;
+
+                if (lblTaskDuration != null)
+                    txtAllocationTime.Text = lblTaskDuration.Text;
+
+                if (lblTaskName != null)
+                    txtTaskName.Text = lblTaskName.Text;
+
+                if (lblTaskDescription != null)
+                    txtTaskDescription.InnerText = lblTaskDescription.Text;
 
                 btnSave.Text = "Update";
             }
