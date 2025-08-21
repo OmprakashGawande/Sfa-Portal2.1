@@ -132,7 +132,7 @@
                                 <div class="col-xl-2 col-sm-6 position-relative">
                                     <div class="form-group">
                                         <label runat="server">
-                                            QA
+                                            QA Name
                                         </label>
                                         <asp:DropDownList runat="server" ID="ddlQA" CssClass="form-select select2">
                                         </asp:DropDownList>

@@ -259,7 +259,7 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
                     }
                     if (string.IsNullOrEmpty(flag))
                     {
-                        WarningMsg(Convert.ToString(ds.Tables[0].Rows[0]["Msg"]));
+                        WarningMsg("Something went wrong, Please try after sometime.");
                         return;
                     }
 
