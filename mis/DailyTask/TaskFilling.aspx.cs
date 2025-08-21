@@ -75,7 +75,7 @@ public partial class mis_DailyTask_TaskFilling : System.Web.UI.Page
         GrvDailyTaskDetail.DataSource = ds.Tables[0];
         GrvDailyTaskDetail.DataBind();
 
-        ds = objdb.ByProcedure("Usp_GetDailyTaskDetail", new string[] { "Emp_id" }, new string[] {Convert.ToString(ViewState["Emp_ID"]) }, "dataset");
+        ds = objdb.ByProcedure("Usp_GetDailyTaskDetail", new string[] { "Emp_id" }, new string[] { Convert.ToString(ViewState["Emp_ID"]) }, "dataset");
 
         if (IsNullDataSet(ds))
         {
