@@ -10,7 +10,7 @@
                     <asp:Label ID="lblMsg" runat="server" Text=""></asp:Label>
                     <div class="card mt-3  border-warning">
                         <div class="card-header">
-                            <h4>Requirement Final Review</h4>
+                            <h4>Requirement Audit Team Review</h4>
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
@@ -34,7 +34,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-xl-3 col-sm-6 position-relative">
+                                <div class="col-xl-6 col-sm-6 position-relative">
                                     <div class="form-group">
                                         <span class="fa-pull-right">
                                             <asp:RequiredFieldValidator
@@ -48,7 +48,7 @@
                                                 Display="Dynamic"
                                                 runat="server" />
                                         </span>
-                                        <label runat="server">Requirement Point<span style="color: red;">*</span></label>
+                                        <label runat="server">Requirement Point Done By Project Manager<span style="color: red;">*</span></label>
                                         <asp:DropDownList AutoPostBack="true" OnSelectedIndexChanged="ddlTaskName_SelectedIndexChanged" runat="server" ID="ddlTaskName" CssClass="form-select select2">
                                         </asp:DropDownList>
                                     </div>
@@ -68,7 +68,7 @@
                                                 Display="Dynamic"
                                                 runat="server" />
                                         </span>
-                                        <label runat="server">Status<span style="color: red;">*</span></label>
+                                        <label runat="server">Audit Status<span style="color: red;">*</span></label>
                                         <asp:DropDownList runat="server" ID="ddlStatus" CssClass="form-select select2">
                                         </asp:DropDownList>
                                     </div>

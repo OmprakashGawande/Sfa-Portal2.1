@@ -181,7 +181,7 @@ public partial class mis_Transaction_ProjectManagerProcess : System.Web.UI.Page
     {
         ddlProject.ClearSelection();
         ddlTaskName.Items.Clear();
-
+        ddlTaskName.Items.Insert(0, new ListItem("Select", "0"));
         dataGrid.DataSource = null;
         dataGrid.DataBind();
         divCheck.Visible = false;

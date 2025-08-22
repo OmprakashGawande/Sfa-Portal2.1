@@ -27,8 +27,10 @@ public partial class mis_Reports_RptRequirementsTraceabilityMatrix : System.Web.
                 BindDropdown();
                 DateTime currentdate = DateTime.Now;
                 string Date = currentdate.ToString("yyyy/MM/dd", cult);
-                GetProjecName(Date);
-         
+                txtAllocationDate.Text = currentdate.ToString("dd/MM/yyyy");
+                GetProjecName(txtAllocationDate.Text);
+                txtAllocationDate_TextChanged(sender, e);
+
                 string currentPath = Request.Url.AbsolutePath.Substring(Request.Url.AbsolutePath.LastIndexOf("/") + 1);
                 ((MainMaster)this.Master).GenerateBreadcrumb(currentPath);
             }
@@ -43,7 +45,7 @@ public partial class mis_Reports_RptRequirementsTraceabilityMatrix : System.Web.
     {
         try
         {
-            string empId = ViewState["Emp_ID"].ToString(); ;
+            string empId = ViewState["Emp_ID"].ToString();
             DataSet ds3 = objdb.ByProcedure("UspGetEmpForReport", new string[] { "EmpId" }, new string[] { empId }, "dataset");
             if (ds3 != null && ds3.Tables[0].Rows.Count > 0)
             {
@@ -52,17 +54,18 @@ public partial class mis_Reports_RptRequirementsTraceabilityMatrix : System.Web.
                 ddlEmp.DataValueField = "Emp_ID";
                 ddlEmp.DataBind();
             }
-            if (ds3.Tables[1].Rows[0]["Status"].ToString() == "Admin")
-            {
-                ddlEmp.Items.Insert(0, new ListItem("All", "0"));
-               
-            }
-            else
-            {
-                //ddlEmp.SelectedIndex = 0;
-            
-               
-            }
+            ddlEmp.Items.Insert(0, new ListItem("All", "0"));
+            //if (ds3.Tables[1].Rows[0]["Status"].ToString() == "Admin")
+            //{
+            //    ddlEmp.Items.Insert(0, new ListItem("All", "0"));
+
+            //}
+            //else
+            //{
+            //    //ddlEmp.SelectedIndex = 0;
+
+
+            //}
 
         }
         catch (Exception ex)
@@ -79,7 +82,7 @@ public partial class mis_Reports_RptRequirementsTraceabilityMatrix : System.Web.
 
 
             string empId = empId = ViewState["Emp_ID"].ToString();
-            DataSet ds = objdb.ByProcedure("Usp_GetProject", new string[] { "EmpId","Date" }, new string[] { empId,FromDate }, "dataset");
+            DataSet ds = objdb.ByProcedure("Usp_GetProject", new string[] { "EmpId", "Date" }, new string[] { empId, FromDate }, "dataset");
             if (ds != null && ds.Tables[0].Rows.Count > 0)
             {
                 ddlProject.DataSource = ds.Tables[0];
@@ -104,9 +107,10 @@ public partial class mis_Reports_RptRequirementsTraceabilityMatrix : System.Web.
         GetProjecName(txtAllocationDate.Text);
     }
 
-   
+
     protected void btnSearch_Click(object sender, EventArgs e)
     {
+        lblMsg.Text = string.Empty;
         string Date = txtAllocationDate.Text != "" ? Convert.ToDateTime(txtAllocationDate.Text, cult).ToString("yyyy/MM/dd") : "";
 
         DataSet ds = objdb.ByProcedure("Usp_GetRptRequirementsTraceabilityMatrix",
@@ -120,7 +124,7 @@ public partial class mis_Reports_RptRequirementsTraceabilityMatrix : System.Web.
             dataGrid.DataBind();
             dataGrid.HeaderRow.TableSection = TableRowSection.TableHeader;
             dataGrid.UseAccessibleHeader = true;
-            
+
         }
         else
         {

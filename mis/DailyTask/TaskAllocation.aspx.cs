@@ -100,7 +100,9 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
         try
         {
             ddlEmployee.Items.Clear();
-            ds = USP_TaskAllocation(new string[] { "Flag" }, new string[] { "1" });
+
+            string empId = ViewState["Emp_ID"].ToString();
+            ds = USP_TaskAllocation(new string[] { "Flag", "EmpId" }, new string[] { "1", empId });
             if (IsNullDataSet(ds))
             {
                 ddlEmployee.DataTextField = "Employee_Name";
@@ -406,5 +408,6 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
         taskAllocationId = string.Empty;
         btnSave.Text = "Save";
         FillGridAlreadyAllocatedTask();
+        lblMsg.Text = string.Empty;
     }
 }

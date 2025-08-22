@@ -14,6 +14,19 @@
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
+                                <div class="col-xl-12 col-sm-6 position-relative">
+                                    <div class="form-check">
+                                        <asp:CheckBox onclick="hideErrorMsg()" runat="server" ID="chkQualityCheck" />
+
+                                        <label class="form-check-label" for="<%= chkQualityCheck.ClientID %>">
+                                            I have received the checklist from the Project Manager.
+                                        </label>
+
+                                        <div class="mt-1" id="errorMsg" style="color: red; display: none">
+                                            Please confirm that you have received the checklist from the Project Manager.
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-xl-3 col-sm-6 position-relative">
                                     <div class="form-group">
                                         <span class="fa-pull-right">
@@ -73,7 +86,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-xl-2 col-sm-6 position-relative">
+                                <div class="col-xl-3 col-sm-6 position-relative">
                                     <div class="form-group">
                                         <span class="fa-pull-right">
                                             <asp:RequiredFieldValidator
@@ -165,11 +178,76 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <%--grid--%>
+                            <div runat="server" id="dvAllocatedRequirements">
+                                <hr />
+                                <h4 class="mt-2">Requirements already allocated by other managers to
+     <asp:Label runat="server" ID="lblEmployeeName"></asp:Label></h4>
+                                <div class="row mt-3" style="padding: 0px 9px 2px 15px;" id="div2" runat="server">
+                                    <div class="table-responsive dt-ext ">
+                                        <div class="col-md-12">
+                                            <asp:GridView runat="server" AutoGenerateColumns="false" ID="gvAllocatedRequirements" CssClass="table table-bordered table-hover">
+                                                <Columns>
+                                                    <asp:TemplateField HeaderText="S. No." ItemStyle-HorizontalAlign="Center" ItemStyle-Width="70px">
+                                                        <ItemTemplate>
+                                                            <asp:Label runat="server" Text="<%# Container.DataItemIndex + 1 %>"></asp:Label>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="Employee" ItemStyle-CssClass="center-grid">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lblEmployee_Name" runat="server" Text='<%# Eval("Employee_Name") %>'></asp:Label>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="Project" ItemStyle-CssClass="center-grid">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lblProject_Name" runat="server" Text='<%# Eval("Project_Name") %>'></asp:Label>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="Allocation Date" ItemStyle-CssClass="center-grid">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lblAllocationDate" runat="server" Text='<%# Eval("AllocationDate") %>'></asp:Label>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="Requirement Duration" ItemStyle-CssClass="center-grid">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lblTaskDuration" runat="server" Text='<%# Eval("TaskDuration") %>'></asp:Label>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="Requirement Point" ItemStyle-CssClass="center-grid">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lblTaskName" runat="server" Text='<%# Eval("TaskName") %>'></asp:Label>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="Priority" ItemStyle-CssClass="center-grid">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lblPriorityType" runat="server" Text='<%# Eval("PriorityType") %>' Font-Bold="true"
+                                                                ForeColor='<%#Eval("PriorityTypeId").ToString() == "1" ? System.Drawing.Color.Red : 
+                                    Eval("PriorityTypeId").ToString() == "2" ? System.Drawing.Color.Orange : 
+                                    System.Drawing.Color.Black %>'>></asp:Label>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="Description" ItemStyle-CssClass="center-grid">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lblTaskDescription" runat="server" Text='<%# Eval("TaskDescription") %>'></asp:Label>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="QA Name" ItemStyle-CssClass="center-grid">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lblEmployee_Name_QA" runat="server" Text='<%# Eval("Employee_Name_QA") %>'></asp:Label>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                </Columns>
+                                            </asp:GridView>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <hr />
                             <div class="row">
                                 <div class="col-xl-3">
                                     <div class="form-group">
-                                        <asp:Button runat="server" Style="margin-top: 22px;" CssClass="btn btn-block btn-outline-success" ValidationGroup="Save" ID="btnSave" Text="Save" OnClick="btnSave_Click" />
+                                        <asp:Button runat="server" Style="margin-top: 22px;" OnClientClick="return validateCheckbox();" CssClass="btn btn-block btn-outline-success" ValidationGroup="Save" ID="btnSave" Text="Save" OnClick="btnSave_Click" />
                                         <a href="TaskAllocation.aspx" style="margin-top: 22px;" class="btn btn-block   btn-outline-danger">Clear</a>
                                     </div>
                                 </div>
@@ -179,71 +257,14 @@
                     <hr />
 
                     <%--grid--%>
-                    <div class="card border-warning" runat="server" id="dvAllocatedRequirements">
+                    <%--                    <div class="card border-warning" >
                         <div class="card-header">
-                            <h4>Requirements already allocated by other managers to <asp:Label runat="server" ID="lblEmployeeName"></asp:Label></h4>
+                            <h4>Requirements already allocated by other managers to
+                                <asp:Label runat="server" ID="lblEmployeeName"></asp:Label></h4>
                         </div>
                         <div class="card-body">
-                            <div class="row" style="padding: 0px 9px 2px 15px;" id="div2" runat="server">
-                                <div class="table-responsive dt-ext ">
-                                    <div class="col-md-12">
-                                        <asp:GridView runat="server" AutoGenerateColumns="false" ID="gvAllocatedRequirements" CssClass="table table-bordered table-hover" >
-                                            <Columns>
-                                                <asp:TemplateField HeaderText="S. No." ItemStyle-HorizontalAlign="Center" ItemStyle-Width="70px">
-                                                    <ItemTemplate>
-                                                        <asp:Label runat="server" Text="<%# Container.DataItemIndex + 1 %>"></asp:Label>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="Employee" ItemStyle-CssClass="center-grid">
-                                                    <ItemTemplate>
-                                                        <asp:Label ID="lblEmployee_Name" runat="server" Text='<%# Eval("Employee_Name") %>'></asp:Label>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="Project" ItemStyle-CssClass="center-grid">
-                                                    <ItemTemplate>
-                                                        <asp:Label ID="lblProject_Name" runat="server" Text='<%# Eval("Project_Name") %>'></asp:Label>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="Allocation Date" ItemStyle-CssClass="center-grid">
-                                                    <ItemTemplate>
-                                                        <asp:Label ID="lblAllocationDate" runat="server" Text='<%# Eval("AllocationDate") %>'></asp:Label>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="Requirement Duration" ItemStyle-CssClass="center-grid">
-                                                    <ItemTemplate>
-                                                        <asp:Label ID="lblTaskDuration" runat="server" Text='<%# Eval("TaskDuration") %>'></asp:Label>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="Requirement Point" ItemStyle-CssClass="center-grid">
-                                                    <ItemTemplate>
-                                                        <asp:Label ID="lblTaskName" runat="server" Text='<%# Eval("TaskName") %>'></asp:Label>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="Priority" ItemStyle-CssClass="center-grid">
-                                                    <ItemTemplate>
-                                                        <asp:Label ID="lblPriorityType" runat="server" Text='<%# Eval("PriorityType") %>' Font-Bold="true"
-                                                            ForeColor='<%#Eval("PriorityTypeId").ToString() == "1" ? System.Drawing.Color.Red : 
-                                                                    Eval("PriorityTypeId").ToString() == "2" ? System.Drawing.Color.Orange : 
-                                                                    System.Drawing.Color.Black %>'>></asp:Label>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="Description" ItemStyle-CssClass="center-grid">
-                                                    <ItemTemplate>
-                                                        <asp:Label ID="lblTaskDescription" runat="server" Text='<%# Eval("TaskDescription") %>'></asp:Label>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="QA Name" ItemStyle-CssClass="center-grid">
-                                                    <ItemTemplate>
-                                                        <asp:Label ID="lblEmployee_Name_QA" runat="server" Text='<%# Eval("Employee_Name_QA") %>'></asp:Label>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-                                            </Columns>
-                                        </asp:GridView>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
-                    </div>
+                    </div>--%>
 
 
                     <%--grid--%>
@@ -359,6 +380,31 @@
             val = val.trimStart();
             el.value = val;
         }
+    </script>
+    <script type="text/javascript">
+        function validateCheckbox() {
+            debugger;
+            var checkbox = document.getElementById('<%= chkQualityCheck.ClientID %>');
+            var errorMsg = document.getElementById('errorMsg');
+
+            if (!checkbox.checked) {
+                errorMsg.style.display = 'block';
+                return false;
+            } else {
+                errorMsg.style.display = 'none';
+                return true;
+            }
+        }
+        function hideErrorMsg() {
+            var errorMsg = document.getElementById('errorMsg');
+            errorMsg.style.display = 'none';
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Main page DataTable
+            initCustomDataTable('.datatable', 'Project Detail', 'Project Detail', [10]);
+        });
     </script>
 </asp:Content>
 

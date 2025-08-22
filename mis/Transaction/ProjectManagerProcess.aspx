@@ -40,7 +40,6 @@
                                     <label runat="server">Requirement Point <span style="color: red;">*</span></label>
                                     <asp:DropDownList runat="server" ID="ddlTaskName" ClientIDMode="Static"
                                         CssClass="form-control select2">
-                                        <asp:ListItem Text="Select" Value="0"></asp:ListItem>
                                     </asp:DropDownList>
                                 </div>
                             </div>
@@ -158,7 +157,7 @@
                                 <div class="form-check">
                                     <asp:CheckBox runat="server" ID="chkQualityCheck" onclick="hideErrorMsg('errorMsg1')" />
                                     <label class="form-check-label" for="<%= chkQualityCheck.ClientID %>">
-                                        I have checked my development quality / processes.
+                                        I have checked development quality / processes.
                                     </label>
                                     <div id="errorMsg1" style="color: red; display: none; margin-top: 5px;">
                                         Please confirm you have checked your development quality / processes.
