@@ -61,6 +61,7 @@ public partial class mis_DailyTask_TaskFinalReviewProcess : System.Web.UI.Page
         FillGrid();
         btnSave.Text = "Save";
         finalReviewId = string.Empty;
+        dvAllocatedDetails.Visible = false;
     }
 
     private void Initials()
@@ -73,6 +74,7 @@ public partial class mis_DailyTask_TaskFinalReviewProcess : System.Web.UI.Page
             FillTask();
             FillStatus();
             FillGrid();
+            dvAllocatedDetails.Visible = false;
 
             string currentPath = Request.Url.AbsolutePath.Substring(Request.Url.AbsolutePath.LastIndexOf("/") + 1);
             ((MainMaster)this.Master).GenerateBreadcrumb(currentPath);
@@ -167,11 +169,45 @@ public partial class mis_DailyTask_TaskFinalReviewProcess : System.Web.UI.Page
         }
     }
 
+    private void FillGridAlreadyAllocatedTask()
+    {
+        try
+        {
+            dvAllocatedDetails.Visible = false;
+            gvAllocatedRequirements.DataSource = null;
+            gvAllocatedRequirements.DataBind();
+
+            ds = USP_FinalReviewProcess(new string[] { "Flag", "AllocationId", "ProjectId" }, new string[] { "7", ddlTaskName.SelectedValue, ddlProject.SelectedValue });
+            if (IsNullDataSet(ds))
+            {
+                dvAllocatedDetails.Visible = true;
+                gvAllocatedRequirements.DataSource = ds.Tables[0];
+                gvAllocatedRequirements.DataBind();
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMsg(ex);
+        }
+    }
+
     protected void ddlProject_SelectedIndexChanged(object sender, EventArgs e)
     {
         try
         {
             FillTask();
+        }
+        catch (Exception ex)
+        {
+            ErrorMsg(ex);
+        }
+    }
+
+    protected void ddlTaskName_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        try
+        {
+            FillGridAlreadyAllocatedTask();
         }
         catch (Exception ex)
         {

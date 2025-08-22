@@ -9,7 +9,7 @@
                 <asp:Label ID="lblMsg" runat="server" Text=""></asp:Label>
                 <div class="card mt-3  border-warning">
                     <div class="card-header">
-                        <h4>Project Manager Process</h4>
+                        <h4>Project Manager Review Process</h4>
                     </div>
                     <div class="card-body">
                         <div class="row g-3">

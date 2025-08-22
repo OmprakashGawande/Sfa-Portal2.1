@@ -232,7 +232,7 @@
                                                         <asp:Label ID="lblTaskDescription" runat="server" Text='<%# Eval("TaskDescription") %>'></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="QA" ItemStyle-CssClass="center-grid">
+                                                <asp:TemplateField HeaderText="QA Name" ItemStyle-CssClass="center-grid">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblEmployee_Name_QA" runat="server" Text='<%# Eval("Employee_Name_QA") %>'></asp:Label>
                                                     </ItemTemplate>

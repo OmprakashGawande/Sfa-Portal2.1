@@ -74,6 +74,15 @@
         .dt-buttons {
             margin-bottom: 0.5rem; /* ya jitna margin chahiye, yahan adjust karo */
         }
+
+        .profile-media img {
+            width: 40px; /* fix size */
+            height: 40px; /* fix size */
+            border-radius: 50%; /* circle banane ke liye */
+            object-fit: cover; /* crop karke fit karega */
+            object-position: center; /* center se crop karega */
+            display: block;
+        }
     </style>
     <asp:ContentPlaceHolder ID="ContentHeader" runat="server">
     </asp:ContentPlaceHolder>
@@ -150,6 +159,7 @@
                                             </p>
                                         </div>
                                     </div>
+
                                     <ul class="profile-dropdown onhover-show-div">
                                         <li><a href="../HR/HRMyProfile.aspx"><i data-feather="user"></i><span>My Profile</span></a></li>
                                         <li><a class="btn btn-pill btn-outline-primary btn-sm" href="../Login.aspx">Log Out</a></li>
