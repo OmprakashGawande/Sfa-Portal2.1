@@ -541,9 +541,9 @@ span.flatpickr-weekday {
     border-radius: 150px;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    color: #393939;
+    color: #000000;
     cursor: pointer;
-    font-weight: 400;
+    font-weight: 600;
     width: 14.2857143%;
     -webkit-flex-basis: 14.2857143%;
     -ms-flex-preferred-size: 14.2857143%;

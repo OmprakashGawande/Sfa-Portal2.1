@@ -356,22 +356,29 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             flatpickr("#<%= txtAllocationTime.ClientID %>", {
-                enableTime: true,
-                noCalendar: true,
-                dateFormat: "H:i",       // 24-hour format, like 01:30
-                time_24hr: true,
-                minuteIncrement: 6,      // 0.1 hour = 6 minutes step
-                defaultHour: 0,
-                minTime: "00:06",        // minimum 6 minutes (0.1 hour)
-                maxTime: "09:00",        // maximum 9 hours
-                disableMobile: "true"    // force desktop version on mobile for consistent UI
-            });
-            flatpickr(".datetime-local", {
-                dateFormat: "d/m/Y",
-                minDate: "today",
-                enableTime: false,
-            });
-        });
+               enableTime: true,
+               noCalendar: true,
+               dateFormat: "H:i",       // 24-hour format, like 01:30
+               time_24hr: true,
+               minuteIncrement: 6,      // 0.1 hour = 6 minutes step
+               defaultHour: 0,
+               minTime: "00:06",        // minimum 6 minutes (0.1 hour)
+               maxTime: "09:00",        // maximum 9 hours
+               disableMobile: "true"    // force desktop version on mobile for consistent UI
+           });
+
+           flatpickr(".datetime-local", {
+               dateFormat: "d/m/Y", 
+               minDate: "today",
+               enableTime: false,
+               disable: [
+                   function (date) {
+                       // Disable Saturdays (6) and Sundays (0)
+                       return (date.getDay() === 0 || date.getDay() === 6);
+                   }
+               ],
+           });
+       });
 
         function sanitizeInput(el) {
             let val = el.value;

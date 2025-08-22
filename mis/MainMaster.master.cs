@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Data;
 using System.Web;
 public partial class MainMaster : System.Web.UI.MasterPage
@@ -149,7 +147,7 @@ public partial class MainMaster : System.Web.UI.MasterPage
             // Footer links
             sidebarHtml += @"
                 <li class='sidebar-list'><i class='fa fa-thumb-tack'> </i>
-                    <a class='sidebar-link sidebar-title' href='../Admin/Change_UserPassword.aspx'>
+                    <a class='sidebar-link sidebar-title' href='#'>
  <svg class='stroke-icon'>
                       <use href='../assets/svg/icon-sprite.svg#stroke-others'></use>
                     </svg>
