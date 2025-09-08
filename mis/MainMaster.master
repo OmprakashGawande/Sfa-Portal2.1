@@ -405,7 +405,7 @@
                         info: true,
                         responsive: true,
                         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                        pageLength: 10,
+                        pageLength: 50,
                         dom:
                             '<"row"<"col-sm-12"B>>' +               // Buttons row full width
                             '<"row"<"col-sm-4"l><"col-sm-8"f>>' +   // Dropdown left, search right

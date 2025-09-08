@@ -296,7 +296,7 @@ public partial class mis_DailyTask_TaskFilling : System.Web.UI.Page
                         }
                         ds = objdb.ByProcedure("Usp_InsertTask",
                             new string[] { "ProjectId", "EmployeeId", "AllocationId", "TastStatusId", "FwdtoQA", "TaskRemark", "OtherTaskAndRemark", "CreatedBy", "CreatedByIp" },
-                            new string[] { ddlProject.SelectedValue, Convert.ToString(ViewState["Emp_ID"]), ddlTaskName.SelectedValue, ddlTaskStatus.SelectedValue, fwdToQA, txtTaskRemark.Text, txtRemark.Text, Convert.ToString(ViewState["Emp_ID"]), objdb.GetLocalIPAddress() }, "dataset");
+                            new string[] { ddlProject.SelectedValue, Convert.ToString(ViewState["Emp_ID"]), ddlTaskName.SelectedValue, ddlTaskStatus.SelectedValue, fwdToQA, txtTaskRemark.Text.Trim().Replace(Environment.NewLine, "<br />"), txtRemark.Text.Trim().Replace(Environment.NewLine, "<br />"), Convert.ToString(ViewState["Emp_ID"]), objdb.GetLocalIPAddress() }, "dataset");
                         if (IsNullDataSet(ds))
                         {
                             if (Convert.ToString(ds.Tables[0].Rows[0]["Stat"]).Equals("Ok"))

@@ -19,10 +19,9 @@
 
                             <div class="col-xl-12 col-sm-6 position-relative text-end">
                                 <div class="form-group">
-                                    <asp:LinkButton runat="server" href="../DailyTaskDoc/CodingStandardChecklist/CodingStandardChecklist.pdf" download="CodingStandardChecklist" class="btn btn-sm btn-info">Download Coding Standard Checklist</asp:LinkButton>
+                                    <asp:LinkButton runat="server" href="../DailyTaskDoc/CodingStandardChecklist/Coding-StandardChecklist-Part1.docx" download="CodingStandardChecklist" class="btn btn-sm btn-info">Download Coding Standard Checklist</asp:LinkButton>
                                 </div>
                             </div>
-
                             <div class="col-xl-2 col-sm-6 position-relative">
                                 <label runat="server">
                                     Date 
@@ -96,13 +95,15 @@
                             <div class="col-xl-6 col-sm-6 position-relative" runat="server" id="Div_Remark" visible="false">
                                 <div class="form-group">
                                     <label runat="server">Remark</label>
-                                    <asp:TextBox placeholder="Emter Remark" runat="server" ID="txtTaskRemark" MaxLength="2000" oninput="sanitizeInput(this)" CssClass="form-control" TextMode="MultiLine"></asp:TextBox>
+                                    <asp:TextBox placeholder="Enter Remark" runat="server" ID="txtTaskRemark" MaxLength="2000" oninput="sanitizeInput(this)" CssClass="form-control" TextMode="MultiLine"></asp:TextBox>
+                                    <asp:Label runat="server" ForeColor="Red" ID="lblCounter"></asp:Label>
                                 </div>
                             </div>
                             <div class="col-xl-6 col-sm-6 position-relative" runat="server" id="Div_OtherTask" visible="false">
                                 <div class="form-group">
                                     <label runat="server">Other Task</label>
                                     <asp:TextBox placeholder="ex: Project Name: Requirement Point." runat="server" ID="txtRemark" MaxLength="2000" oninput="sanitizeInput(this)" CssClass="form-control" TextMode="MultiLine"></asp:TextBox>
+                                    <asp:Label runat="server" ForeColor="Red" ID="lblCounter2"></asp:Label>
                                 </div>
                             </div>
                         </div>
@@ -146,6 +147,16 @@
                                                 <asp:TemplateField HeaderText="Requirement Duration">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblAllocationTime" Text='<%# Eval("AllocationTime").ToString() %>' runat="server"></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="Task Fill Date">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblTaskFillDate" Text='<%# Eval("TaskFillDate").ToString() %>' runat="server"></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="Status">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblTaskStatus" Text='<%# Eval("TaskStatus").ToString() %>' runat="server"></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                             </Columns>
@@ -271,15 +282,6 @@
     </div>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentFooter" runat="Server">
-    <script>
-        function sanitizeInput(el) {
-            let val = el.value;
-            val = val.replace(/[^a-zA-Z0-9 ,.!()-/&]/g, '');
-            val = val.replace(/\s+/g, ' ');
-            val = val.trimStart();
-            el.value = val;
-        }
-    </script>
     <script type="text/javascript">
         function validateCheckbox() {
             debugger;
@@ -298,6 +300,48 @@
             var errorMsg = document.getElementById('errorMsg');
             errorMsg.style.display = 'none';
         }
+    </script>
+
+    <script>
+        const txtTaskRemark = document.getElementById('<%=txtTaskRemark.ClientID%>');
+        const txtRemark = document.getElementById('<%=txtRemark.ClientID%>');
+        const lblCount1 = document.getElementById('<%=lblCounter.ClientID%>'); // assuming this is for txtDiscription
+        const lblCount2 = document.getElementById('<%=lblCounter2.ClientID%>'); // for txtTaskDescription
+
+        // Add keyup event listeners
+        txtTaskRemark.addEventListener("keyup", () => CharactersCount(txtTaskRemark, lblCount1, 2000));
+        txtRemark.addEventListener("keyup", () => CharactersCount(txtRemark, lblCount2, 2000));
+
+        // Character counter function (reusable for any textbox/label)
+        function CharactersCount(textbox, label, maxLength) {
+            if (textbox.value.length > maxLength) {
+                textbox.value = textbox.value.substring(0, maxLength);
+            }
+            const remaining = maxLength - textbox.value.length;
+            label.innerHTML = `${remaining} characters remaining`;
+        }
+
+        // Prevent input beyond max length
+        function checkTextAreaMaxLength(textBox, e, length) {
+            var mLen = textBox["MaxLength"] || length;
+            var maxLength = parseInt(mLen);
+            if (!checkSpecialKeys(e)) {
+                if (textBox.value.length > maxLength - 1) {
+                    if (window.event) // IE
+                        e.returnValue = false;
+                    else // Firefox/Chrome/Edge
+                        e.preventDefault();
+                }
+            }
+        }
+
+        function checkSpecialKeys(e) {
+            return [8, 46, 37, 38, 39, 40].includes(e.keyCode);
+        }
+
+        // Initial call to set remaining count on page load
+        CharactersCount(txtTaskRemark, lblCount1, 2000);
+        CharactersCount(txtRemark, lblCount2, 2000);
     </script>
 
 </asp:Content>

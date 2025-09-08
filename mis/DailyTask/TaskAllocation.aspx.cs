@@ -64,10 +64,11 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
         txtAllocationDate.Text = string.Empty;
         txtAllocationTime.Text = string.Empty;
         txtTaskName.Text = string.Empty;
-        txtTaskDescription.InnerHtml = string.Empty;
+        txtTaskDescription.Text = string.Empty;
         FillGridTakDetails();
         FillGridAlreadyAllocatedTask();
         btnSave.Text = "Save";
+        chkQualityCheck.Checked = false;
     }
 
     private void Initials()
@@ -83,7 +84,7 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
             FillQA();
 
             txtAllocationDate.Attributes.Add("readonly", "readonly");
-            dvAllocatedRequirements.Visible = false;    
+            dvAllocatedRequirements.Visible = false;
             //fill breadcrumb.
             Session["PageTokan"] = Server.UrlEncode(System.DateTime.Now.ToString());
             string currentPath = Request.Url.AbsolutePath.Substring(Request.Url.AbsolutePath.LastIndexOf("/") + 1);
@@ -193,6 +194,7 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
             {
                 gvTaskDetails.DataSource = ds.Tables[0];
                 gvTaskDetails.DataBind();
+                Datatable();
             }
         }
         catch (Exception ex)
@@ -205,12 +207,12 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
     {
         try
         {
-            dvAllocatedRequirements.Visible=false;
+            dvAllocatedRequirements.Visible = false;
             gvAllocatedRequirements.DataSource = null;
             gvAllocatedRequirements.DataBind();
-            string allocationDate = !string.IsNullOrWhiteSpace(txtAllocationDate.Text)? Convert.ToDateTime(txtAllocationDate.Text, cult).ToString("yyyy/MM/dd"): DateTime.Now.ToString("yyyy/MM/dd");
+            string allocationDate = !string.IsNullOrWhiteSpace(txtAllocationDate.Text) ? Convert.ToDateTime(txtAllocationDate.Text, cult).ToString("yyyy/MM/dd") : DateTime.Now.ToString("yyyy/MM/dd");
 
-            ds = USP_TaskAllocation(new string[] { "Flag", "CreatedBy", "EmployeeId", "AllocationDate" }, new string[] { "9", Convert.ToString(ViewState["Emp_ID"]),ddlEmployee.SelectedValue, allocationDate });
+            ds = USP_TaskAllocation(new string[] { "Flag", "CreatedBy", "EmployeeId", "AllocationDate" }, new string[] { "9", Convert.ToString(ViewState["Emp_ID"]), ddlEmployee.SelectedValue, allocationDate });
             if (IsNullDataSet(ds))
             {
                 lblEmployeeName.Text = ddlEmployee.SelectedItem.Text;
@@ -240,7 +242,7 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
                 if (txtAllocationDate.Text == "") { ErrorMsg += "Please Select Allocation Date.\\n"; }
                 if (txtAllocationTime.Text == "") { ErrorMsg += "Please Select Allocation Time.\\n"; }
                 if (txtTaskName.Text == "") { ErrorMsg += "Please Enter Task Name.\\n"; }
-                if (txtTaskDescription.InnerText == "") { ErrorMsg += "Please Enter Task Description.\\n"; }
+                if (txtTaskDescription.Text == "") { ErrorMsg += "Please Enter Task Description.\\n"; }
 
                 if (!string.IsNullOrEmpty(ErrorMsg))
                 {
@@ -290,7 +292,7 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
                               Convert.ToString(allocationDate),
                               txtAllocationTime.Text,
                               txtTaskName.Text,
-                              txtTaskDescription.InnerText,
+                              txtTaskDescription.Text.Trim().Replace(Environment.NewLine, "<br />"),
                               Convert.ToString(ViewState["Emp_ID"]),
                               objdb.GetLocalIPAddress(),
                               ddlPriorityType.SelectedValue,
@@ -384,8 +386,9 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
                     txtTaskName.Text = lblTaskName.Text;
 
                 if (lblTaskDescription != null)
-                    txtTaskDescription.InnerText = lblTaskDescription.Text;
-
+                    txtTaskDescription.Text = lblTaskDescription.Text;
+               
+                Datatable();
                 btnSave.Text = "Update";
             }
         }
@@ -404,10 +407,22 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
         txtAllocationDate.Text = string.Empty;
         txtAllocationTime.Text = string.Empty;
         txtTaskName.Text = string.Empty;
-        txtTaskDescription.InnerHtml = string.Empty;
+        txtTaskDescription.Text = string.Empty;
         taskAllocationId = string.Empty;
         btnSave.Text = "Save";
         FillGridAlreadyAllocatedTask();
         lblMsg.Text = string.Empty;
+        Datatable();
+    }
+
+    protected void Datatable()
+    {
+        if (gvTaskDetails.Rows.Count > 0)
+        {
+            gvTaskDetails.HeaderRow.TableSection = TableRowSection.TableHeader;
+            gvTaskDetails.UseAccessibleHeader = true;
+        }
+
+
     }
 }

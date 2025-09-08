@@ -69,7 +69,7 @@
                                 <div class="col-xl-3 col-sm-6 position-relative">
                                     <div class="form-group">
                                         <label runat="server">Total Test Cases (No.)<span style="color: red;">*</span></label>
-                                        <asp:TextBox TextMode="Number" autocomplete="off" oninput="sanitizeInput(this)" ID="txtTotalTestCase"
+                                        <asp:TextBox TextMode="Number" autocomplete="off" oninput="calculateTestCases()" ID="txtTotalTestCase"
                                             runat="server" placeholder="Enter Total Test Cases" CssClass="form-control"></asp:TextBox>
                                     </div>
                                 </div>
@@ -77,7 +77,7 @@
                                 <div class="col-xl-3 col-sm-6 position-relative">
                                     <div class="form-group">
                                         <label runat="server">Pass Test Cases (No.)<span style="color: red;">*</span></label>
-                                        <asp:TextBox TextMode="Number" autocomplete="off" oninput="sanitizeInput(this)" ID="txtPassTestCase"
+                                        <asp:TextBox TextMode="Number" autocomplete="off" oninput="calculateTestCases()" ID="txtPassTestCase"
                                             runat="server" placeholder="Enter Pass Test Cases" CssClass="form-control"></asp:TextBox>
                                     </div>
                                 </div>
@@ -85,7 +85,7 @@
                                 <div class="col-xl-3 col-sm-6 position-relative">
                                     <div class="form-group">
                                         <label runat="server">Fail Test Cases (No.)<span style="color: red;">*</span></label>
-                                        <asp:TextBox TextMode="Number" autocomplete="off" oninput="sanitizeInput(this)" ID="txtFailTestCase"
+                                        <asp:TextBox TextMode="Number" autocomplete="off" oninput="calculateTestCases()" ID="txtFailTestCase"
                                             runat="server" placeholder="Enter Fail Test Cases" CssClass="form-control"></asp:TextBox>
                                     </div>
                                 </div>
@@ -186,7 +186,7 @@
     </div>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentFooter" runat="Server">
-    <script>
+    <%--<script>
         function sanitizeInput(el) {
             let val = el.value;
             val = val.replace(/[^0-9]/g, '');
@@ -257,7 +257,68 @@
             }
             return true;
         }
+    </script>--%>
+
+    <script>
+        let isPassOrFailFilled = false; // flag
+
+        function calculateTestCases() {
+            let totalBox = document.getElementById("<%= txtTotalTestCase.ClientID %>");
+        let passBox = document.getElementById("<%= txtPassTestCase.ClientID %>");
+        let failBox = document.getElementById("<%= txtFailTestCase.ClientID %>");
+
+            // ----- Limit Total max 5 digits -----
+            if (totalBox.value.length > 5) {
+                totalBox.value = totalBox.value.slice(0, 5);
+            }
+
+            let total = parseInt(totalBox.value) || 0;
+            let pass = parseInt(passBox.value) || 0;
+            let fail = parseInt(failBox.value) || 0;
+
+            // Total test case 0 na ho
+            if (total === 0) {
+                totalBox.value = "";
+                passBox.value = "";
+                failBox.value = "";
+                isPassOrFailFilled = false;
+                return;
+            }
+
+            // Agar pehle Pass/Fail fill ho chuke hain aur Total me phir se change hua → dono reset 0
+            if (document.activeElement.id === totalBox.id && isPassOrFailFilled) {
+                passBox.value = 0;
+                failBox.value = 0;
+                isPassOrFailFilled = false;
+                return;
+            }
+
+            // Pass likhne par Fail auto calculate
+            if (document.activeElement.id === passBox.id) {
+                isPassOrFailFilled = true;
+                if (pass > total) {
+                    pass = total;
+                    passBox.value = total;
+                }
+                fail = total - pass;
+                failBox.value = fail;
+            }
+
+            // Fail likhne par Pass auto calculate
+            if (document.activeElement.id === failBox.id) {
+                isPassOrFailFilled = true;
+                if (fail > total) {
+                    fail = total;
+                    failBox.value = total;
+                }
+                pass = total - fail;
+                passBox.value = pass;
+            }
+        }
     </script>
+
+
+
 </asp:Content>
 
 

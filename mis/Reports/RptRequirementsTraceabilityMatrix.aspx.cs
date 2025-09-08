@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using System.IdentityModel.Protocols.WSTrust;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -54,18 +55,22 @@ public partial class mis_Reports_RptRequirementsTraceabilityMatrix : System.Web.
                 ddlEmp.DataValueField = "Emp_ID";
                 ddlEmp.DataBind();
             }
-            ddlEmp.Items.Insert(0, new ListItem("All", "0"));
-            //if (ds3.Tables[1].Rows[0]["Status"].ToString() == "Admin")
+            if (ds3.Tables[1].Rows[0]["Status"].ToString() == "Admin")
+            {
+                ddlEmp.Items.Insert(0, new ListItem("All", "0"));
+
+            }
+            //else if (ds3.Tables[1].Rows[0]["Status"].ToString() == "Emp")
             //{
-            //    ddlEmp.Items.Insert(0, new ListItem("All", "0"));
+            //    DivAllocationStatus.Visible = false;
 
             //}
-            //else
-            //{
-            //    //ddlEmp.SelectedIndex = 0;
+            else
+            {
+                //ddlEmp.SelectedIndex = 0;
 
 
-            //}
+            }
 
         }
         catch (Exception ex)
@@ -105,17 +110,18 @@ public partial class mis_Reports_RptRequirementsTraceabilityMatrix : System.Web.
     protected void txtAllocationDate_TextChanged(object sender, EventArgs e)
     {
         GetProjecName(txtAllocationDate.Text);
+        Datatable();
     }
 
 
     protected void btnSearch_Click(object sender, EventArgs e)
     {
         lblMsg.Text = string.Empty;
-        string Date = txtAllocationDate.Text != "" ? Convert.ToDateTime(txtAllocationDate.Text, cult).ToString("yyyy/MM/dd") : "";
+        string Date = txtAllocationDate.Text != "" ? Convert.ToDateTime(txtAllocationDate.Text, cult).ToString("yyyy-MM-dd") : "";
 
         DataSet ds = objdb.ByProcedure("Usp_GetRptRequirementsTraceabilityMatrix",
-            new string[] { "EmpId", "ProjectId", "Date" },
-            new string[] { ddlEmp.SelectedValue, ddlProject.SelectedValue, Date },
+            new string[] { "EmpId", "ProjectId", "Date", "AllocationStatus" },
+            new string[] { ddlEmp.SelectedValue, ddlProject.SelectedValue, Date, ddlAllocationStatus.SelectedItem.Text },
             "dataset");
 
         if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
@@ -124,6 +130,8 @@ public partial class mis_Reports_RptRequirementsTraceabilityMatrix : System.Web.
             dataGrid.DataBind();
             dataGrid.HeaderRow.TableSection = TableRowSection.TableHeader;
             dataGrid.UseAccessibleHeader = true;
+            Datatable();
+            Div_Detail.Visible = true;
 
         }
         else
@@ -133,4 +141,77 @@ public partial class mis_Reports_RptRequirementsTraceabilityMatrix : System.Web.
             lblMsg.Text = objdb.Alert("fa-ban", "alert-warning", "Sorry!", "No Record Found");
         }
     }
+    protected void Datatable()
+    {
+        if (dataGrid.Rows.Count > 0)
+        {
+            dataGrid.HeaderRow.TableSection = TableRowSection.TableHeader;
+            dataGrid.UseAccessibleHeader = true;
+        }
+
+
+    }
+    protected void dataGrid_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        // Label lblExcelHeader = (Label)Page.FindControl("lblExcelHeader");
+
+
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            Label lblStatus = (Label)e.Row.FindControl("lblStatus");
+            if (lblStatus.Text == "Not Allocated")
+            {
+                hfExcelHeader.Value = "Requirements Not Allocated Report";
+            }
+            else
+            {
+                hfExcelHeader.Value = "Requirements Allocated Report";
+
+            }
+            if (lblStatus != null)
+            {
+                string status = lblStatus.Text;
+
+
+                if (status == "Not Allocated")
+                {
+                    for (int i = 0; i < e.Row.Cells.Count; i++)
+                    {
+                        if (i != 0 && i != 5 && i != 10)
+                        {
+                            e.Row.Cells[i].Visible = false;
+                        }
+                    }
+
+                    // Hide header also
+                    GridView gv = (GridView)sender;
+                    if (gv.HeaderRow != null)
+                    {
+                        for (int i = 0; i < gv.HeaderRow.Cells.Count; i++)
+                        {
+                            if (i != 0 && i != 5 && i != 10)
+                            {
+                                gv.HeaderRow.Cells[i].Visible = false;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // Row is Allocated → show full header
+                    GridView gv = (GridView)sender;
+                    if (gv.HeaderRow != null)
+                    {
+                        for (int i = 0; i < gv.HeaderRow.Cells.Count; i++)
+                        {
+                            gv.HeaderRow.Cells[i].Visible = true;
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
+
 }

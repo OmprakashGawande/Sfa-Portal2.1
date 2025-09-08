@@ -10,7 +10,7 @@
                     <asp:Label ID="lblMsg" runat="server" Text=""></asp:Label>
                     <div class="card mt-3  border-warning">
                         <div class="card-header">
-                            <h4>Requirements Traceability Matrix Report</h4>
+                            <h4>Requirements Allocation Report</h4>
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
@@ -48,7 +48,15 @@
                                         </asp:DropDownList>
                                     </div>
                                 </div>
-
+                                <div class="col-xl-3 col-sm-6 position-relative" runat="server" id="DivAllocationStatus">
+                                    <div class="form-group">
+                                        <label runat="server">Allocation Status</label>
+                                        <asp:DropDownList runat="server" ID="ddlAllocationStatus" CssClass="form-select select2">
+                                            <asp:ListItem Text="Allocated" Value="Allocated" Selected="True"></asp:ListItem>
+                                            <asp:ListItem Text="Not Allocated" Value="Not Allocated"></asp:ListItem>
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
                             </div>
                             <hr />
                             <div class="row">
@@ -60,11 +68,10 @@
                                 </div>
                             </div>
                         </div>
+                        <asp:HiddenField runat="server" ID="hfExcelHeader" />
                     </div>
-
-
                     <%--grid--%>
-                    <div class="card border-warning">
+                    <div class="card border-warning" runat="server" id="Div_Detail" visible="false">
                         <div class="card-header">
                             <h4>Details</h4>
                         </div>
@@ -73,12 +80,11 @@
                                 <div class="table-responsive dt-ext ">
                                     <div class="col-md-12">
                                         <asp:GridView runat="server" AutoGenerateColumns="false" ID="dataGrid"
-                                            CssClass="table table-bordered table-hover">
+                                            CssClass="datatable table table-bordered table-hover" OnRowDataBound="dataGrid_RowDataBound">
                                             <Columns>
                                                 <asp:TemplateField HeaderText="S. No." ItemStyle-HorizontalAlign="Center" ItemStyle-Width="70px">
                                                     <ItemTemplate>
                                                         <asp:Label runat="server" Text="<%# Container.DataItemIndex + 1 %>"></asp:Label>
-
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                                 <asp:TemplateField HeaderText="Project" ItemStyle-CssClass="center-grid">
@@ -122,27 +128,19 @@
                                                         <asp:Label ID="lblAllocationTime" runat="server" Text='<%# Eval("AllocationTime") %>'></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="Status" ItemStyle-CssClass="center-grid">
+                                                <asp:TemplateField HeaderText="Allocation Status">
                                                     <ItemTemplate>
-                                                        <asp:Label ID="lblTaskStatus" runat="server" Text='<%# Eval("TaskStatus") %>'></asp:Label>
+                                                        <asp:Label ID="lblStatus" runat="server"
+                                                            Text='<%# Eval("AllocationStatus") %>'
+                                                            Font-Bold="True"
+                                                            Font-Size="Medium"
+                                                            ForeColor='<%# Eval("AllocationStatus").ToString() == "Allocated" ? System.Drawing.Color.Green : System.Drawing.Color.Red %>'>
+                                                        </asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="Remark" ItemStyle-CssClass="center-grid">
+                                                <asp:TemplateField HeaderText="On Leave" ItemStyle-CssClass="center-grid">
                                                     <ItemTemplate>
-                                                        <asp:Label ID="lblTaskRemark" runat="server" Text='<%# Eval("TaskRemark") %>'></asp:Label>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-
-                                                <asp:TemplateField HeaderText="Other Task" ItemStyle-CssClass="center-grid">
-                                                    <ItemTemplate>
-                                                        <asp:Label ID="lblOtherTask" runat="server" Text='<%# Eval("OtherTask") %>'></asp:Label>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-
-
-                                                <asp:TemplateField HeaderText="Forward To QA" ItemStyle-CssClass="center-grid">
-                                                    <ItemTemplate>
-                                                        <asp:Label ID="lblFwdtoQA" runat="server" Text='<%# Eval("FwdtoQA") %>'></asp:Label>
+                                                        <asp:Label ID="lblOnLeave" runat="server" Text='<%# Eval("FillStatus") %>'></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                             </Columns>
@@ -158,5 +156,12 @@
     </div>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentFooter" runat="Server">
+    <script>
+        $(document).ready(function () {
+            var reportTitle = $('#<%= hfExcelHeader.ClientID %>').val();
+
+            initCustomDataTable('.datatable', reportTitle, reportTitle);
+        });
+    </script>
 </asp:Content>
 

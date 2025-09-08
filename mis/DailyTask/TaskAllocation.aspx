@@ -4,6 +4,40 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentBody" runat="Server">
     <div class="container-fluid">
+        <%--Confirmation Modal Start --%>
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div style="display: table; height: 100%; width: 100%;">
+                <div class="modal-dialog" style="width: 340px; display: table-cell; vertical-align: middle;">
+                    <div class="modal-content" style="width: inherit; height: inherit; margin: 0 auto;">
+                        <div class="modal-header" style="background-color: #d7c9988c;">
+
+                            <span class="modal-title f-15" style="float: left;" id="myModalLabel">Confirmation</span>
+                            <button type="button" class="btn-close py-0 white" data-bs-dismiss="modal" aria-label="Close" data-dismiss="modal">
+                            </button>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="modal-body">
+                            <p>
+                                <%--<img src="../assets/images/question-circle.png" width="30" />--%>&nbsp;&nbsp; 
+                     <i class="fa fa-question-circle"></i>
+                                <asp:Label ID="lblPopupAlert" runat="server"></asp:Label>
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <asp:Button runat="server" CssClass="btn btn-success" Text="Yes" ID="btnYes" OnClick="btnSave_Click" />
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                onclick="closePopup('#myModal')">
+                                No
+                            </button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%--ConfirmationModal End --%>
         <div class="row">
             <div class="col-sm-12">
                 <div>
@@ -165,15 +199,15 @@
                                                 Display="Dynamic"
                                                 runat="server" />
                                         </span>
-                                        <label>Description <span style="color: red;">*</span></label>
-                                        <textarea
+                                        <label>Description<span style="color: red;">*</span></label>
+                                        <asp:TextBox
                                             autocomplete="off"
                                             maxlength="2000"
                                             oninput="sanitizeInput(this)"
-                                            id="txtTaskDescription"
+                                            id="txtTaskDescription" TextMode="MultiLine"
                                             runat="server"
                                             class="form-control"
-                                            rows="2" placeholder="Enter Description"></textarea>
+                                            rows="2" placeholder="Enter Description"></asp:TextBox>
                                         <asp:Label runat="server" ForeColor="Red" ID="lblCounter"></asp:Label>
                                     </div>
                                 </div>
@@ -202,6 +236,11 @@
                                                     <asp:TemplateField HeaderText="Project" ItemStyle-CssClass="center-grid">
                                                         <ItemTemplate>
                                                             <asp:Label ID="lblProject_Name" runat="server" Text='<%# Eval("Project_Name") %>'></asp:Label>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="Assigned By" ItemStyle-CssClass="center-grid">
+                                                        <ItemTemplate>
+                                                            <asp:Label ID="lblAssignedBy" runat="server" Text='<%# Eval("AssignedBy") %>'></asp:Label>
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
                                                     <asp:TemplateField HeaderText="Allocation Date" ItemStyle-CssClass="center-grid">
@@ -247,7 +286,7 @@
                             <div class="row">
                                 <div class="col-xl-3">
                                     <div class="form-group">
-                                        <asp:Button runat="server" Style="margin-top: 22px;" OnClientClick="return validateCheckbox();" CssClass="btn btn-block btn-outline-success" ValidationGroup="Save" ID="btnSave" Text="Save" OnClick="btnSave_Click" />
+                                        <asp:Button runat="server" Style="margin-top: 22px;" OnClientClick="return validateAll();" CssClass="btn btn-block btn-outline-success" ValidationGroup="Save" ID="btnSave" Text="Save" />
                                         <a href="TaskAllocation.aspx" style="margin-top: 22px;" class="btn btn-block   btn-outline-danger">Clear</a>
                                     </div>
                                 </div>
@@ -277,7 +316,7 @@
                                 <div class="table-responsive dt-ext ">
                                     <div class="col-md-12">
                                         <asp:GridView runat="server" AutoGenerateColumns="false" ID="gvTaskDetails" OnRowCommand="gvTaskDetails_RowCommand"
-                                            CssClass="table table-bordered table-hover" DataKeyNames="AllocationId">
+                                            CssClass="datatable table table-bordered table-hover" DataKeyNames="AllocationId">
                                             <Columns>
                                                 <asp:TemplateField HeaderText="S. No." ItemStyle-HorizontalAlign="Center" ItemStyle-Width="70px">
                                                     <ItemTemplate>
@@ -356,39 +395,43 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             flatpickr("#<%= txtAllocationTime.ClientID %>", {
-               enableTime: true,
-               noCalendar: true,
-               dateFormat: "H:i",       // 24-hour format, like 01:30
-               time_24hr: true,
-               minuteIncrement: 6,      // 0.1 hour = 6 minutes step
-               defaultHour: 0,
-               minTime: "00:06",        // minimum 6 minutes (0.1 hour)
-               maxTime: "09:00",        // maximum 9 hours
-               disableMobile: "true"    // force desktop version on mobile for consistent UI
-           });
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "H:i",       // 24-hour format, like 01:30
+                time_24hr: true,
+                minuteIncrement: 6,      // 0.1 hour = 6 minutes step
+                defaultHour: 0,
+                minTime: "00:06",        // minimum 6 minutes (0.1 hour)
+                maxTime: "09:00",        // maximum 9 hours
+                disableMobile: "true"    // force desktop version on mobile for consistent UI
+            });
 
-           flatpickr(".datetime-local", {
-               dateFormat: "d/m/Y", 
-               minDate: "today",
-               enableTime: false,
-               disable: [
-                   function (date) {
-                       // Disable Saturdays (6) and Sundays (0)
-                       return (date.getDay() === 0 || date.getDay() === 6);
-                   }
-               ],
-           });
-       });
+            flatpickr(".datetime-local", {
+                dateFormat: "d/m/Y",
+                minDate: "today",
+                enableTime: false,
+                disable: [
+                    function (date) {
+                        // Disable Saturdays (6) and Sundays (0)
+                        return (date.getDay() === 0 || date.getDay() === 6);
+                    }
+                ],
+            });
+        });
 
-        function sanitizeInput(el) {
-            let val = el.value;
-            val = val.replace(/[^a-zA-Z0-9 ,.!()-/&]/g, '');
-            val = val.replace(/\s+/g, ' ');
-            val = val.trimStart();
-            el.value = val;
-        }
+        //function sanitizeInput(el) {
+        //    let val = el.value;
+        //    val = val.replace(/[^a-zA-Z0-9 ,.!()-/&]/g, '');
+        //    val = val.replace(/\s+/g, ' ');
+        //    val = val.trimStart();
+        //    el.value = val;
+        //}
     </script>
     <script type="text/javascript">
+        function validateAll() {
+            return validateCheckbox() && ValidatePage();
+        }
+
         function validateCheckbox() {
             debugger;
             var checkbox = document.getElementById('<%= chkQualityCheck.ClientID %>');
@@ -406,11 +449,71 @@
             var errorMsg = document.getElementById('errorMsg');
             errorMsg.style.display = 'none';
         }
+        function ValidatePage() {
+
+            if (typeof (Page_ClientValidate) == 'function') {
+                Page_ClientValidate('Save');
+            }
+
+            if (Page_IsValid) {
+
+                if (document.getElementById('<%=btnSave.ClientID%>').value.trim() == "Update") {
+                    document.getElementById('<%=lblPopupAlert.ClientID%>').textContent = "Are you sure you want to Update this record?";
+                    $('#myModal').modal('show');
+                    return false;
+                }
+                if (document.getElementById('<%=btnSave.ClientID%>').value.trim() == "Save") {
+                    document.getElementById('<%=lblPopupAlert.ClientID%>').textContent = "Are you sure you want to Save this record?";
+                    $('#myModal').modal('show');
+                    return false;
+                }
+            }
+        }
+    </script>
+    <script>
+        CharactersCount(2000);
+        const element = document.getElementById('<%=txtTaskDescription.ClientID%>');
+        // Pass CharactersCount directly with a parameter using an inline arrow function
+        element.addEventListener("keyup", (event) => CharactersCount(2000));
+
+        function CharactersCount(_length) {
+            var txtMsg = document.getElementById('<%=txtTaskDescription.ClientID%>');
+            var lblCount = document.getElementById('<%=lblCounter.ClientID%>');
+            if (txtMsg.value.length > _length) {
+                txtMsg.value = txtMsg.value.substring(0, _length);
+            }
+            // Calculate and display the remaining characters
+            const remaining = _length - txtMsg.value.length;
+            lblCount.innerHTML = `${remaining} characters remaining`;
+        }
+
+        function checkTextAreaMaxLength(textBox, e, length) {
+
+            var mLen = textBox["MaxLength"];
+            if (null == mLen)
+                mLen = length;
+
+            var maxLength = parseInt(mLen);
+            if (!checkSpecialKeys(e)) {
+                if (textBox.value.length > maxLength - 1) {
+                    if (window.event)//IE
+                        e.returnValue = false;
+                    else//Firefox
+                        e.preventDefault();
+                }
+            }
+        }
+        function checkSpecialKeys(e) {
+            if (e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40)
+                return false;
+            else
+                return true;
+        }
     </script>
     <script>
         $(document).ready(function () {
             // Main page DataTable
-            initCustomDataTable('.datatable', 'Project Detail', 'Project Detail', [10]);
+            initCustomDataTable('.datatable', 'Requirements Traceability Matrix', 'Requirements Traceability Matrix', [10]);
         });
     </script>
 </asp:Content>
