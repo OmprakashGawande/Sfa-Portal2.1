@@ -143,6 +143,11 @@
                                                         <asp:Label ID="lblOnLeave" runat="server" Text='<%# Eval("FillStatus") %>'></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
+                                                <%--<asp:TemplateField HeaderText="Task Status" ItemStyle-CssClass="center-grid">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblTaskStatus" runat="server" Text='<%# Eval("TaskStatus") %>'></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>--%>
                                             </Columns>
                                         </asp:GridView>
                                     </div>

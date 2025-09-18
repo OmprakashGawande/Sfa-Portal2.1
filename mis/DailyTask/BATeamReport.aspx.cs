@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class mis_DailyTask_TrnServer : System.Web.UI.Page
+public partial class mis_DailyTask_BATeamReport : System.Web.UI.Page
 {
     APIProcedure objdb = new APIProcedure();
     DataSet ds = new DataSet();
     CultureInfo cult = new CultureInfo("gu-IN", true);
-    private static string ServerId = string.Empty;
+    private static string BATeamReportId = string.Empty;
     protected void Page_Load(object sender, EventArgs e)
     {
         try
@@ -25,12 +22,12 @@ public partial class mis_DailyTask_TrnServer : System.Web.UI.Page
             if (!IsPostBack)
             {
                 ViewState["Emp_ID"] = Session["Emp_ID"].ToString();
-                FillAllBackups();
+                FillProjectPlprebyPM();
                 Clear(sender, e);
-                FillGridServerDetails();
-                DateTime currentdate = DateTime.Now;
-                string Date = currentdate.ToString("yyyy/MM/dd", cult);
-                txtDate.Text = currentdate.ToString("dd/MM/yyyy");
+                FillDetails();
+                //DateTime currentdate = DateTime.Now;
+                //string Date = currentdate.ToString("yyyy/MM/dd", cult);
+                //txtDate.Text = currentdate.ToString("dd/MM/yyyy");
 
                 string currentPath = Request.Url.AbsolutePath.Substring(Request.Url.AbsolutePath.LastIndexOf("/") + 1);
                 ((MainMaster)this.Master).GenerateBreadcrumb(currentPath);
@@ -41,6 +38,7 @@ public partial class mis_DailyTask_TrnServer : System.Web.UI.Page
             ErrorMsg(ex);
         }
     }
+
 
     private string ErrorMsg(Exception ex)
     {
@@ -60,7 +58,7 @@ public partial class mis_DailyTask_TrnServer : System.Web.UI.Page
 
     private DataSet USP_ServerReport(string[] columns, string[] values)
     {
-        ds = objdb.ByProcedure("Usp_InsertUpdateServer", columns, values, "ds");
+        ds = objdb.ByProcedure("Usp_ServerInsertUpdate", columns, values, "ds");
         return ds;
     }
     private bool IsNullDataSet(DataSet ds)
@@ -68,27 +66,27 @@ public partial class mis_DailyTask_TrnServer : System.Web.UI.Page
         return ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0;
     }
 
-    private DataSet USP_Server(string[] columns, string[] values)
+    private DataSet USP_BATeam(string[] columns, string[] values)
     {
-        ds = objdb.ByProcedure("Usp_ServerInsertUpdate", columns, values, "ds");
+        ds = objdb.ByProcedure("Usp_BATeamReportInsertUpdate", columns, values, "ds");
         return ds;
     }
-    private void FillAllBackups()
+    private void FillProjectPlprebyPM()
     {
         try
         {
-            ddlAllBackups.Items.Clear();
+            ddlProjectPlprebyPM.Items.Clear();
 
             string empId = ViewState["Emp_ID"].ToString();
-            ds = USP_Server(new string[] { "Flag" }, new string[] { "1", empId });
+            ds = USP_ServerReport(new string[] { "Flag" }, new string[] { "1", empId });
             if (IsNullDataSet(ds))
             {
-                ddlAllBackups.DataTextField = "TaskStatus2";
-                ddlAllBackups.DataValueField = "TastStatusId";
-                ddlAllBackups.DataSource = ds.Tables[0];
-                ddlAllBackups.DataBind();
+                ddlProjectPlprebyPM.DataTextField = "TaskStatus2";
+                ddlProjectPlprebyPM.DataValueField = "TastStatusId";
+                ddlProjectPlprebyPM.DataSource = ds.Tables[0];
+                ddlProjectPlprebyPM.DataBind();
             }
-            ddlAllBackups.Items.Insert(0, new ListItem("Select", "0"));
+            ddlProjectPlprebyPM.Items.Insert(0, new ListItem("Select", "0"));
         }
         catch (Exception ex)
         {
@@ -96,15 +94,40 @@ public partial class mis_DailyTask_TrnServer : System.Web.UI.Page
         }
     }
 
-    protected void ddlVulnerabilityReportAll_SelectedIndexChanged(object sender, EventArgs e)
+
+    protected void ddlAnyMajorChangesRequiredforClient_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (ddlVulnerabilityReportAll.SelectedValue == "1")
+        if (ddlAnyMajorChangesRequiredforClient.SelectedValue == "1")
         {
-            Div_NoofReprot.Visible = true;
+            Div_AMCRfCDetails.Visible = true;
         }
         else
         {
-            Div_NoofReprot.Visible = false;
+            Div_AMCRfCDetails.Visible = false;
+        }
+    }
+
+    protected void ddlInternalChallenges_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (ddlInternalChallenges.SelectedValue == "1")
+        {
+            Div_ACDetail.Visible = true;
+        }
+        else
+        {
+            Div_ACDetail.Visible = false;
+        }
+    }
+
+    protected void ddlProjectonTime_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (ddlProjectonTime.SelectedValue == "2")
+        {
+            Div_Reason.Visible = true;
+        }
+        else
+        {
+            Div_Reason.Visible = false;
         }
     }
 
@@ -123,11 +146,10 @@ public partial class mis_DailyTask_TrnServer : System.Web.UI.Page
                 }
                 else
                 {
-                    string Date = txtDate.Text != "" ? Convert.ToDateTime(txtDate.Text, cult).ToString("yyyy/MM/dd") : "";
                     string flag = string.Empty;
                     if (btnSave.Text.Equals("Save"))
                     {
-                        ServerId = string.Empty;
+                        BATeamReportId = string.Empty;
                         flag = "1";
                     }
                     else if (btnSave.Text.Equals("Update"))
@@ -140,42 +162,38 @@ public partial class mis_DailyTask_TrnServer : System.Web.UI.Page
                         return;
                     }
 
-                    ds = USP_ServerReport(
+                    ds = USP_BATeam(
                           new string[]
                           {
                               "Flag",
-                              "ServerId",
-                              "ServerDate",
-                              "TotalProjectUpload",
-                              "TotalDatabase",
-                              "TotalSpaceGB",
-                              "AllBackups",
-                              "BackupChallenges",
-                              "AnyInternalSupportRequired",
-                              "AnyActionToBeTaken",
-                              "AverageUtilization",
-                              "VulnerabilityReportAll",
-                              "NoOfReports",
-                              "AllBackupsNotReason",
+                              "BATeamReportId",
+                              "TotalProject",
+                              "TotalTask",
+                              "ClientMeeting",
+                              "ProjectPlanPrepared",
+                              "AnyMajorChangesRequired",
+                              "MajorChangesDetail",
+                              "InternalChallenges",
+                              "InternalChallengesDetail",
+                              "ProjectOnTime",
+                              "ProjectOnTimeNoReason",
                               "CreatedBy",
                               "CreatedByIp"
                           },
                           new string[]
                           {
                               flag,
-                              ServerId,
-                              Convert.ToString(Date),
-                              txtTotalProjectUpload.Text.Trim(),
-                              txtDatabase.Text.Trim(),
-                              txtTotalSpace.Text.Trim(),
-                              ddlAllBackups.SelectedValue,
-                              ddlBackupChallenges.SelectedValue,
-                              txtAISR.Text.Trim(),
-                              txtAATBT.Text.Trim(),
-                              txtAverageUtilization.Text.Trim(),
-                              ddlVulnerabilityReportAll.SelectedValue,
-                              txtNoofReprot.Text.Trim(),
-                              txtAllBackupsNot.Text.Trim(),
+                              BATeamReportId,
+                              txtTotalProject.Text.Trim(),
+                              txtTotalTask.Text.Trim(),
+                              txtClientMeeting.Text.Trim(),
+                              ddlProjectPlprebyPM.SelectedValue,
+                              ddlAnyMajorChangesRequiredforClient.SelectedValue,
+                              txtAMCRfCDetails.Text.Trim(),
+                              ddlInternalChallenges.SelectedValue,
+                              txtICDetail.Text.Trim(),
+                              ddlProjectonTime.SelectedValue,
+                              txtReason.Text.Trim(),
                               Convert.ToString(ViewState["Emp_ID"]),
                               objdb.GetLocalIPAddress()
                           });
@@ -185,8 +203,8 @@ public partial class mis_DailyTask_TrnServer : System.Web.UI.Page
                         if (Convert.ToString(ds.Tables[0].Rows[0]["Stat"]).Equals("Ok"))
                         {
                             SuccessMsg(Convert.ToString(ds.Tables[0].Rows[0]["Msg"]));
-                            FillGridServerDetails();
                             Clear(sender, e);
+                            FillDetails();
                         }
                         else
                         {
@@ -205,33 +223,34 @@ public partial class mis_DailyTask_TrnServer : System.Web.UI.Page
 
     private void Clear(object sender, EventArgs e)
     {
-        txtDate.Text = string.Empty;
-        txtTotalProjectUpload.Text = string.Empty;
-        txtDatabase.Text = string.Empty;
-        txtTotalSpace.Text = string.Empty;
-        ddlAllBackups.ClearSelection();
-        ddlBackupChallenges.ClearSelection();
-        ddlVulnerabilityReportAll.ClearSelection();
-        txtAISR.Text = string.Empty;
-        txtAATBT.Text = string.Empty;
-        txtAverageUtilization.Text = string.Empty;
-        txtNoofReprot.Text = string.Empty;
-        ddlVulnerabilityReportAll_SelectedIndexChanged(sender, e);
-        ddlAllBackups_SelectedIndexChanged(sender, e);
-        txtAllBackupsNot.Text = string.Empty;
+        txtTotalProject.Text = string.Empty;
+        txtTotalTask.Text = string.Empty;
+        txtClientMeeting.Text = string.Empty;
+        ddlProjectPlprebyPM.ClearSelection();
+        ddlAnyMajorChangesRequiredforClient.ClearSelection();
+        ddlAnyMajorChangesRequiredforClient_SelectedIndexChanged(sender, e);
+        txtAMCRfCDetails.Text = string.Empty;
+        ddlInternalChallenges.ClearSelection();
+        ddlInternalChallenges_SelectedIndexChanged(sender, e);
+        txtICDetail.Text= string.Empty;
+        ddlProjectonTime.ClearSelection();
+        ddlProjectonTime_SelectedIndexChanged(sender, e);
+        txtReason.Text = string.Empty;
+
     }
-    private void FillGridServerDetails()
+    private void FillDetails()
+    
     {
         try
         {
-            gvServerReport.DataSource = null;
-            gvServerReport.DataBind();
+            gvBATeamReport.DataSource = null;
+            gvBATeamReport.DataBind();
 
-            ds = USP_ServerReport(new string[] { "Flag", "EmployeeId" }, new string[] { "2", Convert.ToString(ViewState["Emp_ID"]) });
+            ds = USP_BATeam(new string[] { "Flag", "EmployeeId" }, new string[] { "2", Convert.ToString(ViewState["Emp_ID"]) });
             if (IsNullDataSet(ds))
             {
-                gvServerReport.DataSource = ds.Tables[0];
-                gvServerReport.DataBind();
+                gvBATeamReport.DataSource = ds.Tables[0];
+                gvBATeamReport.DataBind();
                 Datatable();
             }
         }
@@ -242,22 +261,10 @@ public partial class mis_DailyTask_TrnServer : System.Web.UI.Page
     }
     protected void Datatable()
     {
-        if (gvServerReport.Rows.Count > 0)
+        if (gvBATeamReport.Rows.Count > 0)
         {
-            gvServerReport.HeaderRow.TableSection = TableRowSection.TableHeader;
-            gvServerReport.UseAccessibleHeader = true;
-        }
-    }
-
-    protected void ddlAllBackups_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        if (ddlAllBackups.SelectedValue == "3")
-        {
-            Div_AllBackupsNot.Visible = true;
-        }
-        else
-        {
-            Div_AllBackupsNot.Visible = false;
+            gvBATeamReport.HeaderRow.TableSection = TableRowSection.TableHeader;
+            gvBATeamReport.UseAccessibleHeader = true;
         }
     }
 }

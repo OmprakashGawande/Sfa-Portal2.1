@@ -106,6 +106,84 @@
                                 <div class="form-group">
                                     <span class="fa-pull-right">
                                         <asp:RequiredFieldValidator
+                                            ID="RFV19"
+                                            ValidationGroup="Save"
+                                            ErrorMessage="Please Select Task Allocated to All Team Members"
+                                            ForeColor="Red"
+                                            Text="<i class='fa fa-exclamation-circle' title='Please Select Task Allotted to All Team Members.'></i>"
+                                            ControlToValidate="ddlTaskATATM"
+                                            InitialValue="0"
+                                            Display="Dynamic"
+                                            runat="server" />
+                                    </span>
+                                    <label runat="server">Task Allocated to All Team Members<span style="color: red;">*</span></label>
+                                    <asp:DropDownList runat="server" ID="ddlTaskATATM" CssClass="form-select select2" OnSelectedIndexChanged="ddlTaskATATM_SelectedIndexChanged" AutoPostBack="true">
+                                        <asp:ListItem Text="Select" Value="0"></asp:ListItem>
+                                        <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
+                                        <asp:ListItem Text="No" Value="2"></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 position-relative" runat="server" id="Div_TaskATATMReason" visible="false">
+                                <div class="form-group">
+                                    <span class="fa-pull-right">
+                                        <asp:RequiredFieldValidator
+                                            ID="RFV20" Enabled="false"
+                                            ValidationGroup="Save"
+                                            ErrorMessage="Please Enter Reason."
+                                            ForeColor="Red"
+                                            Text="<i class='fa fa-exclamation-circle' title='Please Enter Reason.'></i>"
+                                            ControlToValidate="txtTaskATATMReason"
+                                            Display="Dynamic"
+                                            runat="server" />
+                                    </span>
+                                    <label runat="server">Reason<span style="color: red;">*</span></label>
+                                    <asp:TextBox autocomplete="off" ID="txtTaskATATMReason" runat="server" TextMode="MultiLine" placeholder="Enter Reason" CssClass="form-control"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 position-relative">
+                                <div class="form-group">
+                                    <span class="fa-pull-right">
+                                        <asp:RequiredFieldValidator
+                                            ID="RFV21"
+                                            ValidationGroup="Save"
+                                            ErrorMessage="Please Select Reporting Submitted by All Team"
+                                            ForeColor="Red"
+                                            Text="<i class='fa fa-exclamation-circle' title='Please Select Reporting Submitted by All Team.'></i>"
+                                            ControlToValidate="ddlReportingSubmittedbyAllTeam"
+                                            InitialValue="0"
+                                            Display="Dynamic"
+                                            runat="server" />
+                                    </span>
+                                    <label runat="server">Task Reporting Submitted by All Team<span style="color: red;">*</span></label>
+                                    <asp:DropDownList runat="server" ID="ddlReportingSubmittedbyAllTeam" CssClass="form-select select2" OnSelectedIndexChanged="ddlReportingSubmittedbyAllTeam_SelectedIndexChanged" AutoPostBack="true">
+                                        <asp:ListItem Text="Select" Value="0"></asp:ListItem>
+                                        <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
+                                        <asp:ListItem Text="No" Value="2"></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 position-relative" runat="server" id="Div_ReportingSubmittedbyAllTeamReason" visible="false">
+                                <div class="form-group">
+                                    <span class="fa-pull-right">
+                                        <asp:RequiredFieldValidator
+                                            ID="RFV22" Enabled="false"
+                                            ValidationGroup="Save"
+                                            ErrorMessage="Please Enter Reason."
+                                            ForeColor="Red"
+                                            Text="<i class='fa fa-exclamation-circle' title='Please Enter Reason.'></i>"
+                                            ControlToValidate="txtReportingSubmittedbyAllTeamReason"
+                                            Display="Dynamic"
+                                            runat="server" />
+                                    </span>
+                                    <label runat="server">Reason<span style="color: red;">*</span></label>
+                                    <asp:TextBox autocomplete="off" ID="txtReportingSubmittedbyAllTeamReason" runat="server" TextMode="MultiLine" placeholder="Enter Reason" CssClass="form-control"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 position-relative">
+                                <div class="form-group">
+                                    <span class="fa-pull-right">
+                                        <asp:RequiredFieldValidator
                                             ID="RFV3"
                                             ValidationGroup="Save"
                                             ErrorMessage="Please Select Time Overrun."
@@ -185,6 +263,28 @@
                                 <div class="form-group">
                                     <span class="fa-pull-right">
                                         <asp:RequiredFieldValidator
+                                            ID="RFV10"
+                                            ValidationGroup="Save"
+                                            ErrorMessage="Please Select Audited from Audit Team."
+                                            ForeColor="Red"
+                                            Text="<i class='fa fa-exclamation-circle' title='Please Select Audited from Audit Team.'></i>"
+                                            ControlToValidate="ddlAuditedfromAuditTeam"
+                                            InitialValue="0"
+                                            Display="Dynamic"
+                                            runat="server" />
+                                    </span>
+                                    <label runat="server">Audited from Audit Team<span style="color: red;">*</span></label>
+                                    <asp:DropDownList runat="server" ID="ddlAuditedfromAuditTeam" CssClass="form-select select2">
+                                        <asp:ListItem Text="Select" Value="0"></asp:ListItem>
+                                        <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
+                                        <asp:ListItem Text="No" Value="2"></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 position-relative">
+                                <div class="form-group">
+                                    <span class="fa-pull-right">
+                                        <asp:RequiredFieldValidator
                                             ID="RFV7"
                                             ValidationGroup="Save"
                                             ErrorMessage="Please Enter Test Cases Passed"
@@ -237,28 +337,7 @@
                                     </asp:DropDownList>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-sm-6 position-relative">
-                                <div class="form-group">
-                                    <span class="fa-pull-right">
-                                        <asp:RequiredFieldValidator
-                                            ID="RFV10"
-                                            ValidationGroup="Save"
-                                            ErrorMessage="Please Select Audited from Audit Team."
-                                            ForeColor="Red"
-                                            Text="<i class='fa fa-exclamation-circle' title='Please Select Audited from Audit Team.'></i>"
-                                            ControlToValidate="ddlAuditedfromAuditTeam"
-                                            InitialValue="0"
-                                            Display="Dynamic"
-                                            runat="server" />
-                                    </span>
-                                    <label runat="server">Audited from Audit Team<span style="color: red;">*</span></label>
-                                    <asp:DropDownList runat="server" ID="ddlAuditedfromAuditTeam" CssClass="form-select select2">
-                                        <asp:ListItem Text="Select" Value="0"></asp:ListItem>
-                                        <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
-                                        <asp:ListItem Text="No" Value="2"></asp:ListItem>
-                                    </asp:DropDownList>
-                                </div>
-                            </div>
+
                             <div class="col-xl-3 col-sm-6 position-relative">
                                 <div class="form-group">
                                     <span class="fa-pull-right">
@@ -413,6 +492,148 @@
                                     </span>
                                     <label runat="server">Detail<span style="color: red;">*</span></label>
                                     <asp:TextBox autocomplete="off" ID="txtAESRDetail" runat="server" TextMode="MultiLine" placeholder="Enter Detail" CssClass="form-control"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 position-relative">
+                                <div class="form-group">
+                                    <span class="fa-pull-right">
+                                        <asp:RequiredFieldValidator
+                                            ID="RFV23" Enabled="false"
+                                            ValidationGroup="Save"
+                                            ErrorMessage="Please Enter Team Utilization %."
+                                            ForeColor="Red"
+                                            Text="<i class='fa fa-exclamation-circle' title='Please Enter Team Utilization %.'></i>"
+                                            ControlToValidate="txtAESRDetail"
+                                            Display="Dynamic"
+                                            runat="server" />
+                                    </span>
+                                    <label runat="server">Team Utilization %<span style="color: red;">*</span></label>
+                                    <asp:TextBox autocomplete="off" ID="txtTeamUtilization" runat="server"
+                                        placeholder="Enter Team Utilization %"
+                                        CssClass="form-control"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 position-relative">
+                                <div class="form-group">
+                                    <label runat="server">Team Utilization Detail</label>
+                                    <asp:TextBox autocomplete="off" ID="txtTeamUtilizationDetail" runat="server" TextMode="MultiLine" placeholder="Enter Detail" CssClass="form-control"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 position-relative">
+                                <div class="form-group">
+                                    <span class="fa-pull-right">
+                                        <asp:RequiredFieldValidator
+                                            ID="RFV24"
+                                            ValidationGroup="Save"
+                                            ErrorMessage="Please Select Daily Standup Meeting."
+                                            ForeColor="Red"
+                                            Text="<i class='fa fa-exclamation-circle' title='Please Select Daily Standup Meeting.'></i>"
+                                            ControlToValidate="ddlDailyStandupMeeting"
+                                            InitialValue="0"
+                                            Display="Dynamic"
+                                            runat="server" />
+                                    </span>
+                                    <label runat="server">Daily Standup Meeting<span style="color: red;">*</span></label>
+                                    <asp:DropDownList runat="server" ID="ddlDailyStandupMeeting" CssClass="form-select select2" OnSelectedIndexChanged="ddlDailyStandupMeeting_SelectedIndexChanged" AutoPostBack="true">
+                                        <asp:ListItem Text="Select" Value="0"></asp:ListItem>
+                                        <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
+                                        <asp:ListItem Text="No" Value="2"></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 position-relative" runat="server" id="Div_DailyStandupMeeting" visible="false">
+                                <div class="form-group">
+                                    <span class="fa-pull-right">
+                                        <asp:RequiredFieldValidator
+                                            ID="RFV25" Enabled="false"
+                                            ValidationGroup="Save"
+                                            ErrorMessage="Please Enter Detail."
+                                            ForeColor="Red"
+                                            Text="<i class='fa fa-exclamation-circle' title='Please Enter Detail.'></i>"
+                                            ControlToValidate="txtDailyStandupMeetingDetail"
+                                            Display="Dynamic"
+                                            runat="server" />
+                                    </span>
+                                    <label runat="server">Detail<span style="color: red;">*</span></label>
+                                    <asp:TextBox autocomplete="off" ID="txtDailyStandupMeetingDetail" runat="server" TextMode="MultiLine" placeholder="Enter Detail" CssClass="form-control"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 position-relative">
+                                <div class="form-group">
+                                    <span class="fa-pull-right">
+                                        <asp:RequiredFieldValidator
+                                            ID="RFV26"
+                                            ValidationGroup="Save"
+                                            ErrorMessage="Please Select All MOM / Email Shered."
+                                            ForeColor="Red"
+                                            Text="<i class='fa fa-exclamation-circle' title='Please Select All MOM / Email Shered.'></i>"
+                                            ControlToValidate="ddlAllMOMEmailShered"
+                                            InitialValue="0"
+                                            Display="Dynamic"
+                                            runat="server" />
+                                    </span>
+                                    <label runat="server">All MOM / Email Shered<span style="color: red;">*</span></label>
+                                    <asp:DropDownList runat="server" ID="ddlAllMOMEmailShered" CssClass="form-select select2" OnSelectedIndexChanged="ddlAllMOMEmailShered_SelectedIndexChanged" AutoPostBack="true">
+                                        <asp:ListItem Text="Select" Value="0"></asp:ListItem>
+                                        <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
+                                        <asp:ListItem Text="No" Value="2"></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 position-relative" runat="server" id="Div_AllMOMEmailShered" visible="false">
+                                <div class="form-group">
+                                    <span class="fa-pull-right">
+                                        <asp:RequiredFieldValidator
+                                            ID="RFV27" Enabled="false"
+                                            ValidationGroup="Save"
+                                            ErrorMessage="Please Enter Detail."
+                                            ForeColor="Red"
+                                            Text="<i class='fa fa-exclamation-circle' title='Please Enter Detail.'></i>"
+                                            ControlToValidate="txtAllMOMEmailShered"
+                                            Display="Dynamic"
+                                            runat="server" />
+                                    </span>
+                                    <label runat="server">Detail<span style="color: red;">*</span></label>
+                                    <asp:TextBox autocomplete="off" ID="txtAllMOMEmailShered" runat="server" TextMode="MultiLine" placeholder="Enter Detail" CssClass="form-control"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 position-relative">
+                                <div class="form-group">
+                                    <span class="fa-pull-right">
+                                        <asp:RequiredFieldValidator
+                                            ID="RFV28"
+                                            ValidationGroup="Save"
+                                            ErrorMessage="Please Select Any Team Memberes (Underutilized)."
+                                            ForeColor="Red"
+                                            Text="<i class='fa fa-exclamation-circle' title='Please Select Any Team Memberes (Underutilized).'></i>"
+                                            ControlToValidate="ddlAnyTeamMemberesU"
+                                            InitialValue="0"
+                                            Display="Dynamic"
+                                            runat="server" />
+                                    </span>
+                                    <label runat="server">Any Team Memberes (Underutilized)<span style="color: red;">*</span></label>
+                                    <asp:DropDownList runat="server" ID="ddlAnyTeamMemberesU" CssClass="form-select select2" OnSelectedIndexChanged="ddlAnyTeamMemberesU_SelectedIndexChanged" AutoPostBack="true">
+                                        <asp:ListItem Text="Select" Value="0"></asp:ListItem>
+                                        <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
+                                        <asp:ListItem Text="No" Value="2"></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 position-relative" runat="server" id="Div_AnyTeamMemberesU" visible="false">
+                                <div class="form-group">
+                                    <span class="fa-pull-right">
+                                        <asp:RequiredFieldValidator
+                                            ID="RFV29" Enabled="false"
+                                            ValidationGroup="Save"
+                                            ErrorMessage="Please Enter Detail."
+                                            ForeColor="Red"
+                                            Text="<i class='fa fa-exclamation-circle' title='Please Enter Detail.'></i>"
+                                            ControlToValidate="txtAnyTeamMemberesUDetail"
+                                            Display="Dynamic"
+                                            runat="server" />
+                                    </span>
+                                    <label runat="server">Reason With Name<span style="color: red;">*</span></label>
+                                    <asp:TextBox autocomplete="off" ID="txtAnyTeamMemberesUDetail" runat="server" TextMode="MultiLine" placeholder="Enter Detail" CssClass="form-control"></asp:TextBox>
                                 </div>
                             </div>
                         </div>
@@ -592,6 +813,24 @@
             //if (v === "0" || v === "00") v = "";
             el.value = v;
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var txt = document.getElementById("<%= txtTeamUtilization.ClientID %>");
+
+            txt.addEventListener("input", function () {
+                // सिर्फ digits और वैकल्पिक % चिन्ह की अनुमति
+                this.value = this.value.replace(/[^0-9%]/g, '');
+
+                // अगर यूजर ने % लगाया है तो सिर्फ एक बार आने दे और आख़िर में ही हो
+                this.value = this.value.replace(/(%.+)/g, '%');
+
+                // सिर्फ 0-100 तक की वैल्यू allow करे
+                let val = this.value.replace('%', '');
+                if (val !== "" && Number(val) > 100) {
+                    this.value = "100%";
+                }
+            });
+        });
     </script>
     <script>
         $(document).ready(function () {

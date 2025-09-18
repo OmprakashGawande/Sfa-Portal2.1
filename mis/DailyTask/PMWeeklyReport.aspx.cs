@@ -263,7 +263,7 @@ public partial class mis_DailyTask_PMWeeklyReport : System.Web.UI.Page
 
     private void Clear(object sender, EventArgs e)
     {
-        txtDate.Text = string.Empty;
+        //txtDate.Text = string.Empty;
         txtTotalProject.Text = string.Empty;
         txtTotalTask.Text = string.Empty;
         ddlTimeOverrun.ClearSelection();
@@ -318,4 +318,79 @@ public partial class mis_DailyTask_PMWeeklyReport : System.Web.UI.Page
         }
     }
 
+
+    protected void ddlTaskATATM_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Datatable();
+        if (ddlTaskATATM.SelectedValue == "2")
+        {
+            Div_TaskATATMReason.Visible = true;
+            RFV20.Enabled = true;
+        }
+        else
+        {
+            Div_TaskATATMReason.Visible = false;
+            RFV20.Enabled = false;
+        }
+    }
+
+    protected void ddlReportingSubmittedbyAllTeam_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Datatable();
+        if (ddlReportingSubmittedbyAllTeam.SelectedValue == "2")
+        {
+            Div_ReportingSubmittedbyAllTeamReason.Visible = true;
+            RFV22.Enabled = true;
+        }
+        else
+        {
+            Div_ReportingSubmittedbyAllTeamReason.Visible = false;
+            RFV22.Enabled = false;
+        }
+    }
+
+    protected void ddlDailyStandupMeeting_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Datatable();
+        if (ddlDailyStandupMeeting.SelectedValue == "2")
+        {
+            Div_DailyStandupMeeting.Visible = true;
+            RFV25.Enabled = true;
+        }
+        else
+        {
+            Div_DailyStandupMeeting.Visible = false;
+            RFV25.Enabled = false;
+        }
+    }
+
+    protected void ddlAllMOMEmailShered_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Datatable();
+        if (ddlAllMOMEmailShered.SelectedValue == "2")
+        {
+            Div_AllMOMEmailShered.Visible = true;
+            RFV25.Enabled = true;
+        }
+        else
+        {
+            Div_AllMOMEmailShered.Visible = false;
+            RFV25.Enabled = false;
+        }
+    }
+
+    protected void ddlAnyTeamMemberesU_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Datatable();
+        if (ddlAnyTeamMemberesU.SelectedValue == "1")
+        {
+            Div_AnyTeamMemberesU.Visible = true;
+            RFV29.Enabled = true;
+        }
+        else
+        {
+            Div_AnyTeamMemberesU.Visible = false;
+            RFV29.Enabled = false;
+        }
+    }
 }

@@ -132,8 +132,14 @@
                                             runat="server" />
                                     </span>
                                     <label runat="server">All Backups<span style="color: red;">*</span></label>
-                                    <asp:DropDownList runat="server" ID="ddlAllBackups" CssClass="form-select select2">
+                                    <asp:DropDownList runat="server" ID="ddlAllBackups" CssClass="form-select select2" OnSelectedIndexChanged="ddlAllBackups_SelectedIndexChanged" AutoPostBack="true">
                                     </asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 position-relative" runat="server" id="Div_AllBackupsNot" visible="false">
+                                <div class="form-group">
+                                    <label runat="server">Reason<span style="color: red;">*</span></label>
+                                    <asp:TextBox autocomplete="off" ID="txtAllBackupsNot" runat="server" TextMode="MultiLine" placeholder="Enter Reason" CssClass="form-control"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-sm-6 position-relative">
@@ -211,15 +217,15 @@
                                         <asp:RequiredFieldValidator
                                             ID="RFV9"
                                             ValidationGroup="Save"
-                                            ErrorMessage="Please Select Vulnerability Report All."
+                                            ErrorMessage="Please Select Vulnerability Report All Project."
                                             ForeColor="Red"
-                                            Text="<i class='fa fa-exclamation-circle' title='Please Select Vulnerability Report All.'></i>"
+                                            Text="<i class='fa fa-exclamation-circle' title='Please Select Vulnerability Report All Project.'></i>"
                                             ControlToValidate="ddlVulnerabilityReportAll"
                                             InitialValue="0"
                                             Display="Dynamic"
                                             runat="server" />
                                     </span>
-                                    <label runat="server">Vulnerability Report All<span style="color: red;">*</span></label>
+                                    <label runat="server">Vulnerability Report All Project<span style="color: red;">*</span></label>
                                     <asp:DropDownList runat="server" ID="ddlVulnerabilityReportAll" CssClass="form-select select2" OnSelectedIndexChanged="ddlVulnerabilityReportAll_SelectedIndexChanged" AutoPostBack="true">
                                         <asp:ListItem Text="Select" Value="0"></asp:ListItem>
                                         <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
@@ -296,6 +302,11 @@
                                                     <asp:Label ID="lblAllBackups" runat="server" Text='<%# Eval("AllBackups") %>'></asp:Label>
                                                 </ItemTemplate>
                                             </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Reason" ItemStyle-CssClass="center-grid">
+                                                <ItemTemplate>
+                                                    <asp:Label ID="lblAllBackupsNotReason" runat="server" Text='<%# Eval("AllBackupsNotReason") %>'></asp:Label>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
                                             <asp:TemplateField HeaderText="Backup Challenges" ItemStyle-CssClass="center-grid">
                                                 <ItemTemplate>
                                                     <asp:Label ID="lblBackupChallenges" runat="server" Text='<%# Eval("BackupChallenges") %>'></asp:Label>
@@ -316,7 +327,7 @@
                                                     <asp:Label ID="lblAverageUtilization" runat="server" Text='<%# Eval("AverageUtilization") %>'></asp:Label>
                                                 </ItemTemplate>
                                             </asp:TemplateField>
-                                            <asp:TemplateField HeaderText="Vulnerability Report All" ItemStyle-CssClass="center-grid">
+                                            <asp:TemplateField HeaderText="Vulnerability Report All Project" ItemStyle-CssClass="center-grid">
                                                 <ItemTemplate>
                                                     <asp:Label ID="lblVulnerabilityReportAll" runat="server" Text='<%# Eval("VulnerabilityReportAll") %>'></asp:Label>
                                                 </ItemTemplate>
@@ -366,6 +377,12 @@
                 }
             }
         }
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Main page DataTable
+            initCustomDataTable('.datatable', 'Server Report', 'Server Report');
+        });
     </script>
 </asp:Content>
 

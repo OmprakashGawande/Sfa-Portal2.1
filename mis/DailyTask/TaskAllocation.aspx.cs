@@ -386,8 +386,9 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
                     txtTaskName.Text = lblTaskName.Text;
 
                 if (lblTaskDescription != null)
-                    txtTaskDescription.Text = lblTaskDescription.Text;
-               
+                    txtTaskDescription.Text = lblTaskDescription.Text.Replace("<br />", Environment.NewLine);
+
+
                 Datatable();
                 btnSave.Text = "Update";
             }

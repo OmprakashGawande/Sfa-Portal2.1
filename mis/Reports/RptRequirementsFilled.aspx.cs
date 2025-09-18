@@ -25,7 +25,7 @@ public partial class mis_Reports_RptRequirementsFilled : System.Web.UI.Page
                 BindDropdown();
                 DateTime currentdate = DateTime.Now;
                 string Date = currentdate.ToString("yyyy/MM/dd", cult);
-                txtReqFilledDate.Text = currentdate.ToString("dd/MM/yyyy");
+                txtFromDate.Text = currentdate.ToString("dd/MM/yyyy");
                 GetProjecName();
 
                 string currentPath = Request.Url.AbsolutePath.Substring(Request.Url.AbsolutePath.LastIndexOf("/") + 1);
@@ -104,11 +104,12 @@ public partial class mis_Reports_RptRequirementsFilled : System.Web.UI.Page
         try
         {
             lblMsg.Text = string.Empty;
-            string Date = txtReqFilledDate.Text != "" ? Convert.ToDateTime(txtReqFilledDate.Text, cult).ToString("yyyy/MM/dd") : "";
+            string FromDate = txtFromDate.Text != "" ? Convert.ToDateTime(txtFromDate.Text, cult).ToString("yyyy/MM/dd") : "";
+            string ToDate = txtToDate.Text != "" ? Convert.ToDateTime(txtToDate.Text, cult).ToString("yyyy/MM/dd") : "";
 
             DataSet ds = objdb.ByProcedure("Usp_GetRptRequirementsFilled",
-                new string[] { "EmpId", "ProjectId", "Date", "FillStatus" },
-                new string[] { ddlEmp.SelectedValue, ddlProject.SelectedValue, Date, ddlFilledStatus.SelectedValue },
+                new string[] { "EmpId", "ProjectId", "FromDate", "ToDate", "FillStatus" },
+                new string[] { ddlEmp.SelectedValue, ddlProject.SelectedValue, FromDate, ToDate, ddlFilledStatus.SelectedValue },
                 "dataset");
 
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
@@ -153,7 +154,7 @@ public partial class mis_Reports_RptRequirementsFilled : System.Web.UI.Page
                 {
                     hfExcelHeader.Value = "Requirements Filled Report";
                 }
-                else 
+                else
                 {
                     hfExcelHeader.Value = "Requirements Not Filled Report";
                 }

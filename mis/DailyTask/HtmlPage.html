@@ -1,0 +1,228 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Weekly Report (Project Manager)</title>
+    <style>
+        /* Page / paper like styling */
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 40px;
+            color: #111;
+        }
+
+        .paper {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 16px;
+            margin: 0 0 14px 0;
+            text-decoration: underline;
+        }
+
+        .meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px
+        }
+
+            .meta .name {
+                flex: 1
+            }
+
+            .meta .week {
+                flex: 1;
+                text-align: center
+            }
+
+            .meta .to {
+                flex: 1;
+                text-align: right
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #000;
+            table-layout: fixed;
+        }
+
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            vertical-align: top;
+            font-size: 13px
+        }
+
+        th {
+            background: #fff;
+            font-weight: 600;
+        }
+
+        /* Column width approximations to match the scanned design */
+        .col-sno {
+            width: 6%;
+        }
+
+        .col-activity {
+            width: 44%;
+        }
+
+        .col-weekly {
+            width: 50%;
+        }
+
+        .big-empty {
+            height: 120px;
+        }
+
+        .medium-empty {
+            height: 80px;
+        }
+
+        .small-empty {
+            height: 40px;
+        }
+
+        /* finer layout inside some cells */
+        .label {
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: block
+        }
+
+        .muted {
+            color: #333
+        }
+
+        /* Signature / footer space */
+        .footer-space {
+            height: 40px
+        }
+
+        /* Make it look printable */
+        @media print {
+            body {
+                margin: 10mm
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="paper">
+        <h1>Weekly Report (Project Manager)</h1>
+
+        <div class="meta">
+            <div class="name">Name: </div>
+            <div class="week">Week from </div>
+            <div>To </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-sno">S.No.</th>
+                    <th class="col-activity">Activities</th>
+                    <th class="col-weekly">Weekly Process</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="col-sno">1.</td>
+                    <td class="col-activity">
+                        <div class="label">Task Allotted to all team members</div>
+                        <div class="muted">(developers , QA, Coordinators)</div>
+                    </td>
+                    <td class="col-weekly">
+                        <div class="label">Y/N : ________</div>
+                        <div>Details (if No)</div>
+                        <div class="big-empty"></div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>2.</td>
+                    <td>Task repeated to portal</td>
+                    <td>
+                        <div class="label">Y/N : ________</div>
+                        <div>Details (if Yes)</div>
+                        <div class="medium-empty"></div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>3.</td>
+                    <td>Reporting submitted by all team members (5 days)</td>
+                    <td>
+                        <div class="label">Y/N : ________</div>
+                        <div>Details (if No)</div>
+                        <div class="medium-empty"></div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>5.</td>
+                    <td>Team Utilization %</td>
+                    <td>
+                        <div class="label">______ %</div>
+                        <div>Details :-</div>
+                        <div class="small-empty"></div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>6.</td>
+                    <td>Daily Standup Meeting</td>
+                    <td>Y/N</td>
+                </tr>
+
+                <tr>
+                    <td>7.</td>
+                    <td>No of meetings with clients</td>
+                    <td>___________ No's</td>
+                </tr>
+
+                <tr>
+                    <td>8.</td>
+                    <td>All MOM / Email shared</td>
+                    <td>
+                        <div class="label">Y/N : ________</div>
+                        <div>Details (if No)</div>
+                        <div class="small-empty"></div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>9.</td>
+                    <td>Any team members (Underutilized)</td>
+                    <td>
+                        <div><strong>Name</strong> ______________________</div>
+                        <div style="margin-top:8px"><strong>Reason</strong></div>
+                        <div class="small-empty"></div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>10.</td>
+                    <td>Any major Challenges / requirements</td>
+                    <td>
+                        <div><strong>Internal :-</strong></div>
+                        <div class="medium-empty"></div>
+                        <div><strong>External :-</strong></div>
+                        <div class="big-empty"></div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+        <div class="footer-space"></div>
+    </div>
+</body>
+</html>

@@ -17,18 +17,42 @@
                                 <div class="form-group">
                                     <span class="fa-pull-right">
                                         <asp:RequiredFieldValidator
-                                            ID="rfvAllocationDate"
+                                            ID="rfvFromDate"
                                             ValidationGroup="Save"
-                                            ErrorMessage="Please Select Requirements Filled Date."
+                                            ErrorMessage="Please Select From Date."
                                             ForeColor="Red"
-                                            Text="<i class='fa fa-exclamation-circle' title='Please Select Requirements Filled Date.'></i>"
-                                            ControlToValidate="txtReqFilledDate"
+                                            Text="<i class='fa fa-exclamation-circle' title='Please Select From Date.'></i>"
+                                            ControlToValidate="txtFromDate"
                                             Display="Dynamic"
                                             runat="server" />
                                     </span>
-                                    <label>Date<span style="color: red;">*</span></label>
-                                    <asp:TextBox ID="txtReqFilledDate" runat="server" placeholder="DD/MM/YYYY" autocomplete="off"
-                                        data-date-format="dd/mm/yyyy" data-date-autoclose="true" CssClass="form-control datetime-local" />
+                                    <label>From Date<span style="color: red;">*</span></label>
+                                    <asp:TextBox ID="txtFromDate" runat="server"
+                                        placeholder="DD/MM/YYYY" autocomplete="off"
+                                        CssClass="form-control datetime-local"
+                                       />
+                                </div>
+                            </div>
+
+                            <!-- To Date -->
+                            <div class="col-xl-3 col-sm-6 position-relative">
+                                <div class="form-group">
+                                    <span class="fa-pull-right">
+                                        <asp:RequiredFieldValidator
+                                            ID="rfvToDate"
+                                            ValidationGroup="Save"
+                                            ErrorMessage="Please Select To Date."
+                                            ForeColor="Red"
+                                            Text="<i class='fa fa-exclamation-circle' title='Please Select To Date.'></i>"
+                                            ControlToValidate="txtToDate"
+                                            Display="Dynamic"
+                                            runat="server" />
+                                    </span>
+                                    <label>To Date<span style="color: red;">*</span></label>
+                                    <asp:TextBox ID="txtToDate" runat="server"
+                                        placeholder="DD/MM/YYYY" autocomplete="off"
+                                        CssClass="form-control datetime-local"
+                                        />
                                 </div>
                             </div>
                             <div class="col-xl-3 col-sm-6 position-relative">
@@ -41,7 +65,7 @@
                             </div>
                             <div class="col-xl-3 col-sm-6 position-relative">
                                 <div class="form-group">
-                                  <%--  <span class="fa-pull-right">
+                                    <%--  <span class="fa-pull-right">
                                         <asp:RequiredFieldValidator
                                             ID="RFV2"
                                             ValidationGroup="Save"
@@ -184,16 +208,40 @@
                 </div>
             </div>
         </div>
-         <asp:HiddenField runat="server" ID="hfExcelHeader" />
+        <asp:HiddenField runat="server" ID="hfExcelHeader" />
     </div>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentFooter" runat="Server">
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var fromDate = document.getElementById("<%= txtFromDate.ClientID %>");
+            var toDate = document.getElementById("<%= txtToDate.ClientID %>");
+
+            // Aaj ki date ko min set karna for From Date
+            var today = new Date().toISOString().split("T")[0];
+            fromDate.setAttribute("min", today);
+
+            // Jab From Date change ho
+            fromDate.addEventListener("change", function () {
+                toDate.value = ""; // Reset To Date jab From Date change ho
+                toDate.setAttribute("min", fromDate.value);
+            });
+
+            // Jab To Date change ho
+            toDate.addEventListener("change", function () {
+                if (toDate.value < fromDate.value) {
+                    alert("To Date cannot be earlier than From Date!");
+                    toDate.value = "";
+                }
+            });
+        });
+    </script>
+    <script>
         $(document).ready(function () {
             var reportTitle = $('#<%= hfExcelHeader.ClientID %>').val();
 
-         initCustomDataTable('.datatable', reportTitle, reportTitle);
-     });
+            initCustomDataTable('.datatable', reportTitle, reportTitle);
+        });
     </script>
 </asp:Content>
 
