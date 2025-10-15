@@ -96,7 +96,7 @@
                                             runat="server" />
                                     </span>
                                     <label runat="server">Bug's Major<span style="color: red;">*</span></label>
-                                    <asp:TextBox autocomplete="off" oninput="sanitizeInput(this)" ID="txtBugsMajor" runat="server" placeholder="ex:00" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox autocomplete="off" oninput="allowOnlyNumbers(this);" ID="txtBugsMajor" runat="server" placeholder="ex:00" CssClass="form-control"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-sm-6 position-relative">
@@ -113,7 +113,7 @@
                                             runat="server" />
                                     </span>
                                     <label runat="server">Minor<span style="color: red;">*</span></label>
-                                    <asp:TextBox autocomplete="off" oninput="sanitizeInput(this)" ID="txtMinor" runat="server" placeholder="ex:00" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox autocomplete="off" oninput="allowOnlyNumbers(this);" ID="txtMinor" runat="server" placeholder="ex:00" CssClass="form-control"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-sm-6 position-relative">
@@ -130,7 +130,7 @@
                                             runat="server" />
                                     </span>
                                     <label runat="server">Test Cases Prepared <span style="color: red;">*</span></label>
-                                    <asp:TextBox autocomplete="off" oninput="sanitizeInput(this)" ID="txtTestCasesPrepared" runat="server" placeholder="ex:00" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox autocomplete="off" oninput="allowOnlyNumbers(this); validateTestCases();" ID="txtTestCasesPrepared" runat="server" placeholder="ex:0000" CssClass="form-control"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-sm-6 position-relative">
@@ -147,7 +147,7 @@
                                             runat="server" />
                                     </span>
                                     <label runat="server">Apply<span style="color: red;">*</span></label>
-                                    <asp:TextBox autocomplete="off" oninput="sanitizeInput(this)" ID="txtApply" runat="server" placeholder="ex:00" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox autocomplete="off" oninput="allowOnlyNumbers(this); validateTestCases();" ID="txtApply" runat="server" placeholder="ex:0000" CssClass="form-control"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-sm-6 position-relative">
@@ -164,7 +164,7 @@
                                             runat="server" />
                                     </span>
                                     <label runat="server">Pass<span style="color: red;">*</span></label>
-                                    <asp:TextBox autocomplete="off" oninput="sanitizeInput(this)" ID="txtPass" runat="server" placeholder="ex:00" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox autocomplete="off" oninput="allowOnlyNumbers(this); validateTestCases();" ID="txtPass" runat="server" placeholder="ex:0000" CssClass="form-control"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-sm-6 position-relative">
@@ -181,7 +181,7 @@
                                             runat="server" />
                                     </span>
                                     <label runat="server">Fail<span style="color: red;">*</span></label>
-                                    <asp:TextBox autocomplete="off" oninput="sanitizeInput(this)" ID="txtFail" runat="server" placeholder="ex:00" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox autocomplete="off" oninput="allowOnlyNumbers(this); validateTestCases();" ID="txtFail" runat="server" placeholder="ex:0000" CssClass="form-control"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-sm-6 position-relative">
@@ -344,6 +344,46 @@
           el.value = v;
       }
   </script>
+ <script>
+     function validateTestCases() {
+         let preparedEl = document.getElementById("<%=txtTestCasesPrepared.ClientID%>");
+        let applyEl = document.getElementById("<%=txtApply.ClientID%>");
+        let passEl = document.getElementById("<%=txtPass.ClientID%>");
+        let failEl = document.getElementById("<%=txtFail.ClientID%>");
+
+         let prepared = parseInt(preparedEl.value) || 0;
+         let apply = parseInt(applyEl.value) || 0;
+         let pass = parseInt(passEl.value) || 0;
+
+         // ✅ Apply <= Prepared
+         if (apply > prepared) {
+             applyEl.value = "";
+             failEl.value = "";
+             return;
+         }
+
+         // ✅ Pass <= Apply
+         if (pass > apply) {
+             passEl.value = "";
+             failEl.value = "";
+             return;
+         }
+
+         // ✅ Auto calculate Fail = Apply - Pass
+         failEl.value = apply - pass;
+     }
+
+     // ✅ Allow only numbers and max 4 digits
+     function allowOnlyNumbers(e) {
+         let value = e.value.replace(/\D/g, ""); // remove non-digits
+         if (value.length > 4) {
+             value = value.substring(0, 4); // max 4 digits
+         }
+         e.value = value;
+     }
+ </script>
+
+
   <script>
       $(document).ready(function () {
           // Main page DataTable

@@ -7,46 +7,77 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class mis_Reports_RptEmployeeFreeHours : System.Web.UI.Page
+public partial class mis_Reports_RptEmployeeInOutRegister : System.Web.UI.Page
 {
     APIProcedure objdb = new APIProcedure();
     DataSet ds;
     CultureInfo cult = new CultureInfo("gu-IN", true);
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["Emp_ID"] != null)
+        try
         {
+            if (Session["Emp_ID"] == null)
+            {
+                Response.Redirect("~/mis/Login.aspx");
+                return;
+            }
             if (!IsPostBack)
             {
                 ViewState["Emp_ID"] = Session["Emp_ID"].ToString();
-                ViewState["Office_ID"] = Session["Office_ID"].ToString();
-                ViewState["UserTypeId"] = Session["UserTypeId"].ToString();
-                ViewState["Designation_ID"] = Session["Designation_ID"].ToString();
+                BindDropdown();
                 DateTime currentdate = DateTime.Now;
                 string Date = currentdate.ToString("yyyy/MM/dd", cult);
-                txtFromDate.Text = currentdate.ToString("dd/MM/yyyy");
+                txtDate.Text = currentdate.ToString("dd/MM/yyyy");
 
                 string currentPath = Request.Url.AbsolutePath.Substring(Request.Url.AbsolutePath.LastIndexOf("/") + 1);
                 ((MainMaster)this.Master).GenerateBreadcrumb(currentPath);
             }
         }
-        else
+        catch (Exception ex)
         {
-            Response.Redirect("~/mis/Login.aspx");
+            ErrorMsg(ex);
         }
     }
+    private string ErrorMsg(Exception ex)
+    {
+        lblMsg.Text = objdb.Alert("fa-ban", "alert-danger", "Sorry! : Error ", ex.Message.ToString());
+        return lblMsg.Text;
+    }
+    public void BindDropdown()
+    {
+        try
+        {
+            string empId = ViewState["Emp_ID"].ToString();
+            DataSet ds3 = objdb.ByProcedure("UspGetEmpForReport", new string[] { "EmpId" }, new string[] { empId }, "dataset");
+            if (ds3 != null && ds3.Tables[0].Rows.Count > 0)
+            {
+                ddlEmp.DataSource = ds3.Tables[0];
+                ddlEmp.DataTextField = "Emp_Name";
+                ddlEmp.DataValueField = "Emp_ID";
+                ddlEmp.DataBind();
+            }
+            if (ds3.Tables[1].Rows[0]["Status"].ToString() == "Admin")
+            {
+                ddlEmp.Items.Insert(0, new ListItem("All", "0"));
 
+            }
+
+        }
+        catch (Exception ex)
+        {
+            ErrorMsg(ex);
+        }
+    }
     protected void btnSearch_Click(object sender, EventArgs e)
     {
         try
         {
             lblMsg.Text = string.Empty;
-            string FromDate = txtFromDate.Text != "" ? Convert.ToDateTime(txtFromDate.Text, cult).ToString("yyyy-MM-dd") : "";
-            string ToDate = txtToDate.Text != "" ? Convert.ToDateTime(txtToDate.Text, cult).ToString("yyyy-MM-dd") : "";
+            string Date = txtDate.Text != "" ? Convert.ToDateTime(txtDate.Text, cult).ToString("yyyy-MM-dd") : "";
 
-            DataSet ds = objdb.ByProcedure("Usp_RptEmployeeFreeHours",
-                new string[] { "FromDate", "ToDate" },
-                new string[] { FromDate,ToDate },
+            DataSet ds = objdb.ByProcedure("USP_EmployeeInOutRegister",
+                new string[] { "Flag", "Employee_Id", "EntryDate" },
+                new string[] { "3", ddlEmp.SelectedValue, Date },
                 "dataset");
 
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
@@ -68,8 +99,7 @@ public partial class mis_Reports_RptEmployeeFreeHours : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-
-            throw ex;
+            ErrorMsg(ex);
         }
     }
     protected void Datatable()
@@ -79,7 +109,5 @@ public partial class mis_Reports_RptEmployeeFreeHours : System.Web.UI.Page
             dataGrid.HeaderRow.TableSection = TableRowSection.TableHeader;
             dataGrid.UseAccessibleHeader = true;
         }
-
-
     }
 }

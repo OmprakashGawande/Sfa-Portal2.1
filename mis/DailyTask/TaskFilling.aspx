@@ -4,6 +4,40 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentBody" runat="Server">
     <div class="container-fluid">
+        <%--Confirmation Modal Start --%>
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div style="display: table; height: 100%; width: 100%;">
+                <div class="modal-dialog" style="width: 340px; display: table-cell; vertical-align: middle;">
+                    <div class="modal-content" style="width: inherit; height: inherit; margin: 0 auto;">
+                        <div class="modal-header" style="background-color: #d7c9988c;">
+
+                            <span class="modal-title f-15" style="float: left;" id="myModalLabel">Confirmation</span>
+                            <button type="button" class="btn-close py-0 white" data-bs-dismiss="modal" aria-label="Close" data-dismiss="modal">
+                            </button>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="modal-body">
+                            <p>
+                                <%--<img src="../assets/images/question-circle.png" width="30" />--%>&nbsp;&nbsp; 
+                <i class="fa fa-question-circle"></i>
+                                <asp:Label ID="lblPopupAlert" runat="server"></asp:Label>
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <asp:Button runat="server" CssClass="btn btn-success" Text="Yes" OnClick="btnSave_Click" ID="btnYes" />
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                onclick="closePopup('#myModal')">
+                                No
+                            </button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%--ConfirmationModal End --%>
         <div class="row">
             <div class="col-sm-12">
                 <asp:Label ID="lblMsg" runat="server" Text=""></asp:Label>
@@ -182,8 +216,8 @@
 
                         <div class="col-xl-3" runat="server" id="Div_button" visible="false">
                             <div class="form-group">
-                                <asp:Button runat="server" OnClientClick="return validateCheckbox();" CssClass="btn btn-block btn-outline-success" ID="btnSave" OnClick="btnSave_Click" Text="Save" ValidationGroup="Save" />
-                                <a href="TaskFilling.aspx" class="btn btn-block   btn-outline-danger">Clear</a>
+                                <asp:Button runat="server" OnClientClick="return validateCheckbox() && ValidatePage();" CssClass="btn btn-block btn-outline-success" ID="btnSave" Text="Save" ValidationGroup="Save" />
+                                <a href="TaskFilling.aspx" class="btn btn-block   btn-outline-danger">Clear</a> 
                             </div>
                         </div>
                     </div>
@@ -283,6 +317,26 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentFooter" runat="Server">
     <script type="text/javascript">
+        function ValidatePage() {
+
+            if (typeof (Page_ClientValidate) == 'function') {
+                Page_ClientValidate('Save');
+            }
+
+            if (Page_IsValid) {
+
+                if (document.getElementById('<%=btnSave.ClientID%>').value.trim() == "Update") {
+                    document.getElementById('<%=lblPopupAlert.ClientID%>').textContent = "Are you sure you want to Update this record?";
+                    $('#myModal').modal('show');
+                    return false;
+                }
+                if (document.getElementById('<%=btnSave.ClientID%>').value.trim() == "Save") {
+                    document.getElementById('<%=lblPopupAlert.ClientID%>').textContent = "Are you sure you want to Save this record?";
+                    $('#myModal').modal('show');
+                    return false;
+                }
+            }
+        }
         function validateCheckbox() {
             debugger;
             var checkbox = document.getElementById('<%= chkQualityCheck.ClientID %>');

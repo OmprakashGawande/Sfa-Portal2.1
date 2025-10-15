@@ -85,8 +85,9 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
 
             txtAllocationDate.Attributes.Add("readonly", "readonly");
             dvAllocatedRequirements.Visible = false;
+
             //fill breadcrumb.
-            Session["PageTokan"] = Server.UrlEncode(System.DateTime.Now.ToString());
+
             string currentPath = Request.Url.AbsolutePath.Substring(Request.Url.AbsolutePath.LastIndexOf("/") + 1);
             ((MainMaster)this.Master).GenerateBreadcrumb(currentPath);
         }
@@ -423,7 +424,5 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
             gvTaskDetails.HeaderRow.TableSection = TableRowSection.TableHeader;
             gvTaskDetails.UseAccessibleHeader = true;
         }
-
-
     }
 }

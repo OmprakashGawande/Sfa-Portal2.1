@@ -498,12 +498,12 @@
                                 <div class="form-group">
                                     <span class="fa-pull-right">
                                         <asp:RequiredFieldValidator
-                                            ID="RFV23" Enabled="false"
+                                            ID="RFV23"
                                             ValidationGroup="Save"
                                             ErrorMessage="Please Enter Team Utilization %."
                                             ForeColor="Red"
                                             Text="<i class='fa fa-exclamation-circle' title='Please Enter Team Utilization %.'></i>"
-                                            ControlToValidate="txtAESRDetail"
+                                            ControlToValidate="txtTeamUtilization"
                                             Display="Dynamic"
                                             runat="server" />
                                     </span>
@@ -589,12 +589,12 @@
                                             ErrorMessage="Please Enter Detail."
                                             ForeColor="Red"
                                             Text="<i class='fa fa-exclamation-circle' title='Please Enter Detail.'></i>"
-                                            ControlToValidate="txtAllMOMEmailShered"
+                                            ControlToValidate="txtAllMOMEmailSheredDetail"
                                             Display="Dynamic"
                                             runat="server" />
                                     </span>
                                     <label runat="server">Detail<span style="color: red;">*</span></label>
-                                    <asp:TextBox autocomplete="off" ID="txtAllMOMEmailShered" runat="server" TextMode="MultiLine" placeholder="Enter Detail" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox autocomplete="off" ID="txtAllMOMEmailSheredDetail" runat="server" TextMode="MultiLine" placeholder="Enter Detail" CssClass="form-control"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-sm-6 position-relative">
@@ -685,6 +685,26 @@
                                                     <asp:Label ID="lblTotalTask" runat="server" Text='<%# Eval("TotalTask") %>'></asp:Label>
                                                 </ItemTemplate>
                                             </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Task Allocated to All Team Members" ItemStyle-CssClass="center-grid">
+                                                <ItemTemplate>
+                                                    <asp:Label ID="lblTaskATATM" runat="server" Text='<%# Eval("TaskATATM") %>'></asp:Label>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Reason" ItemStyle-CssClass="center-grid">
+                                                <ItemTemplate>
+                                                    <asp:Label ID="lblTaskATATMReaso" runat="server" Text='<%# Eval("TaskATATMReaso") %>'></asp:Label>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Reporting Submitted by All Team" ItemStyle-CssClass="center-grid">
+                                                <ItemTemplate>
+                                                    <asp:Label ID="lblReportingSubmittedbyAllTeam" runat="server" Text='<%# Eval("ReportingSubmittedbyAllTeam") %>'></asp:Label>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Reporting Submitted by All Team Reason" ItemStyle-CssClass="center-grid">
+                                                <ItemTemplate>
+                                                    <asp:Label ID="lblReportingSubmittedbyAllTeamReason" runat="server" Text='<%# Eval("ReportingSubmittedbyAllTeamReason") %>'></asp:Label>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
                                             <asp:TemplateField HeaderText="Time Overrun" ItemStyle-CssClass="center-grid">
                                                 <ItemTemplate>
                                                     <asp:Label ID="lblIsTimeOverrun" runat="server" Text='<%# Eval("IsTimeOverrun") %>'></asp:Label>
@@ -763,6 +783,48 @@
                                             <asp:TemplateField HeaderText="Any External Support Required Detail" ItemStyle-CssClass="center-grid">
                                                 <ItemTemplate>
                                                     <asp:Label ID="lblExternalSupportDetail" runat="server" Text='<%# Eval("ExternalSupportDetail") %>'></asp:Label>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+
+
+                                            <asp:TemplateField HeaderText="Team Utilization" ItemStyle-CssClass="center-grid">
+                                                <ItemTemplate>
+                                                    <asp:Label ID="lblTeamUtilization" runat="server" Text='<%# Eval("TeamUtilization") %>'></asp:Label>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Team Utilization Detail" ItemStyle-CssClass="center-grid">
+                                                <ItemTemplate>
+                                                    <asp:Label ID="lblTeamUtilizationDetail" runat="server" Text='<%# Eval("TeamUtilizationDetail") %>'></asp:Label>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Daily Standup Meeting" ItemStyle-CssClass="center-grid">
+                                                <ItemTemplate>
+                                                    <asp:Label ID="lblDailyStandupMeeting" runat="server" Text='<%# Eval("DailyStandupMeeting") %>'></asp:Label>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Daily Standup Meeting Detail" ItemStyle-CssClass="center-grid">
+                                                <ItemTemplate>
+                                                    <asp:Label ID="lblDailyStandupMeetingDetail" runat="server" Text='<%# Eval("DailyStandupMeetingDetail") %>'></asp:Label>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="All MOM Email Shared" ItemStyle-CssClass="center-grid">
+                                                <ItemTemplate>
+                                                    <asp:Label ID="lblAllMOMEmailShered" runat="server" Text='<%# Eval("AllMOMEmailShered") %>'></asp:Label>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="All MOM Email Shared Detail" ItemStyle-CssClass="center-grid">
+                                                <ItemTemplate>
+                                                    <asp:Label ID="lblAllMOMEmailSheredDetail" runat="server" Text='<%# Eval("AllMOMEmailSheredDetail") %>'></asp:Label>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Any Team Memberes (Underutilized)" ItemStyle-CssClass="center-grid">
+                                                <ItemTemplate>
+                                                    <asp:Label ID="lblAnyTeamMemberesU" runat="server" Text='<%# Eval("AnyTeamMemberesU") %>'></asp:Label>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Reason With Name" ItemStyle-CssClass="center-grid">
+                                                <ItemTemplate>
+                                                    <asp:Label ID="lblAnyTeamMemberesUDetail" runat="server" Text='<%# Eval("AnyTeamMemberesUDetail") %>'></asp:Label>
                                                 </ItemTemplate>
                                             </asp:TemplateField>
                                         </Columns>

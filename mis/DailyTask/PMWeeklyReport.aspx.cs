@@ -23,7 +23,7 @@ public partial class mis_DailyTask_PMWeeklyReport : System.Web.UI.Page
             {
                 ViewState["Emp_ID"] = Session["Emp_ID"].ToString();
                 Clear(sender, e);
-                FillGridTakDetails();
+                FillGridDetails();
                 DateTime currentdate = DateTime.Now;
                 string Date = currentdate.ToString("yyyy/MM/dd", cult);
                 txtDate.Text = currentdate.ToString("dd/MM/yyyy");
@@ -52,7 +52,6 @@ public partial class mis_DailyTask_PMWeeklyReport : System.Web.UI.Page
         lblMsg.Text = objdb.Alert("fa-warning", "alert-warning", "Warning!", "Info :" + msg);
         return lblMsg.Text;
     }
-
     private bool IsNullDataSet(DataSet ds)
     {
         return ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0;
@@ -77,7 +76,6 @@ public partial class mis_DailyTask_PMWeeklyReport : System.Web.UI.Page
             RFV4.Enabled = false;
         }
     }
-
     protected void ddlClientMeeting_SelectedIndexChanged(object sender, EventArgs e)
     {
         Datatable();
@@ -92,7 +90,6 @@ public partial class mis_DailyTask_PMWeeklyReport : System.Web.UI.Page
             RFV6.Enabled = false;
         }
     }
-
     protected void ddlProjectDelay_SelectedIndexChanged(object sender, EventArgs e)
     {
         Datatable();
@@ -107,7 +104,6 @@ public partial class mis_DailyTask_PMWeeklyReport : System.Web.UI.Page
             RFV12.Enabled = false;
         }
     }
-
     protected void ddlMajorChallenges_SelectedIndexChanged(object sender, EventArgs e)
     {
         Datatable();
@@ -122,7 +118,6 @@ public partial class mis_DailyTask_PMWeeklyReport : System.Web.UI.Page
             RFV14.Enabled = false;
         }
     }
-
     protected void ddlAnyInternalSupportRequired_SelectedIndexChanged(object sender, EventArgs e)
     {
         Datatable();
@@ -137,7 +132,6 @@ public partial class mis_DailyTask_PMWeeklyReport : System.Web.UI.Page
             RFV16.Enabled = false;
         }
     }
-
     protected void ddlAnyExternalSupportRequired_SelectedIndexChanged(object sender, EventArgs e)
     {
         Datatable();
@@ -152,7 +146,76 @@ public partial class mis_DailyTask_PMWeeklyReport : System.Web.UI.Page
             RFV18.Enabled = false;
         }
     }
-
+    protected void ddlTaskATATM_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Datatable();
+        if (ddlTaskATATM.SelectedValue == "2")
+        {
+            Div_TaskATATMReason.Visible = true;
+            RFV20.Enabled = true;
+        }
+        else
+        {
+            Div_TaskATATMReason.Visible = false;
+            RFV20.Enabled = false;
+        }
+    }
+    protected void ddlReportingSubmittedbyAllTeam_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Datatable();
+        if (ddlReportingSubmittedbyAllTeam.SelectedValue == "2")
+        {
+            Div_ReportingSubmittedbyAllTeamReason.Visible = true;
+            RFV22.Enabled = true;
+        }
+        else
+        {
+            Div_ReportingSubmittedbyAllTeamReason.Visible = false;
+            RFV22.Enabled = false;
+        }
+    }
+    protected void ddlDailyStandupMeeting_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Datatable();
+        if (ddlDailyStandupMeeting.SelectedValue == "2")
+        {
+            Div_DailyStandupMeeting.Visible = true;
+            RFV25.Enabled = true;
+        }
+        else
+        {
+            Div_DailyStandupMeeting.Visible = false;
+            RFV25.Enabled = false;
+        }
+    }
+    protected void ddlAllMOMEmailShered_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Datatable();
+        if (ddlAllMOMEmailShered.SelectedValue == "2")
+        {
+            Div_AllMOMEmailShered.Visible = true;
+            RFV25.Enabled = true;
+        }
+        else
+        {
+            Div_AllMOMEmailShered.Visible = false;
+            RFV25.Enabled = false;
+        }
+    }
+    protected void ddlAnyTeamMemberesU_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Datatable();
+        if (ddlAnyTeamMemberesU.SelectedValue == "1")
+        {
+            Div_AnyTeamMemberesU.Visible = true;
+            RFV29.Enabled = true;
+        }
+        else
+        {
+            Div_AnyTeamMemberesU.Visible = false;
+            RFV29.Enabled = false;
+        }
+    }
     protected void btnSave_Click(object sender, EventArgs e)
     {
         try
@@ -209,6 +272,19 @@ public partial class mis_DailyTask_PMWeeklyReport : System.Web.UI.Page
                               "InternalSupportDetail",
                               "IsExternalSupportRequired",
                               "ExternalSupportDetail",
+
+                              "TaskATATM",
+                              "TaskATATMReaso",
+                              "ReportingSubmittedbyAllTeam",
+                              "ReportingSubmittedbyAllTeamReason",
+                              "TeamUtilization",
+                              "TeamUtilizationDetail",
+                              "DailyStandupMeeting",
+                              "DailyStandupMeetingDetail",
+                              "AllMOMEmailShered",
+                              "AllMOMEmailSheredDetail",
+                              "AnyTeamMemberesU",
+                              "AnyTeamMemberesUDetail",
                               "CreatedBy",
                               "CreatedByIp"
                           },
@@ -235,6 +311,18 @@ public partial class mis_DailyTask_PMWeeklyReport : System.Web.UI.Page
                               txtAISRDetail.Text.Trim(),
                               ddlAnyExternalSupportRequired.SelectedValue,
                               txtAESRDetail.Text.Trim(),
+                              ddlTaskATATM.SelectedValue,
+                              txtTaskATATMReason.Text.Trim(),
+                              ddlReportingSubmittedbyAllTeam.SelectedValue,
+                              txtReportingSubmittedbyAllTeamReason.Text.Trim(),
+                              txtTeamUtilization.Text.Trim(),
+                              txtTeamUtilizationDetail.Text.Trim(),
+                              ddlDailyStandupMeeting.SelectedValue,
+                              txtDailyStandupMeetingDetail.Text.Trim(),
+                              ddlAllMOMEmailShered.SelectedValue,
+                              txtAllMOMEmailSheredDetail.Text.Trim(),
+                              ddlAnyTeamMemberesU.SelectedValue,
+                              txtAnyTeamMemberesUDetail.Text.Trim(),
                               Convert.ToString(ViewState["Emp_ID"]),
                               objdb.GetLocalIPAddress()
                           });
@@ -244,6 +332,7 @@ public partial class mis_DailyTask_PMWeeklyReport : System.Web.UI.Page
                         if (Convert.ToString(ds.Tables[0].Rows[0]["Stat"]).Equals("Ok"))
                         {
                             SuccessMsg(Convert.ToString(ds.Tables[0].Rows[0]["Msg"]));
+                            FillGridDetails();
                             Clear(sender, e);
                         }
                         else
@@ -260,7 +349,6 @@ public partial class mis_DailyTask_PMWeeklyReport : System.Web.UI.Page
             ErrorMsg(ex);
         }
     }
-
     private void Clear(object sender, EventArgs e)
     {
         //txtDate.Text = string.Empty;
@@ -288,8 +376,23 @@ public partial class mis_DailyTask_PMWeeklyReport : System.Web.UI.Page
         ddlAnyExternalSupportRequired.ClearSelection();
         ddlAnyExternalSupportRequired_SelectedIndexChanged(sender, e);
         txtAESRDetail.Text = string.Empty;
+        ddlTaskATATM.ClearSelection();
+        ddlTaskATATM_SelectedIndexChanged(sender, e);
+        txtTaskATATMReason.Text = string.Empty;
+        ddlReportingSubmittedbyAllTeam.ClearSelection();
+        ddlReportingSubmittedbyAllTeam_SelectedIndexChanged(sender, e);
+        txtReportingSubmittedbyAllTeamReason.Text = string.Empty;
+        txtTeamUtilization.Text = string.Empty;
+        txtTeamUtilizationDetail.Text = string.Empty;
+        ddlDailyStandupMeeting.ClearSelection();
+        ddlDailyStandupMeeting_SelectedIndexChanged(sender, e);
+        txtDailyStandupMeetingDetail.Text = string.Empty;
+        ddlAllMOMEmailShered.ClearSelection();
+        txtAllMOMEmailSheredDetail.Text = string.Empty;
+        ddlAnyTeamMemberesU.ClearSelection();
+        txtAnyTeamMemberesUDetail.Text = string.Empty;
     }
-    private void FillGridTakDetails()
+    private void FillGridDetails()
     {
         try
         {
@@ -315,82 +418,6 @@ public partial class mis_DailyTask_PMWeeklyReport : System.Web.UI.Page
         {
             gvPMWeeklyReport.HeaderRow.TableSection = TableRowSection.TableHeader;
             gvPMWeeklyReport.UseAccessibleHeader = true;
-        }
-    }
-
-
-    protected void ddlTaskATATM_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        Datatable();
-        if (ddlTaskATATM.SelectedValue == "2")
-        {
-            Div_TaskATATMReason.Visible = true;
-            RFV20.Enabled = true;
-        }
-        else
-        {
-            Div_TaskATATMReason.Visible = false;
-            RFV20.Enabled = false;
-        }
-    }
-
-    protected void ddlReportingSubmittedbyAllTeam_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        Datatable();
-        if (ddlReportingSubmittedbyAllTeam.SelectedValue == "2")
-        {
-            Div_ReportingSubmittedbyAllTeamReason.Visible = true;
-            RFV22.Enabled = true;
-        }
-        else
-        {
-            Div_ReportingSubmittedbyAllTeamReason.Visible = false;
-            RFV22.Enabled = false;
-        }
-    }
-
-    protected void ddlDailyStandupMeeting_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        Datatable();
-        if (ddlDailyStandupMeeting.SelectedValue == "2")
-        {
-            Div_DailyStandupMeeting.Visible = true;
-            RFV25.Enabled = true;
-        }
-        else
-        {
-            Div_DailyStandupMeeting.Visible = false;
-            RFV25.Enabled = false;
-        }
-    }
-
-    protected void ddlAllMOMEmailShered_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        Datatable();
-        if (ddlAllMOMEmailShered.SelectedValue == "2")
-        {
-            Div_AllMOMEmailShered.Visible = true;
-            RFV25.Enabled = true;
-        }
-        else
-        {
-            Div_AllMOMEmailShered.Visible = false;
-            RFV25.Enabled = false;
-        }
-    }
-
-    protected void ddlAnyTeamMemberesU_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        Datatable();
-        if (ddlAnyTeamMemberesU.SelectedValue == "1")
-        {
-            Div_AnyTeamMemberesU.Visible = true;
-            RFV29.Enabled = true;
-        }
-        else
-        {
-            Div_AnyTeamMemberesU.Visible = false;
-            RFV29.Enabled = false;
         }
     }
 }

@@ -29,8 +29,7 @@
                                     <label>From Date<span style="color: red;">*</span></label>
                                     <asp:TextBox ID="txtFromDate" runat="server"
                                         placeholder="DD/MM/YYYY" autocomplete="off"
-                                        CssClass="form-control datetime-local"
-                                       />
+                                        CssClass="form-control datetime-local" />
                                 </div>
                             </div>
 
@@ -51,8 +50,7 @@
                                     <label>To Date<span style="color: red;">*</span></label>
                                     <asp:TextBox ID="txtToDate" runat="server"
                                         placeholder="DD/MM/YYYY" autocomplete="off"
-                                        CssClass="form-control datetime-local"
-                                        />
+                                        CssClass="form-control datetime-local" />
                                 </div>
                             </div>
                             <div class="col-xl-3 col-sm-6 position-relative">
@@ -162,6 +160,11 @@
                                                     <asp:Label ID="lblAllocationTime" runat="server" Text='<%# Eval("AllocationTime") %>'></asp:Label>
                                                 </ItemTemplate>
                                             </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Requirement Fill Date" ItemStyle-CssClass="center-grid">
+                                                <ItemTemplate>
+                                                    <asp:Label ID="lblFillDate" runat="server" Text='<%# Eval("FillDate") %>'></asp:Label>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
                                             <asp:TemplateField HeaderText="Status" ItemStyle-CssClass="center-grid">
                                                 <ItemTemplate>
                                                     <asp:Label ID="lblTaskStatus" runat="server" Text='<%# Eval("TaskStatus") %>'></asp:Label>
@@ -183,8 +186,8 @@
                                                     <asp:Label ID="lblFwdtoQA" runat="server"
                                                         Text='<%# Eval("FwdtoQA") %>'
                                                         ForeColor='<%# (Eval("FwdtoQA").ToString() == "Yes" ? System.Drawing.Color.Green : 
-                    (Eval("FwdtoQA").ToString() == "No" ? System.Drawing.Color.Orange : 
-                    System.Drawing.Color.Black)) %>'
+                                                        (Eval("FwdtoQA").ToString() == "No" ? System.Drawing.Color.Orange : 
+                                                        System.Drawing.Color.Black)) %>'
                                                         Font-Bold='<%# (Eval("FwdtoQA").ToString() == "Yes" || Eval("FwdtoQA").ToString() == "No") %>'>
                                                     </asp:Label>
                                                 </ItemTemplate>
@@ -217,21 +220,25 @@
             var fromDate = document.getElementById("<%= txtFromDate.ClientID %>");
             var toDate = document.getElementById("<%= txtToDate.ClientID %>");
 
-            // Aaj ki date ko min set karna for From Date
-            var today = new Date().toISOString().split("T")[0];
-            fromDate.setAttribute("min", today);
+            function parseDate(str) {
+                // dd/MM/yyyy ko JS Date me convert kare
+                var parts = str.split("/");
+                return new Date(parts[2], parts[1] - 1, parts[0]);
+            }
 
-            // Jab From Date change ho
             fromDate.addEventListener("change", function () {
-                toDate.value = ""; // Reset To Date jab From Date change ho
-                toDate.setAttribute("min", fromDate.value);
+                toDate.value = "";
             });
 
-            // Jab To Date change ho
             toDate.addEventListener("change", function () {
-                if (toDate.value < fromDate.value) {
-                    alert("To Date cannot be earlier than From Date!");
-                    toDate.value = "";
+                if (fromDate.value && toDate.value) {
+                    var fDate = parseDate(fromDate.value);
+                    var tDate = parseDate(toDate.value);
+
+                    if (tDate < fDate) {
+                        alert("To Date cannot be earlier than From Date!");
+                        toDate.value = "";
+                    }
                 }
             });
         });
