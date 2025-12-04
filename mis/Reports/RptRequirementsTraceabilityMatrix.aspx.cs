@@ -153,63 +153,78 @@ public partial class mis_Reports_RptRequirementsTraceabilityMatrix : System.Web.
     }
     protected void dataGrid_RowDataBound(object sender, GridViewRowEventArgs e)
     {
-        // Label lblExcelHeader = (Label)Page.FindControl("lblExcelHeader");
-
-
+        // ===== Hide/Show Based on Status =====
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
             Label lblStatus = (Label)e.Row.FindControl("lblStatus");
-            if (lblStatus.Text == "Not Allocated")
-            {
-                hfExcelHeader.Value = "Requirements Not Allocated Report";
-            }
-            else
-            {
-                hfExcelHeader.Value = "Requirements Allocated Report";
-
-            }
             if (lblStatus != null)
             {
                 string status = lblStatus.Text;
+                hfExcelHeader.Value = status == "Not Allocated"
+                    ? "Requirements Not Allocated Report"
+                    : "Requirements Allocated Report";
 
-
+                // Hide columns when Not Allocated
                 if (status == "Not Allocated")
                 {
                     for (int i = 0; i < e.Row.Cells.Count; i++)
                     {
                         if (i != 0 && i != 5 && i != 10)
-                        {
                             e.Row.Cells[i].Visible = false;
-                        }
                     }
 
-                    // Hide header also
+                    // Hide headers also for Not Allocated
                     GridView gv = (GridView)sender;
                     if (gv.HeaderRow != null)
                     {
                         for (int i = 0; i < gv.HeaderRow.Cells.Count; i++)
                         {
                             if (i != 0 && i != 5 && i != 10)
-                            {
                                 gv.HeaderRow.Cells[i].Visible = false;
-                            }
                         }
                     }
                 }
                 else
                 {
-                    // Row is Allocated → show full header
+                    // Show all columns if allocated
                     GridView gv = (GridView)sender;
                     if (gv.HeaderRow != null)
                     {
                         for (int i = 0; i < gv.HeaderRow.Cells.Count; i++)
-                        {
                             gv.HeaderRow.Cells[i].Visible = true;
-                        }
-
                     }
                 }
             }
+        }
+
+        // ===== Hide Allocation Time for non-admin users =====
+        string userRole = Convert.ToString(Session["Role_ID"]);
+        int allocationTimeColumnIndex = 9; // "Allocation Time" column index
+
+        // Hide for header and data rows both
+        if ((e.Row.RowType == DataControlRowType.Header || e.Row.RowType == DataControlRowType.DataRow)
+            && allocationTimeColumnIndex < e.Row.Cells.Count)
+        {
+            if (string.IsNullOrEmpty(userRole) || userRole != "2")
+            {
+                e.Row.Cells[allocationTimeColumnIndex].Visible = false;
+
+            }
+        }
+    }
+
+    protected void dataGrid_RowCreated(object sender, GridViewRowEventArgs e)
+    {
+        // Show "Allocation Time" only for Role_ID = 2
+        string userRole = Convert.ToString(Session["Role_ID"]);
+
+        if (userRole == "2")
+        {
+            // Get the GridView instance
+            GridView gv = (GridView)sender;
+
+            // Make the 9th column (Allocation Time) visible
+            gv.Columns[9].Visible = true;  // 👈 yahan 9 index apke "Allocation Time" ka hai (0-based)
         }
     }
 

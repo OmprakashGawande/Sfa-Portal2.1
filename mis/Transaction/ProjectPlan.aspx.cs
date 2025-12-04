@@ -26,6 +26,8 @@ public partial class mis_Transaction_ProjectPlan : System.Web.UI.Page
                 FillRole();
                 FillEmployee();
                 FillGridDetails();
+                string currentPath = Request.Url.AbsolutePath.Substring(Request.Url.AbsolutePath.LastIndexOf("/") + 1);
+                ((MainMaster)this.Master).GenerateBreadcrumb(currentPath);
             }
         }
         catch (Exception)

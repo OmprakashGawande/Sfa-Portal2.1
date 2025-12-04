@@ -342,30 +342,30 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var fromDate = document.getElementById("<%= txtFromDate.ClientID %>");
-        var toDate = document.getElementById("<%= txtToDate.ClientID %>");
+            var toDate = document.getElementById("<%= txtToDate.ClientID %>");
 
-        function parseDate(str) {
-            // dd/MM/yyyy ko JS Date me convert kare
-            var parts = str.split("/");
-            return new Date(parts[2], parts[1] - 1, parts[0]);
-        }
-
-        fromDate.addEventListener("change", function () {
-            toDate.value = "";
-        });
-
-        toDate.addEventListener("change", function () {
-            if (fromDate.value && toDate.value) {
-                var fDate = parseDate(fromDate.value);
-                var tDate = parseDate(toDate.value);
-
-                if (tDate < fDate) {
-                    alert("To Date cannot be earlier than From Date!");
-                    toDate.value = "";
-                }
+            function parseDate(str) {
+                // dd/MM/yyyy ko JS Date me convert kare
+                var parts = str.split("/");
+                return new Date(parts[2], parts[1] - 1, parts[0]);
             }
+
+            fromDate.addEventListener("change", function () {
+                toDate.value = "";
+            });
+
+            toDate.addEventListener("change", function () {
+                if (fromDate.value && toDate.value) {
+                    var fDate = parseDate(fromDate.value);
+                    var tDate = parseDate(toDate.value);
+
+                    if (tDate < fDate) {
+                        alert("To Date cannot be earlier than From Date!");
+                        toDate.value = "";
+                    }
+                }
+            });
         });
-    });
     </script>
 
 

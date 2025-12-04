@@ -45,6 +45,10 @@
                     <div class="card mt-3  border-warning">
                         <div class="card-header">
                             <h4>Requirement Allocation</h4>
+                            <marquee behavior="scroll" direction="left" scrollamount="6" style="color: #ffff; font-weight: 600; width: 100%;">
+                                Task allocation is allowed only till 12:00 PM for the current date
+                                <%--The page is closed after 02/12/2025 7:00 PM--%>
+                            </marquee>
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
@@ -202,12 +206,12 @@
                                         <label>Description<span style="color: red;">*</span></label>
                                         <asp:TextBox
                                             autocomplete="off"
-                                            maxlength="2000"
+                                            MaxLength="2000"
                                             oninput="sanitizeInput(this)"
-                                            id="txtTaskDescription" TextMode="MultiLine"
+                                            ID="txtTaskDescription" TextMode="MultiLine"
                                             runat="server"
                                             class="form-control"
-                                            rows="2" placeholder="Enter Description"></asp:TextBox>
+                                            Rows="2" placeholder="Enter Description"></asp:TextBox>
                                         <asp:Label runat="server" ForeColor="Red" ID="lblCounter"></asp:Label>
                                     </div>
                                 </div>
@@ -405,7 +409,7 @@
                 maxTime: "09:00",        // maximum 9 hours
                 disableMobile: "true"    // force desktop version on mobile for consistent UI
             });
-
+            //old code 3/12/2025 ko chalu karna hai
             flatpickr(".datetime-local", {
                 dateFormat: "d/m/Y",
                 minDate: "today",
@@ -417,6 +421,46 @@
                     }
                 ],
             });
+
+            //new code 3/12/2025 ko remove
+            //flatpickr(".datetime-local", {
+            //    dateFormat: "d/m/Y",
+            //    enableTime: false,
+
+            //    disable: [
+            //        function (date) {
+
+            //            let today = new Date();
+            //            today.setHours(0, 0, 0, 0);
+
+            //            let currentYear = today.getFullYear();
+
+            //            // November = month index 10
+            //            let isCurrentYearNovember =
+            //                (date.getFullYear() === currentYear &&
+            //                    date.getMonth() === 10);
+
+            //            // Allow: Today or future date
+            //            let isTodayOrFuture = (date >= today);
+
+            //            // Disable Saturday & Sunday
+            //            if (date.getDay() === 0 || date.getDay() === 6) {
+            //                return true;
+            //            }
+
+            //            // ❌ PAST DATE but NOT in current year's November → disable
+            //            if (date < today && !isCurrentYearNovember) {
+            //                return true;
+            //            }
+
+            //            // ✔ Allowed date
+            //            return false;
+            //        }
+            //    ]
+            //});
+
+
+
         });
 
         //function sanitizeInput(el) {

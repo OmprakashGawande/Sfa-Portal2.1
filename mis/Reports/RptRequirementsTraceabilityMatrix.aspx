@@ -80,7 +80,8 @@
                                 <div class="table-responsive dt-ext ">
                                     <div class="col-md-12">
                                         <asp:GridView runat="server" AutoGenerateColumns="false" ID="dataGrid"
-                                            CssClass="datatable table table-bordered table-hover" OnRowDataBound="dataGrid_RowDataBound">
+                                            CssClass="datatable table table-bordered table-hover" OnRowDataBound="dataGrid_RowDataBound"
+                                            OnRowCreated="dataGrid_RowCreated">
                                             <Columns>
                                                 <asp:TemplateField HeaderText="S. No." ItemStyle-HorizontalAlign="Center" ItemStyle-Width="70px">
                                                     <ItemTemplate>
@@ -123,9 +124,15 @@
                                                         <asp:Label ID="lblAllocationDate" runat="server" Text='<%# Eval("AllocationDate") %>'></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
+
                                                 <asp:TemplateField HeaderText="Requirement Duration" ItemStyle-CssClass="center-grid">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblAllocationTime" runat="server" Text='<%# Eval("AllocationTime") %>'></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="Allocation Time" ItemStyle-CssClass="center-grid" Visible="false">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblCreatedOn" runat="server" Text='<%# Eval("CreatedOn") %>'></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                                 <asp:TemplateField HeaderText="Allocation Status">

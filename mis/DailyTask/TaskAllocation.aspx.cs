@@ -227,6 +227,131 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
             ErrorMsg(ex);
         }
     }
+    //protected void btnSave_Click(object sender, EventArgs e)
+    //{
+    //    try
+    //    {
+    //        // =======================
+    //        // 🚫 PAGE BLOCK CONDITION
+    //        // =======================
+    //        DateTime now = DateTime.Now;
+    //        DateTime blockDate = new DateTime(2025, 12, 02);       // 02/12/2025
+    //        DateTime blockCutoff = new DateTime(2025, 12, 02, 19, 0, 0); // 7:00 PM
+
+    //        // If current date is 02/12/2025 AND time is after 7 PM
+
+    //            //            {
+    //            if (now.Date == blockDate.Date && now > blockCutoff)
+    //            {
+    //                WarningMsg("The page is closed after 02/12/2025 7:00 PM.");
+    //                return;   // stop everything
+    //            }
+    //        // =======================
+
+
+
+    //        if (Page.IsValid)
+    //        {
+    //            lblMsg.Text = string.Empty;
+    //            string ErrorMsg = string.Empty;
+
+    //            if (ddlEmployee.SelectedValue == "0") { ErrorMsg += "Please Select Employee Name.\\n"; }
+    //            if (ddlProject.SelectedValue == "0") { ErrorMsg += "Please Select Project Name.\\n"; }
+    //            if (ddlPriorityType.SelectedValue == "0") { ErrorMsg += "Please Select Priority.\\n"; }
+    //            if (txtAllocationDate.Text == "") { ErrorMsg += "Please Select Allocation Date.\\n"; }
+    //            if (txtAllocationTime.Text == "") { ErrorMsg += "Please Select Allocation Time.\\n"; }
+    //            if (txtTaskName.Text == "") { ErrorMsg += "Please Enter Task Name.\\n"; }
+    //            if (txtTaskDescription.Text == "") { ErrorMsg += "Please Enter Task Description.\\n"; }
+
+    //            if (!string.IsNullOrEmpty(ErrorMsg))
+    //            {
+    //                ScriptManager.RegisterClientScriptBlock(Page, Page.GetType(),
+    //                    "alertMessage", "alert(' \\n " + ErrorMsg + "')", true);
+    //                return;
+    //            }
+
+    //            DateTime allocationDate = DateTime.ParseExact(txtAllocationDate.Text, "dd/MM/yyyy", cult);
+    //            string allocationTime = txtAllocationTime.Text.Trim();
+
+    //            string combinedDateTime = string.Format("{0:yyyy-MM-dd} {1}", allocationDate, allocationTime);
+    //            DateTime allocationDateTime;
+    //            if (!DateTime.TryParse(combinedDateTime, out allocationDateTime))
+    //            {
+    //                WarningMsg("Invalid Allocation Date or Time format.");
+    //                return;
+    //            }
+
+
+    //            string flag = string.Empty;
+    //            if (btnSave.Text.Equals("Save"))
+    //            {
+    //                taskAllocationId = string.Empty;
+    //                flag = "3";
+    //            }
+    //            else if (btnSave.Text.Equals("Update"))
+    //            {
+    //                flag = "6";
+    //            }
+
+    //            if (string.IsNullOrEmpty(flag))
+    //            {
+    //                WarningMsg("Something went wrong, Please try after sometime.");
+    //                return;
+    //            }
+
+
+    //            ds = USP_TaskAllocation(
+    //                  new string[]
+    //                  {
+    //                  "Flag",
+    //                  "AllocationId",
+    //                  "EmployeeId",
+    //                  "ProjectId",
+    //                  "AllocationDate",
+    //                  "AllocationTime",
+    //                  "TaskName",
+    //                  "TaskDescription",
+    //                  "CreatedBy",
+    //                  "CreatedByIp",
+    //                  "PriorityTypeId",
+    //                  "EmployeeId_QA"
+    //                  },
+    //                  new string[]
+    //                  {
+    //                  flag,
+    //                  taskAllocationId,
+    //                  ddlEmployee.SelectedValue,
+    //                  ddlProject.SelectedValue,
+    //                  allocationDate.ToString("yyyy/MM/dd"),
+    //                  txtAllocationTime.Text,
+    //                  txtTaskName.Text,
+    //                  txtTaskDescription.Text.Trim().Replace(Environment.NewLine, "<br />"),
+    //                  Convert.ToString(ViewState["Emp_ID"]),
+    //                  objdb.GetLocalIPAddress(),
+    //                  ddlPriorityType.SelectedValue,
+    //                  ddlQA.SelectedValue
+    //                  });
+
+    //            if (IsNullDataSet(ds))
+    //            {
+    //                if (Convert.ToString(ds.Tables[0].Rows[0]["Stat"]).Equals("Ok"))
+    //                {
+    //                    SuccessMsg(Convert.ToString(ds.Tables[0].Rows[0]["Msg"]));
+    //                    Clear();
+    //                }
+    //                else
+    //                {
+    //                    WarningMsg(Convert.ToString(ds.Tables[0].Rows[0]["Msg"]));
+    //                }
+    //            }
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ErrorMsg(ex);
+    //    }
+    //}
+
 
     protected void btnSave_Click(object sender, EventArgs e)
     {
@@ -248,69 +373,89 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
                 if (!string.IsNullOrEmpty(ErrorMsg))
                 {
                     ScriptManager.RegisterClientScriptBlock(Page, Page.GetType(), "alertMessage", "alert(' \\n " + ErrorMsg + "')", true);
+                    return;
                 }
-                else
+
+                DateTime allocationDate = DateTime.ParseExact(txtAllocationDate.Text, "dd/MM/yyyy", cult);
+                string allocationTime = txtAllocationTime.Text.Trim();
+
+                string combinedDateTime = string.Format("{0:yyyy-MM-dd} {1}", allocationDate, allocationTime);
+                DateTime allocationDateTime;
+                if (!DateTime.TryParse(combinedDateTime, out allocationDateTime))
                 {
-                    string allocationDate = txtAllocationDate.Text != "" ? Convert.ToDateTime(txtAllocationDate.Text, cult).ToString("yyyy/MM/dd") : "";
-                    string flag = string.Empty;
-                    if (btnSave.Text.Equals("Save"))
+                    WarningMsg("Invalid Allocation Date or Time format.");
+                    return;
+                }
+
+
+
+                string flag = string.Empty;
+                if (btnSave.Text.Equals("Save"))
+                {
+                    taskAllocationId = string.Empty;
+                    flag = "3";
+                    DateTime now = DateTime.Now;
+                    DateTime today12PM = new DateTime(now.Year, now.Month, now.Day, 12, 0, 0);
+
+                    if (allocationDate.Date == now.Date && now > today12PM)
                     {
-                        taskAllocationId = string.Empty;
-                        flag = "3";
-                    }
-                    else if (btnSave.Text.Equals("Update"))
-                    {
-                        flag = "6";
-                    }
-                    if (string.IsNullOrEmpty(flag))
-                    {
-                        WarningMsg("Something went wrong, Please try after sometime.");
+                        WarningMsg("Task allocation is allowed only till 12:00 PM for the current date.");
                         return;
                     }
+                }
+                else if (btnSave.Text.Equals("Update"))
+                {
+                    flag = "6";
+                }
 
-                    ds = USP_TaskAllocation(
-                          new string[]
-                          {
-                              "Flag",
-                              "AllocationId",
-                              "EmployeeId",
-                              "ProjectId",
-                              "AllocationDate",
-                              "AllocationTime",
-                              "TaskName",
-                              "TaskDescription",
-                              "CreatedBy",
-                              "CreatedByIp",
-                              "PriorityTypeId",
-                              "EmployeeId_QA"
-                          },
-                          new string[]
-                          {
-                              flag,
-                              taskAllocationId,
-                              ddlEmployee.SelectedValue,
-                              ddlProject.SelectedValue,
-                              Convert.ToString(allocationDate),
-                              txtAllocationTime.Text,
-                              txtTaskName.Text,
-                              txtTaskDescription.Text.Trim().Replace(Environment.NewLine, "<br />"),
-                              Convert.ToString(ViewState["Emp_ID"]),
-                              objdb.GetLocalIPAddress(),
-                              ddlPriorityType.SelectedValue,
-                              ddlQA.SelectedValue
-                          });
+                if (string.IsNullOrEmpty(flag))
+                {
+                    WarningMsg("Something went wrong, Please try after sometime.");
+                    return;
+                }
 
-                    if (IsNullDataSet(ds))
+                ds = USP_TaskAllocation(
+                      new string[]
+                      {
+                      "Flag",
+                      "AllocationId",
+                      "EmployeeId",
+                      "ProjectId",
+                      "AllocationDate",
+                      "AllocationTime",
+                      "TaskName",
+                      "TaskDescription",
+                      "CreatedBy",
+                      "CreatedByIp",
+                      "PriorityTypeId",
+                      "EmployeeId_QA"
+                      },
+                      new string[]
+                      {
+                      flag,
+                      taskAllocationId,
+                      ddlEmployee.SelectedValue,
+                      ddlProject.SelectedValue,
+                      allocationDate.ToString("yyyy/MM/dd"),
+                      txtAllocationTime.Text,
+                      txtTaskName.Text,
+                      txtTaskDescription.Text.Trim().Replace(Environment.NewLine, "<br />"),
+                      Convert.ToString(ViewState["Emp_ID"]),
+                      objdb.GetLocalIPAddress(),
+                      ddlPriorityType.SelectedValue,
+                      ddlQA.SelectedValue
+                      });
+
+                if (IsNullDataSet(ds))
+                {
+                    if (Convert.ToString(ds.Tables[0].Rows[0]["Stat"]).Equals("Ok"))
                     {
-                        if (Convert.ToString(ds.Tables[0].Rows[0]["Stat"]).Equals("Ok"))
-                        {
-                            SuccessMsg(Convert.ToString(ds.Tables[0].Rows[0]["Msg"]));
-                            Clear();
-                        }
-                        else
-                        {
-                            WarningMsg(Convert.ToString(ds.Tables[0].Rows[0]["Msg"]));
-                        }
+                        SuccessMsg(Convert.ToString(ds.Tables[0].Rows[0]["Msg"]));
+                        Clear();
+                    }
+                    else
+                    {
+                        WarningMsg(Convert.ToString(ds.Tables[0].Rows[0]["Msg"]));
                     }
                 }
             }
@@ -320,6 +465,7 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
             ErrorMsg(ex);
         }
     }
+
 
     protected void gvTaskDetails_RowCommand(object sender, GridViewCommandEventArgs e)
     {

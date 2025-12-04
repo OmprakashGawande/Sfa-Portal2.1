@@ -154,6 +154,14 @@ public partial class Login : System.Web.UI.Page
                                         Session["Designation_ID"] = ds.Tables[0].Rows[0]["Designation_ID"].ToString();
                                         Session["Designation_Name"] = ds.Tables[0].Rows[0]["Designation_Name"].ToString();
                                         Session["Emp_ProfileImage"] = ds.Tables[0].Rows[0]["Emp_ProfileImage"].ToString();
+                                        if (ds.Tables.Count > 3 && ds.Tables[3].Rows.Count > 0)
+                                        {
+                                            Session["Role_ID"] = ds.Tables[3].Rows[0]["Role_ID"].ToString();
+                                        }
+                                        else
+                                        {
+                                            Session["Role_ID"] = null; 
+                                        }
                                         Session["AccessModule"] = ds.Tables[1];
                                         Session["AccessForm"] = ds.Tables[2];
                                         GetAccess();

@@ -101,7 +101,7 @@
                                                 runat="server" />
                                         </span>
                                         <label runat="server">Project<span style="color: red;">*</span></label>
-                                        <asp:DropDownList runat="server" ID="ddlProject" CssClass="form-select select2">
+                                        <asp:DropDownList runat="server" ID="ddlProject"  CssClass="form-select select2">
                                         </asp:DropDownList>
                                     </div>
                                 </div>
@@ -471,7 +471,7 @@
                                             </asp:TemplateField>
                                             <asp:TemplateField HeaderText="Assign Resource" ItemStyle-CssClass="center-grid">
                                                 <ItemTemplate>
-                                                    <asp:Label ID="lblAssignResource" runat="server" Text='<%# Eval("AssignResource") %>'></asp:Label>
+                                                    <asp:Label ID="lblAssignResource" runat="server" Text='<%# Eval("EmployeeNames") %>'></asp:Label>
                                                 </ItemTemplate>
                                             </asp:TemplateField>
                                             <asp:TemplateField HeaderText="Start Date" ItemStyle-CssClass="center-grid">
@@ -501,8 +501,8 @@
                                             </asp:TemplateField>
                                             <asp:TemplateField HeaderText="Priority" ItemStyle-CssClass="center-grid">
                                                 <ItemTemplate>
-                                                     <asp:Label ID="lblPriority" runat="server" Text='<%# Eval("Priority") %>'></asp:Label>
-                                                   <%-- <asp:Label ID="lblPriorityType" runat="server" Text='<%# Eval("PriorityType") %>' Font-Bold="true"
+                                                    <asp:Label ID="lblPriority" runat="server" Text='<%# Eval("Priority") %>'></asp:Label>
+                                                    <%-- <asp:Label ID="lblPriorityType" runat="server" Text='<%# Eval("PriorityType") %>' Font-Bold="true"
                                                         ForeColor='<%#Eval("PriorityTypeId").ToString() == "1" ? System.Drawing.Color.Red : 
                                                                      Eval("PriorityTypeId").ToString() == "2" ? System.Drawing.Color.Orange : 
                                                                      System.Drawing.Color.Black %>'></asp:Label>--%>
@@ -669,6 +669,11 @@
             if (val > 100) input.value = 100;
             if (val < 0) input.value = 0;
         }
+    </script>
+    <script>
+        $(document).ready(function () {
+            initCustomDataTable('.datatable', 'Project Plan Detail', 'Project Plan Detail', [20]);
+        });
     </script>
 </asp:Content>
 
