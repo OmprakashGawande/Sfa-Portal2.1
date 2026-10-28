@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MainMaster.master.cs" Inherits="MainMaster" %>
+<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MainMaster.master.cs" Inherits="MainMaster" %>
 
 <!DOCTYPE html>
 
@@ -12,42 +12,44 @@
     <title>SFA-Portal</title>
     <!-- Google font-->
 
-    <link rel="icon" href="assets/images/favicon.png" type="image/x-icon" />
-    <link rel="shortcut icon" href="assets/images/favicon.png" type="image/x-icon" />
+    <link rel="icon" href="../assets/images/favicon.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="../assets/images/favicon.png" type="image/x-icon" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
-    <%--<link rel="stylesheet" type="text/css" href="~/assets/css/font-awesome.css"/>--%>
-    <link href="assets/css/font-awesome.css" rel="stylesheet" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link href="../assets/css/font-awesome.css" rel="stylesheet" asp-append-version="true" />
     <!-- ico-font-->
-    <link rel="stylesheet" type="text/css" href="assets/css/vendors/icofont.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/icofont.css" asp-append-version="true" />
     <!-- Themify icon -->
-    <link rel="stylesheet" type="text/css" href="assets/css/vendors/themify.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/themify.css" asp-append-version="true" />
     <!-- Flag icon-->
-    <link rel="stylesheet" type="text/css" href="assets/css/vendors/flag-icon.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/flag-icon.css" asp-append-version="true" />
     <!-- Feather icon-->
-    <link rel="stylesheet" type="text/css" href="assets/css/vendors/feather-icon.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/feather-icon.css" asp-append-version="true" />
     <!-- Plugins css start-->
-    <link rel="stylesheet" type="text/css" href="assets/css/vendors/slick.css" asp-append-version="true" />
-    <link rel="stylesheet" type="text/css" href="assets/css/vendors/slick-theme.css" asp-append-version="true" />
-    <link rel="stylesheet" type="text/css" href="assets/css/vendors/scrollbar.css" asp-append-version="true" />
-    <link rel="stylesheet" type="text/css" href="assets/css/vendors/animate.css" asp-append-version="true" />
-    <link rel="stylesheet" type="text/css" href="assets/css/vendors/echart.css" asp-append-version="true" />
-    <link rel="stylesheet" type="text/css" href="assets/css/vendors/date-picker.css" asp-append-version="true" />
-    <link rel="stylesheet" type="text/css" href="assets/css/vendors/animate.css" asp-append-version="true" />
-    <link rel="stylesheet" type="text/css" href="assets/css/vendors/datatables.css" />
-    <link rel="stylesheet" type="text/css" href="assets/css/vendors/datatable-extension.css" />
-    <link rel="stylesheet" type="text/css" href="assets/css/vendors/flatpickr/flatpickr.min.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/slick.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/slick-theme.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/scrollbar.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/animate.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/echart.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/date-picker.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/animate.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/datatables.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/datatable-extension.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/flatpickr/flatpickr.min.css" asp-append-version="true" />
     <!-- Plugins css Ends-->
     <!-- Bootstrap css-->
-    <link rel="stylesheet" type="text/css" href="assets/css/vendors/bootstrap.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/bootstrap.css" asp-append-version="true" />
     <!-- App css-->
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css" asp-append-version="true" />
-    <link id="color" rel="stylesheet" href="assets/css/color-1.css" media="screen" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/style.css" asp-append-version="true" />
+    <link id="color" rel="stylesheet" href="../assets/css/color-1.css" media="screen" asp-append-version="true" />
     <!-- Responsive css-->
-    <link rel="stylesheet" type="text/css" href="assets/css/responsive.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/responsive.css" asp-append-version="true" />
 
-    <link href="css/select2.css" rel="stylesheet" asp-append-version="true" />
-    <link rel="stylesheet" type="text/css" href="assets/css/vendors/datatables.css" asp-append-version="true" />
+    <link href="../css/select2.css" rel="stylesheet" asp-append-version="true" />
+    <link href="../css/bootstrap-multiselect.css" rel="stylesheet" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/datatables.css" asp-append-version="true" />
+    <link href="../css/legacy-theme-bridge.css" rel="stylesheet" asp-append-version="true" />
     <style>
         /*.card {
             border: var(--theme-deafult) 1px solid !important;
@@ -82,6 +84,11 @@
             object-fit: cover; /* crop karke fit karega */
             object-position: center; /* center se crop karega */
             display: block;
+        }
+
+        .hidden,
+        [hidden] {
+            display: none !important;
         }
     </style>
     <asp:ContentPlaceHolder ID="ContentHeader" runat="server">
@@ -338,29 +345,82 @@
             <script src="../assets/js/datatable/datatable-extension/custom-1.js" asp-append-version="true"></script>--%>
             <!-- Plugins JS Ends-->
 
+            <script src="../js/bootstrap-multiselect.js" asp-append-version="true"></script>
             <script src="../assets/js/flat-pickr/flatpickr-1.js"></script>
             <script src="../assets/js/flat-pickr/custom-flatpickr-1.js"></script>
             <!-- Theme js-->
             <script src="../assets/js/script.js" asp-append-version="true"></script>
             <script src="../assets/js/theme-customizer/customizer.js" asp-append-version="true"></script>
             <script>
+                function initGlobalPlugins() {
+                    if (window.jQuery) {
+                        if ($.fn.select2) {
+                            $('.select2').select2();
+                        }
+                        if ($.fn.datepicker) {
+                            $('.DateAdd').datepicker({
+                                autoclose: true,
+                                format: 'dd/mm/yyyy',
+                                todayHighlight: true
+                            });
+                        }
+                    }
+                    if (typeof flatpickr !== 'undefined') {
+                        flatpickr('.datetime-local', {
+                            dateFormat: 'd/m/Y',
+                            allowInput: true,
+                            onChange: function (selectedDates, dateStr, instance) {
+                                instance.element.dispatchEvent(new Event('change', { bubbles: true }));
+                            }
+                        });
+                    }
+                }
 
                 $(document).ready(function () {
-                    $('.select2').select2()
+                    initGlobalPlugins();
 
-                    //$(".datatable").DataTable({
-                    //    paging: true,
-                    //    searching: true,
-                    //    ordering: true,
-                    //    info: true,
-                    //    responsive: true
-                    //});
-                    //$("#Grid").DataTable({
-                    //    dom: "Bfrtip",
-                    //    buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdfHtml5"],
-                    //});
+                    // Universal multiselect dropdown toggle for Bootstrap 5 compatibility
+                    $(document).off('click', '.btn-group:has(.multiselect) .dropdown-toggle').on('click', '.btn-group:has(.multiselect) .dropdown-toggle', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        var $group = $(this).closest('.btn-group');
+                        var $menu = $group.find('.multiselect-container');
+                        var wasOpen = $group.hasClass('open') || $menu.hasClass('show');
 
+                        $('.btn-group:has(.multiselect)').removeClass('open');
+                        $('.multiselect-container').removeClass('show').hide();
+
+                        if (!wasOpen) {
+                            $group.addClass('open');
+                            $menu.addClass('show').show();
+                        }
+                    });
+
+                    $(document).on('click', function (e) {
+                        if (!$(e.target).closest('.btn-group:has(.multiselect)').length) {
+                            $('.btn-group:has(.multiselect)').removeClass('open');
+                            $('.multiselect-container').removeClass('show').hide();
+                        }
+                    });
+
+                    $(document).on('click', '.multiselect-container', function (e) {
+                        e.stopPropagation();
+                    });
+
+                    // Input group addon click to open flatpickr
+                    $(document).on('click', '.input-group-text, .input-group-addon', function () {
+                        var $input = $(this).closest('.input-group').find('.datetime-local');
+                        if ($input.length && $input[0]._flatpickr) {
+                            $input[0]._flatpickr.open();
+                        }
+                    });
                 });
+
+                if (typeof Sys !== 'undefined' && Sys.WebForms && Sys.WebForms.PageRequestManager) {
+                    Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function () {
+                        initGlobalPlugins();
+                    });
+                }
                 function myModal() {
                     $("#myModal").modal('show');
                 }

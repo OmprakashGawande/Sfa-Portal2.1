@@ -50,7 +50,7 @@
     });
 
     // 9. Time-picker
-    flatpickr(".time-picker", {
+    flatpickr("#time-picker", {
         enableTime: true,
         noCalendar: true,
         dateFormat: "H:i"

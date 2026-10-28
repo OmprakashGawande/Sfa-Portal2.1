@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/mis/MainMaster.master" AutoEventWireup="true" CodeFile="ProjectManagerProcess.aspx.cs" Inherits="mis_Transaction_ProjectManagerProcess" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/mis/MainMaster.master" AutoEventWireup="true" CodeFile="ProjectManagerProcess.aspx.cs" Inherits="mis_Transaction_ProjectManagerProcess" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentHeader" runat="Server">
 </asp:Content>
@@ -46,12 +46,12 @@
 
                         </div>
                         <hr />
-                        <div class="row">
-                            <div class="col-xl-3">
-                                <div class="form-group">
-                                    <asp:Button runat="server" Style="margin-top: 22px;" CssClass="btn btn-block btn-outline-info" ValidationGroup="Save" OnClick="btnSearch_Click" ID="btnSearch" Text="Search" />
-                                    <a href="ProjectManagerProcess.aspx" style="margin-top: 22px;" class="btn btn-block   btn-outline-danger">Clear</a>
-                                </div>
+                        <div class="row mt-3">
+                            <div class="col-md-2 col-sm-4">
+                                <asp:Button runat="server" CssClass="btn btn-primary w-100" ValidationGroup="Save" OnClick="btnSearch_Click" ID="btnSearch" Text="Search" />
+                            </div>
+                            <div class="col-md-2 col-sm-4">
+                                <a href="ProjectManagerProcess.aspx" class="btn btn-outline-secondary w-100">Clear</a>
                             </div>
                         </div>
 
@@ -186,10 +186,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-12" runat="server" >
-                                <div class="form-group">
-                                    <asp:Button runat="server" OnClientClick="return validateCheckboxes();" CssClass="btn btn-block btn-success" ID="btnSave" OnClick="btnSave_Click" Text="Send" ValidationGroup="Save" />
-                                </div>
+                            <div class="col-md-2 mt-3" runat="server">
+                                <asp:Button runat="server" OnClientClick="return validateCheckboxes();" CssClass="btn btn-success w-100" ID="btnSave" OnClick="btnSave_Click" Text="Send" ValidationGroup="Save" />
                             </div>
                         </div>
                     </div>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Globalization;
 using System.Web.UI;
@@ -387,6 +387,18 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
                     return;
                 }
 
+                if (allocationDate.Date < DateTime.Today)
+                {
+                    WarningMsg("Past dates are not allowed for Task Allocation. Please select today or a future date.");
+                    return;
+                }
+
+                if (allocationDate.DayOfWeek == DayOfWeek.Saturday || allocationDate.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    WarningMsg("Task allocation is not allowed on weekends (Saturday / Sunday).");
+                    return;
+                }
+
 
 
                 string flag = string.Empty;
@@ -395,13 +407,16 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
                     taskAllocationId = string.Empty;
                     flag = "3";
                     DateTime now = DateTime.Now;
-                    DateTime today12PM = new DateTime(now.Year, now.Month, now.Day, 12, 0, 0);
 
-                    if (allocationDate.Date == now.Date && now > today12PM)
-                    {
-                        WarningMsg("Task allocation is allowed only till 12:00 PM for the current date.");
-                        return;
-                    }
+
+                    //DateTime today12PM = new DateTime(now.Year, now.Month, now.Day, 12, 0, 0);
+
+                    // if (allocationDate.Date == now.Date && now > today12PM)
+                    //{
+                    //    WarningMsg("Task allocation is allowed only till 12:00 PM for the current date.");
+                    //    return;
+                    //}
+                    
                 }
                 else if (btnSave.Text.Equals("Update"))
                 {

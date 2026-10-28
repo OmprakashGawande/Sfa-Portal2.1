@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/mis/MainMaster.master" AutoEventWireup="true" CodeFile="RptRequirementsTraceabilityMatrix.aspx.cs" Inherits="mis_Reports_RptRequirementsTraceabilityMatrix" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/mis/MainMaster.master" AutoEventWireup="true" CodeFile="RptRequirementsTraceabilityMatrix.aspx.cs" Inherits="mis_Reports_RptRequirementsTraceabilityMatrix" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentHeader" runat="Server">
 </asp:Content>
@@ -59,12 +59,12 @@
                                 </div>
                             </div>
                             <hr />
-                            <div class="row">
-                                <div class="col-xl-3">
-                                    <div class="form-group">
-                                        <asp:Button runat="server" Style="margin-top: 22px;" CssClass="btn btn-block btn-outline-success" OnClick="btnSearch_Click" ValidationGroup="Save" ID="btnSearch" Text="Search" />
-                                        <a href="RptRequirementsTraceabilityMatrix.aspx" style="margin-top: 22px;" class="btn btn-block   btn-outline-danger">Clear</a>
-                                    </div>
+                            <div class="row mt-3">
+                                <div class="col-md-2 col-sm-4">
+                                    <asp:Button runat="server" CssClass="btn btn-success w-100" OnClick="btnSearch_Click" ValidationGroup="Save" ID="btnSearch" Text="Search" />
+                                </div>
+                                <div class="col-md-2 col-sm-4">
+                                    <a href="RptRequirementsTraceabilityMatrix.aspx" class="btn btn-outline-secondary w-100">Clear</a>
                                 </div>
                             </div>
                         </div>

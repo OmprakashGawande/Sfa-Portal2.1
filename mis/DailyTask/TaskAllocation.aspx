@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/mis/MainMaster.master" AutoEventWireup="true" CodeFile="TaskAllocation.aspx.cs" Inherits="mis_DailyTask_TaskAllocation" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/mis/MainMaster.master" AutoEventWireup="true" CodeFile="TaskAllocation.aspx.cs" Inherits="mis_DailyTask_TaskAllocation" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentHeader" runat="Server">
 </asp:Content>
@@ -120,7 +120,7 @@
                                         </span>
                                         <label>Allocation Date<span style="color: red;">*</span></label>
                                         <asp:TextBox ID="txtAllocationDate" runat="server" placeholder="DD/MM/YYYY" autocomplete="off"
-                                            data-date-format="dd/mm/yyyy" data-date-autoclose="true" CssClass="form-control datetime-local" />
+                                            data-date-format="dd/mm/yyyy" data-date-autoclose="true" CssClass="form-control date-picker-allocation" />
                                     </div>
                                 </div>
 
@@ -287,12 +287,12 @@
                                 </div>
                             </div>
                             <hr />
-                            <div class="row">
-                                <div class="col-xl-3">
-                                    <div class="form-group">
-                                        <asp:Button runat="server" Style="margin-top: 22px;" OnClientClick="return validateAll();" CssClass="btn btn-block btn-outline-success" ValidationGroup="Save" ID="btnSave" Text="Save" />
-                                        <a href="TaskAllocation.aspx" style="margin-top: 22px;" class="btn btn-block   btn-outline-danger">Clear</a>
-                                    </div>
+                            <div class="row mt-3">
+                                <div class="col-md-2 col-sm-4">
+                                    <asp:Button runat="server" OnClientClick="return validateAll();" CssClass="btn btn-success w-100" ValidationGroup="Save" ID="btnSave" Text="Save" />
+                                </div>
+                                <div class="col-md-2 col-sm-4">
+                                    <a href="TaskAllocation.aspx" class="btn btn-outline-secondary w-100">Clear</a>
                                 </div>
                             </div>
                         </div>
@@ -397,71 +397,35 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentFooter" runat="Server">
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            flatpickr("#<%= txtAllocationTime.ClientID %>", {
-                enableTime: true,
-                noCalendar: true,
-                dateFormat: "H:i",       // 24-hour format, like 01:30
-                time_24hr: true,
-                minuteIncrement: 6,      // 0.1 hour = 6 minutes step
-                defaultHour: 0,
-                minTime: "00:06",        // minimum 6 minutes (0.1 hour)
-                maxTime: "09:00",        // maximum 9 hours
-                disableMobile: "true"    // force desktop version on mobile for consistent UI
-            });
-            //old code 3/12/2025 ko chalu karna hai
-            flatpickr(".datetime-local", {
-                dateFormat: "d/m/Y",
-                minDate: "today",
-                enableTime: false,
-                disable: [
-                    function (date) {
-                        // Disable Saturdays (6) and Sundays (0)
-                        return (date.getDay() === 0 || date.getDay() === 6);
-                    }
-                ],
-            });
-
-            //new code 3/12/2025 ko remove
-            //flatpickr(".datetime-local", {
-            //    dateFormat: "d/m/Y",
-            //    enableTime: false,
-
-            //    disable: [
-            //        function (date) {
-
-            //            let today = new Date();
-            //            today.setHours(0, 0, 0, 0);
-
-            //            let currentYear = today.getFullYear();
-
-            //            // November = month index 10
-            //            let isCurrentYearNovember =
-            //                (date.getFullYear() === currentYear &&
-            //                    date.getMonth() === 10);
-
-            //            // Allow: Today or future date
-            //            let isTodayOrFuture = (date >= today);
-
-            //            // Disable Saturday & Sunday
-            //            if (date.getDay() === 0 || date.getDay() === 6) {
-            //                return true;
-            //            }
-
-            //            // ❌ PAST DATE but NOT in current year's November → disable
-            //            if (date < today && !isCurrentYearNovember) {
-            //                return true;
-            //            }
-
-            //            // ✔ Allowed date
-            //            return false;
-            //        }
-            //    ]
-            //});
-
-
-
-        });
+        function initAllocationPickers() {
+            if (typeof flatpickr !== 'undefined') {
+                flatpickr("#<%= txtAllocationTime.ClientID %>", {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",       // 24-hour format, like 01:30
+                    time_24hr: true,
+                    minuteIncrement: 6,      // 0.1 hour = 6 minutes step
+                    defaultHour: 0,
+                    minTime: "00:06",        // minimum 6 minutes (0.1 hour)
+                    maxTime: "09:00",        // maximum 9 hours
+                    disableMobile: "true"    // force desktop version on mobile for consistent UI
+                });
+                flatpickr("#<%= txtAllocationDate.ClientID %>", {
+                    dateFormat: "d/m/Y",
+                    minDate: "today",
+                    allowInput: false,
+                    enableTime: false,
+                    disable: [
+                        function (date) {
+                            // Disable Saturdays (6) and Sundays (0)
+                            return (date.getDay() === 0 || date.getDay() === 6);
+                        }
+                    ]
+                });
+            }
+        }
+        document.addEventListener('DOMContentLoaded', initAllocationPickers);
+        $(document).ready(initAllocationPickers);
 
         //function sanitizeInput(el) {
         //    let val = el.value;

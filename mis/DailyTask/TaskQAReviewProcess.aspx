@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/mis/MainMaster.master" AutoEventWireup="true" CodeFile="TaskQAReviewProcess.aspx.cs" Inherits="mis_DailyTask_TaskQAReviewProcess" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/mis/MainMaster.master" AutoEventWireup="true" CodeFile="TaskQAReviewProcess.aspx.cs" Inherits="mis_DailyTask_TaskQAReviewProcess" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentHeader" runat="Server">
 </asp:Content>
@@ -91,12 +91,12 @@
                                 </div>
                             </div>
                             <hr />
-                            <div class="row">
-                                <div class="col-xl-3">
-                                    <div class="form-group">
-                                        <asp:Button OnClientClick="return validateTestCases();" runat="server" Style="margin-top: 22px;" CssClass="btn btn-block btn-outline-success" ValidationGroup="Save" ID="btnSave" Text="Save" OnClick="btnSave_Click" />
-                                        <a href="TaskQAReviewProcess.aspx" style="margin-top: 22px;" class="btn btn-block   btn-outline-danger">Clear</a>
-                                    </div>
+                            <div class="row mt-3">
+                                <div class="col-md-2 col-sm-4">
+                                    <asp:Button OnClientClick="return validateTestCases();" runat="server" CssClass="btn btn-success w-100" ValidationGroup="Save" ID="btnSave" Text="Save" OnClick="btnSave_Click" />
+                                </div>
+                                <div class="col-md-2 col-sm-4">
+                                    <a href="TaskQAReviewProcess.aspx" class="btn btn-outline-secondary w-100">Clear</a>
                                 </div>
                             </div>
                         </div>

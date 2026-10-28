@@ -57,10 +57,11 @@
                                 </div>
                             </div>
                             <div class="col-xl-2 col-sm-6 position-relative">
-                                <label runat="server">
-                                    Date 
-                                </label>
                                 <div class="form-group">
+                                    <label runat="server">
+                                        Date 
+                                    </label>
+
                                     <asp:TextBox runat="server" ID="txtDate"
                                         data-provide="timepicker" placeholder="DD/MM/YYYY"
                                         autocomplete="off" data-date-format="dd/mm/yyyy"
@@ -217,7 +218,7 @@
                         <div class="col-xl-3" runat="server" id="Div_button" visible="false">
                             <div class="form-group">
                                 <asp:Button runat="server" OnClientClick="return validateCheckbox() && ValidatePage();" CssClass="btn btn-block btn-outline-success" ID="btnSave" Text="Save" ValidationGroup="Save" />
-                                <a href="TaskFilling.aspx" class="btn btn-block   btn-outline-danger">Clear</a> 
+                                <a href="TaskFilling.aspx" class="btn btn-block   btn-outline-danger">Clear</a>
                             </div>
                         </div>
                     </div>
@@ -359,8 +360,8 @@
     <script>
         const txtTaskRemark = document.getElementById('<%=txtTaskRemark.ClientID%>');
         const txtRemark = document.getElementById('<%=txtRemark.ClientID%>');
-        const lblCount1 = document.getElementById('<%=lblCounter.ClientID%>'); // assuming this is for txtDiscription
-        const lblCount2 = document.getElementById('<%=lblCounter2.ClientID%>'); // for txtTaskDescription
+const lblCount1 = document.getElementById('<%=lblCounter.ClientID%>'); // assuming this is for txtDiscription
+const lblCount2 = document.getElementById('<%=lblCounter2.ClientID%>'); // for txtTaskDescription
 
         // Add keyup event listeners
         txtTaskRemark.addEventListener("keyup", () => CharactersCount(txtTaskRemark, lblCount1, 2000));

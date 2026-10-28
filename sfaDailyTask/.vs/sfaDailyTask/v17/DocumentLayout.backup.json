@@ -3,12 +3,22 @@
   "WorkspaceRootPath": "D:\\Git\\Sfa-Portal2.1\\sfaDailyTask\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{312A048B-0DEA-4368-882F-C19472121350}|sfaDailyTask\\sfaDailyTask.csproj|d:\\git\\sfa-portal2.1\\sfadailytask\\sfadailytask\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|sfaDailyTask||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{312A048B-0DEA-4368-882F-C19472121350}|sfaDailyTask\\sfaDailyTask.csproj|d:\\git\\sfa-portal2.1\\sfadailytask\\sfadailytask\\commonmethod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{312A048B-0DEA-4368-882F-C19472121350}|sfaDailyTask\\sfaDailyTask.csproj|solutionrelative:sfadailytask\\commonmethod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{312A048B-0DEA-4368-882F-C19472121350}|sfaDailyTask\\sfaDailyTask.csproj|D:\\Git\\Sfa-Portal2.1\\sfaDailyTask\\sfadailytask\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{312A048B-0DEA-4368-882F-C19472121350}|sfaDailyTask\\sfaDailyTask.csproj|solutionrelative:sfadailytask\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{312A048B-0DEA-4368-882F-C19472121350}|sfaDailyTask\\sfaDailyTask.csproj|D:\\Git\\Sfa-Portal2.1\\sfaDailyTask\\sfadailytask\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "AbsoluteMoniker": "D:0:0:{312A048B-0DEA-4368-882F-C19472121350}|sfaDailyTask\\sfaDailyTask.csproj|d:\\git\\sfa-portal2.1\\sfadailytask\\sfadailytask\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{312A048B-0DEA-4368-882F-C19472121350}|sfaDailyTask\\sfaDailyTask.csproj|solutionrelative:sfadailytask\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{312A048B-0DEA-4368-882F-C19472121350}|sfaDailyTask\\sfaDailyTask.csproj|d:\\git\\sfa-portal2.1\\sfadailytask\\sfadailytask\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|f8d6553f-f752-4dbf-acb6-f291b744a792"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,7 +28,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -42,25 +52,51 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "sfaDailyTask",
+              "DocumentMoniker": "D:\\Git\\Sfa-Portal2.1\\sfaDailyTask\\sfaDailyTask\\sfaDailyTask.csproj",
+              "RelativeDocumentMoniker": "sfaDailyTask\\sfaDailyTask.csproj",
+              "ToolTip": "D:\\Git\\Sfa-Portal2.1\\sfaDailyTask\\sfaDailyTask\\sfaDailyTask.csproj*",
+              "RelativeToolTip": "sfaDailyTask\\sfaDailyTask.csproj*",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-10-30T10:16:46.821Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "CommonMethod.cs",
+              "DocumentMoniker": "D:\\Git\\Sfa-Portal2.1\\sfaDailyTask\\sfaDailyTask\\CommonMethod.cs",
+              "RelativeDocumentMoniker": "sfaDailyTask\\CommonMethod.cs",
+              "ToolTip": "D:\\Git\\Sfa-Portal2.1\\sfaDailyTask\\sfaDailyTask\\CommonMethod.cs",
+              "RelativeToolTip": "sfaDailyTask\\CommonMethod.cs",
+              "ViewState": "AgIAAMwAAAAAAAAAAAAIwNcAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-30T09:51:17.091Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "App.config",
               "DocumentMoniker": "D:\\Git\\Sfa-Portal2.1\\sfaDailyTask\\sfaDailyTask\\App.config",
               "RelativeDocumentMoniker": "sfaDailyTask\\App.config",
               "ToolTip": "D:\\Git\\Sfa-Portal2.1\\sfaDailyTask\\sfaDailyTask\\App.config",
               "RelativeToolTip": "sfaDailyTask\\App.config",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
-              "WhenOpened": "2025-08-28T06:01:48.515Z"
+              "WhenOpened": "2025-08-28T06:01:48.515Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Git\\Sfa-Portal2.1\\sfaDailyTask\\sfaDailyTask\\Program.cs",
               "RelativeDocumentMoniker": "sfaDailyTask\\Program.cs",
               "ToolTip": "D:\\Git\\Sfa-Portal2.1\\sfaDailyTask\\sfaDailyTask\\Program.cs",
               "RelativeToolTip": "sfaDailyTask\\Program.cs",
-              "ViewState": "AgIAAFwAAAAAAAAAAAAgwIkAAAApAAAAAAAAAA==",
+              "ViewState": "AgIAAD0AAAAAAAAAAAAgwBMAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-28T06:01:15.55Z",
               "EditorCaption": ""

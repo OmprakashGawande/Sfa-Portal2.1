@@ -21,7 +21,7 @@
     <div class="container-fluid">
         <div class="row mt-3">
 
-            <div class="col-xl-12 col-sm-6 position-relative text-end">
+            <div class="col-xl-12 col-sm-6 position-relative text-end" style="display: none;">
                 <div class="form-group">
                     <asp:Button ID="btnOldSFA" runat="server"
                         Text="Access Leave & Salary Management (Old SFA Portal)"
@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <div class="page-title">
+        <div class="page-title" style="display: none;">
             <div class="row">
                 <div class="col-6">
                     <h4>Dashboard (<span runat="server" id="SpCDate"></span>)</h4>
@@ -46,7 +46,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" style="display: none;">
             <div class="col-xml-4 col-sm-4">
                 <div class="card">
                     <div class="card-header">
@@ -275,10 +275,10 @@
 
 
         </div>
-        <hr />
+        <%--<hr />--%>
 
-        <h4>QA Process Completed   <span class="f-12 f-w-400">(No's)</span></h4>
-        <div class="row mt-3">
+        <h4 style="display: none;">QA Process Completed   <span class="f-12 f-w-400">(No's)</span></h4>
+        <div class="row mt-3" style="display: none;">
 
             <div class="col-xl-4 col-sm-6">
                 <div class="card o-hidden small-widget">

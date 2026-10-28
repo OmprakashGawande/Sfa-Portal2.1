@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Web;
 public partial class MainMaster : System.Web.UI.MasterPage
@@ -105,7 +105,7 @@ public partial class MainMaster : System.Web.UI.MasterPage
                 DataTable dtAccessForm = Session["AccessForm"] as DataTable;
                 DataView dv = dtAccessForm.DefaultView;
                 dv.RowFilter = "Module_ID = '" + Session["Module_Id"].ToString() + "'";
-                DataTable dtAccess = dv.ToTable();
+                DataTable dtAccess = dv.ToTable(true);
 
                 string currentMenu = "";
                 for (int i = 0; i < dtAccess.Rows.Count; i++)
@@ -177,6 +177,19 @@ public partial class MainMaster : System.Web.UI.MasterPage
     }
 
 
+    protected void Page_PreRender(object sender, EventArgs e)
+    {
+        try
+        {
+            if (breadcrumbContainer != null && string.IsNullOrEmpty(breadcrumbContainer.InnerHtml))
+            {
+                string currentPath = Request.Url.AbsolutePath.Substring(Request.Url.AbsolutePath.LastIndexOf("/") + 1);
+                GenerateBreadcrumb(currentPath);
+            }
+        }
+        catch { }
+    }
+
     public void GenerateBreadcrumb(string currentPath)
     {
         try
@@ -197,10 +210,37 @@ public partial class MainMaster : System.Web.UI.MasterPage
                 }
             }
 
-            if (string.IsNullOrEmpty(page))
+            if (string.IsNullOrEmpty(page) || page == "Unknown Page")
             {
-                page = "Unknown Page";
+                if (!string.IsNullOrEmpty(this.Page.Title) && this.Page.Title != "Untitled Page")
+                {
+                    page = this.Page.Title.Replace(" | SFA Portal", "").Trim();
+                }
+                else
+                {
+                    string raw = System.IO.Path.GetFileNameWithoutExtension(currentPath);
+                    if (raw.StartsWith("Rpt", StringComparison.OrdinalIgnoreCase))
+                        raw = raw.Substring(3);
+                    raw = raw.Replace("_", " ");
+                    page = System.Text.RegularExpressions.Regex.Replace(raw, "(\\B[A-Z])", " $1").Trim();
+                }
             }
+
+            if (string.IsNullOrEmpty(section))
+            {
+                string[] parts = Request.Url.AbsolutePath.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length >= 2)
+                {
+                    section = parts[parts.Length - 2];
+                }
+                else
+                {
+                    section = "Home";
+                }
+            }
+
+            string homeUrl = ResolveClientUrl("~/mis/Dashboard/Home.aspx?IsMainPage=1");
+            string svgPath = ResolveClientUrl("~/assets/svg/icon-sprite.svg#stroke-home");
 
             string breadcrumbHtml = @"
         <div class='container-fluid'>
@@ -210,11 +250,11 @@ public partial class MainMaster : System.Web.UI.MasterPage
                         <h4>" + page + @"</h4>
                     </div>
                     <div class='col-6'>
-                        <ol class='breadcrumb'>
+                        <ol class='breadcrumb justify-content-end'>
                             <li class='breadcrumb-item'>
-                                <a href='../Dashboard/Home.aspx?IsMainPage=1'>
-                                    <svg class='stroke-icon'>
-                                        <use href='../assets/svg/icon-sprite.svg#stroke-home'></use>
+                                <a href='" + homeUrl + @"' title='Home'>
+                                    <svg class='stroke-icon' style='width:16px;height:16px;vertical-align:middle;'>
+                                        <use href='" + svgPath + @"'></use>
                                     </svg>
                                 </a>
                             </li>";
@@ -237,7 +277,7 @@ public partial class MainMaster : System.Web.UI.MasterPage
         catch
         {
             // fallback if anything fails
-            breadcrumbContainer.InnerHtml = "<h4>Page</h4>";
+            breadcrumbContainer.InnerHtml = "<div class='container-fluid'><div class='page-title'><h4>Page</h4></div></div>";
         }
     }
     //protected void Page_Load(object sender, EventArgs e)
