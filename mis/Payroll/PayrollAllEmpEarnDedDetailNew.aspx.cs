@@ -317,16 +317,17 @@ public partial class mis_Payroll_PayrollAllEmpEarnDedDetailNew : System.Web.UI.P
                         }
                     }
 
-                    if (deductionHeads.Count == 0 && dsEmp.Tables.Count > 2)
+                    if (dsEmp.Tables.Count > 2)
                     {
                         foreach (DataRow r in dsEmp.Tables[2].Rows)
                         {
                             string headName = r["EarnDeduction_Name"].ToString().Trim();
-                            if (!headName.Equals("EMPLOYEES PROVIDENT FUND (EMPLOYER)", StringComparison.OrdinalIgnoreCase)
-                                && !headName.Equals("ESI", StringComparison.OrdinalIgnoreCase)
-                                && !headName.ToUpper().Contains("ESI"))
+                            if (!headName.Equals("EMPLOYEES PROVIDENT FUND (EMPLOYER)", StringComparison.OrdinalIgnoreCase))
                             {
-                                deductionHeads.Add(headName);
+                                if (!deductionHeads.Contains(headName))
+                                {
+                                    deductionHeads.Add(headName);
+                                }
                             }
                         }
                     }
@@ -583,9 +584,7 @@ public partial class mis_Payroll_PayrollAllEmpEarnDedDetailNew : System.Web.UI.P
         foreach (DataRow row in dsEmp.Tables[2].Rows)
         {
             string headName = row["EarnDeduction_Name"].ToString().Trim();
-            if (!headName.Equals("EMPLOYEES PROVIDENT FUND (EMPLOYER)", StringComparison.OrdinalIgnoreCase)
-                && !headName.Equals("ESI", StringComparison.OrdinalIgnoreCase)
-                && !headName.ToUpper().Contains("ESI"))
+            if (!headName.Equals("EMPLOYEES PROVIDENT FUND (EMPLOYER)", StringComparison.OrdinalIgnoreCase))
             {
                 empDeductionDict[headName] = ParseDecimal(row["Earning"]);
             }

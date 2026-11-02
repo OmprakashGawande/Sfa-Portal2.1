@@ -74,7 +74,47 @@
         }
 
         .dt-buttons {
-            margin-bottom: 0.5rem; /* ya jitna margin chahiye, yahan adjust karo */
+            margin-bottom: 0.75rem;
+        }
+
+        .dt-buttons .btn,
+        .dt-buttons .buttons-excel,
+        .buttons-excel {
+            background-color: #ff5722 !important;
+            border-color: #ff5722 !important;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            margin-right: 6px !important;
+            border-radius: 4px !important;
+            border: none !important;
+            padding: 6px 14px !important;
+            box-shadow: 1px 2px 4px rgba(0,0,0,0.15) !important;
+        }
+
+        .dt-buttons .buttons-pdf,
+        .buttons-pdf {
+            background-color: #e91e63 !important;
+            border-color: #e91e63 !important;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            margin-right: 6px !important;
+            border-radius: 4px !important;
+            border: none !important;
+            padding: 6px 14px !important;
+            box-shadow: 1px 2px 4px rgba(0,0,0,0.15) !important;
+        }
+
+        .dt-buttons .buttons-print,
+        .buttons-print {
+            background-color: #009688 !important;
+            border-color: #009688 !important;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            margin-right: 6px !important;
+            border-radius: 4px !important;
+            border: none !important;
+            padding: 6px 14px !important;
+            box-shadow: 1px 2px 4px rgba(0,0,0,0.15) !important;
         }
 
         .profile-media img {
@@ -431,7 +471,8 @@
                     // Reload after a short delay
                     $('.select2').select2();
                 }
-                function initCustomDataTable(tableSelector, excelFileName, excelTopTitle, excludeColumns) {
+
+                function initCustomDataTable(tableSelector, excelFileName, excelTopTitle, excludeColumns, options) {
                     function getFormattedDateTime() {
                         var now = new Date();
                         var day = String(now.getDate()).padStart(2, '0');
@@ -453,10 +494,183 @@
                         $(tableSelector).DataTable().clear().destroy();
                     }
 
-                    // Prepare export column selector
-                    let exportCols = ':visible';
-                    if (excludeColumns && excludeColumns.length > 0) {
-                        exportCols = ':visible:not(' + excludeColumns.map(c => `:eq(${c})`).join(',') + ')';
+                    options = options || {};
+
+                    // Prepare export column selector:
+                    // Include ALL columns EXCEPT those explicitly listed in excludeColumns or having no-export class
+                    let exportCols = function (idx, data, node) {
+                        if (excludeColumns && Array.isArray(excludeColumns) && excludeColumns.indexOf(idx) !== -1) {
+                            return false;
+                        }
+                        if (node && ($(node).hasClass('no-export') || $(node).hasClass('noExport') || $(node).hasClass('dtr-control'))) {
+                            return false;
+                        }
+                        return true;
+                    };
+
+                    var exportFormat = {
+                        body: function (data, row, column, node) {
+                            if (!node) return data;
+                            var $clone = $(node).clone();
+                            $clone.find('br').replaceWith(' ');
+                            $clone.find('div, p, small, span').each(function () {
+                                $(this).append(' ');
+                            });
+                            return $clone.text().replace(/\s+/g, ' ').trim();
+                        }
+                    };
+
+                    var dtButtons = [
+                        {
+                            extend: 'excelHtml5',
+                            text: '<i class="fa fa-file-excel-o"></i> Excel',
+                            title: `${excelFileName} - ${getFormattedDateTime()}`,
+                            exportOptions: { columns: exportCols, format: exportFormat },
+                            footer: true,
+                            customize: function (xlsx) {
+                                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                                var styles = xlsx.xl['styles.xml'];
+
+                                // Count number of columns in the exported sheet
+                                var colCount = $('sheetData row:first c', sheet).length;
+
+                                // Add a new style for centered text
+                                var cellXfs = $('cellXfs xf', styles);
+                                var centerStyleIndex = cellXfs.length;
+                                var centerStyle =
+                                    '<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0">' +
+                                    '<alignment horizontal="center"/>' +
+                                    '</xf>';
+                                cellXfs.append(centerStyle);
+
+                                // Convert 0-based col index to Excel col letters (A, B, ... Z, AA, AB...)
+                                function getExcelColName(n) {
+                                    var ordA = 65;
+                                    var ordZ = 90;
+                                    var len = ordZ - ordA + 1;
+                                    var s = "";
+                                    while (n >= 0) {
+                                        s = String.fromCharCode((n % len) + ordA) + s;
+                                        n = Math.floor(n / len) - 1;
+                                    }
+                                    return s;
+                                }
+
+                                var lastColLetter = getExcelColName(colCount > 0 ? colCount - 1 : 0);
+                                var mergeCells = sheet.getElementsByTagName('mergeCells')[0];
+                                if (!mergeCells) {
+                                    mergeCells = sheet.createElement('mergeCells');
+                                    sheet.documentElement.appendChild(mergeCells);
+                                }
+                                var mergeCell = sheet.createElement('mergeCell');
+                                mergeCell.setAttribute('ref', 'A1:' + lastColLetter + '1');
+                                mergeCells.appendChild(mergeCell);
+                                mergeCells.setAttribute('count', mergeCells.getElementsByTagName('mergeCell').length);
+
+                                // Insert the title row at top
+                                var row = $('<row r="1"></row>');
+                                var cell = $('<c t="inlineStr" r="A1" s="' + centerStyleIndex + '">' +
+                                    '<is><t>' + excelTopTitle + '</t></is></c>');
+                                row.append(cell);
+                                sheet.childNodes[0].insertBefore(row[0], sheet.childNodes[0].firstChild);
+                            }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            text: '<i class="fa fa-file-pdf-o"></i> PDF',
+                            title: `${excelFileName} - ${getFormattedDateTime()}`,
+                            exportOptions: { columns: exportCols, format: exportFormat },
+                            footer: true,
+                            orientation: 'landscape',
+                            pageSize: 'A4',
+                            customize: function (doc) {
+                                doc.pageMargins = [10, 15, 10, 15];
+
+                                for (var i = 0; i < doc.content.length; i++) {
+                                    if (doc.content[i].table) {
+                                        var table = doc.content[i].table;
+                                        var colCount = table.body[0].length;
+
+                                        // Set auto/distributed widths for all columns so all columns fit within the page
+                                        if (colCount > 12) {
+                                            var colWidths = [];
+                                            for (var c = 0; c < colCount; c++) {
+                                                if (c === 0) {
+                                                    colWidths.push(20); // Compact S.No.
+                                                } else {
+                                                    colWidths.push('*');
+                                                }
+                                            }
+                                            table.widths = colWidths;
+                                        } else {
+                                            table.widths = Array(colCount).fill('*');
+                                        }
+
+                                        // Compact table cell padding & borders
+                                        doc.content[i].layout = {
+                                            hLineWidth: function () { return 0.5; },
+                                            vLineWidth: function () { return 0.5; },
+                                            hLineColor: function () { return '#ddd'; },
+                                            vLineColor: function () { return '#ddd'; },
+                                            paddingLeft: function () { return 2; },
+                                            paddingRight: function () { return 2; },
+                                            paddingTop: function () { return 2.5; },
+                                            paddingBottom: function () { return 2.5; }
+                                        };
+
+                                        // Header styling and font size
+                                        var headerFontSize = colCount > 15 ? 6 : (colCount > 10 ? 7 : 8);
+                                        var bodyFontSize = colCount > 15 ? 5.5 : (colCount > 10 ? 6.5 : 7.5);
+
+                                        if (doc.styles && doc.styles.tableHeader) {
+                                            doc.styles.tableHeader.fontSize = headerFontSize;
+                                            doc.styles.tableHeader.alignment = 'center';
+                                        }
+
+                                        doc.defaultStyle = doc.defaultStyle || {};
+                                        doc.defaultStyle.fontSize = bodyFontSize;
+
+                                        // Style header cells with background color
+                                        for (var c = 0; c < table.body[0].length; c++) {
+                                            var headerCell = table.body[0][c];
+                                            if (headerCell && typeof headerCell === 'object') {
+                                                headerCell.fillColor = '#005d68';
+                                                headerCell.color = '#ffffff';
+                                                headerCell.bold = true;
+                                                headerCell.alignment = 'center';
+                                                headerCell.fontSize = headerFontSize;
+                                            }
+                                        }
+
+                                        // Style body cells font size
+                                        for (var r = 1; r < table.body.length; r++) {
+                                            for (var c = 0; c < table.body[r].length; c++) {
+                                                var bCell = table.body[r][c];
+                                                if (bCell && typeof bCell === 'object') {
+                                                    bCell.fontSize = bodyFontSize;
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    ];
+
+                    var showPrint = true;
+                    if (options && typeof options.showPrint !== 'undefined') {
+                        showPrint = options.showPrint;
+                    }
+
+                    if (showPrint) {
+                        dtButtons.push({
+                            extend: 'print',
+                            text: '<i class="fa fa-print"></i> Print',
+                            title: `${excelFileName} - ${getFormattedDateTime()}`,
+                            exportOptions: { columns: exportCols, format: exportFormat },
+                            footer: true
+                        });
                     }
 
                     $(tableSelector).DataTable({
@@ -472,59 +686,7 @@
                             '<"row"<"col-sm-4"l><"col-sm-8"f>>' +   // Dropdown left, search right
                             '<"row"<"col-sm-12"tr>>' +               // Table row
                             '<"row"<"col-sm-5"i><"col-sm-7"p>>',     // Info and pagination
-                        buttons: [
-                            {
-                                extend: 'excelHtml5',
-                                text: '<i class="fa fa-file-excel-o"></i> Excel',
-                                title: `${excelFileName} - ${getFormattedDateTime()}`,
-                                exportOptions: { columns: exportCols },
-                                footer: true,
-                                customize: function (xlsx) {
-                                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                                    var styles = xlsx.xl['styles.xml'];
-
-                                    // Count number of columns in the exported sheet
-                                    var colCount = $('sheetData row:first c', sheet).length;
-
-                                    // Add a new style for centered text
-                                    var cellXfs = $('cellXfs xf', styles);
-                                    var centerStyleIndex = cellXfs.length;
-                                    var centerStyle =
-                                        '<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0">' +
-                                        '<alignment horizontal="center"/>' +
-                                        '</xf>';
-                                    cellXfs.append(centerStyle);
-
-                                    // Merge cells from A1 to last column for title
-                                    var lastColLetter = String.fromCharCode(65 + colCount - 1); // 65 = 'A'
-                                    var mergeCells = sheet.getElementsByTagName('mergeCells')[0];
-                                    if (!mergeCells) {
-                                        mergeCells = sheet.createElement('mergeCells');
-                                        sheet.documentElement.appendChild(mergeCells);
-                                    }
-                                    var mergeCell = sheet.createElement('mergeCell');
-                                    mergeCell.setAttribute('ref', 'A1:' + lastColLetter + '1');
-                                    mergeCells.appendChild(mergeCell);
-                                    mergeCells.setAttribute('count', mergeCells.getElementsByTagName('mergeCell').length);
-
-                                    // Insert the title row at top
-                                    var row = $('<row r="1"></row>');
-                                    var cell = $('<c t="inlineStr" r="A1" s="' + centerStyleIndex + '">' +
-                                        '<is><t>' + excelTopTitle + '</t></is></c>');
-                                    row.append(cell);
-                                    sheet.childNodes[0].insertBefore(row[0], sheet.childNodes[0].firstChild);
-                                }
-                            },
-                            {
-                                extend: 'pdfHtml5',
-                                text: '<i class="fa fa-file-pdf-o"></i> PDF',
-                                title: `${excelFileName} - ${getFormattedDateTime()}`,
-                                exportOptions: { columns: exportCols },
-                                footer: true,
-                                orientation: 'landscape',
-                                pageSize: 'A4'
-                            }
-                        ]
+                        buttons: dtButtons
                     });
                 }
 

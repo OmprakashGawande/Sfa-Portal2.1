@@ -127,7 +127,7 @@
                             </div>
 
                             <div class="col-xl-4 col-md-4 col-sm-6">
-                                <div class="card kpi-card bg-light-warning border-warning mb-0">
+                                <div class="card kpi-card bg-light-warning mb-0">
                                     <div class="card-body p-3">
                                         <div class="d-flex align-items-center">
                                             <div class="flex-shrink-0 bg-warning text-white p-3 rounded-circle me-3">
@@ -233,7 +233,7 @@
 
                                     <asp:TemplateField HeaderText="Duration" ItemStyle-CssClass="center-grid" ItemStyle-Width="100px">
                                         <ItemTemplate>
-                                            <span class="badge bg-light-info text-info font-weight-bold">
+                                            <span class="badge bg-light-info text-dark font-weight-bold">
                                                 <i class="fa fa-hourglass-start me-1"></i>
                                                 <asp:Label ID="lblTaskDuration" runat="server" Text='<%# Eval("TaskDuration") %>'></asp:Label>
                                             </span>
@@ -270,9 +270,10 @@
 
                                     <asp:TemplateField HeaderText="Action" ItemStyle-CssClass="center-grid" ItemStyle-Width="120px">
                                         <ItemTemplate>
-                                            <a href="TaskAllocationEntry.aspx" class="btn btn-sm btn-success text-white">
+                                            <asp:HyperLink ID="lnkFillTask" runat="server" NavigateUrl="TaskAllocationEntry.aspx" CssClass="btn btn-sm btn-success text-white">
                                                 <i class="fa fa-pencil-square-o me-1"></i>Fill Task
-                                            </a>
+                                            </asp:HyperLink>
+                                            <asp:Label ID="lblNoAction" runat="server" Text="-" CssClass="text-muted" Visible="false"></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                 </Columns>
@@ -289,7 +290,7 @@
     <script>
         $(document).ready(function () {
             if ($('.datatable tbody tr').length > 0 && $('.datatable td').length > 1) {
-                initCustomDataTable('.datatable', 'Today_Allocated_Tasks', 'Today Allocated Tasks', []);
+                initCustomDataTable('.datatable', 'Today_Allocated_Tasks', 'Today Allocated Tasks', [10]);
             }
             if ($('.select2').length > 0) {
                 $('.select2').select2();

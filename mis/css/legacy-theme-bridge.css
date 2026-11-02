@@ -821,3 +821,42 @@ ul.multiselect-container .multiselect-search {
     }
 }
 
+/* --------------------------------------------------------------------------
+   14. ALERT MESSAGES (Full visibility at all zoom levels including 150% and mobile)
+   -------------------------------------------------------------------------- */
+.alert,
+.alert-dismissible {
+    position: relative !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    overflow: visible !important;
+}
+
+.alert-dismissible p,
+.alert p,
+.alert-dismissible strong ~ p {
+    max-width: 100% !important;
+    width: auto !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    line-height: 1.5 !important;
+    display: block !important;
+}
+
+@media (max-width: 1400px), (max-width: 1280px), (max-width: 991px), (max-width: 768px), (max-width: 575px) {
+    .alert-dismissible p,
+    .alert p,
+    .alert-dismissible strong ~ p {
+        max-width: 100% !important;
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+    }
+}
+
+

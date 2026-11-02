@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 
 public partial class mis_Payroll_PayrollEarnDeductionDetailFullNew : System.Web.UI.Page
@@ -219,6 +220,34 @@ public partial class mis_Payroll_PayrollEarnDeductionDetailFullNew : System.Web.
         }
     }
 
+    private decimal ParseDecimal(object val)
+    {
+        if (val == null || val == DBNull.Value) return 0m;
+        decimal result = 0m;
+        decimal.TryParse(val.ToString().Trim(), out result);
+        return result;
+    }
+
+    private string GetMonthDisplayName(int monthNo)
+    {
+        switch (monthNo)
+        {
+            case 1: return "January";
+            case 2: return "February";
+            case 3: return "March";
+            case 4: return "April";
+            case 5: return "May";
+            case 6: return "June";
+            case 7: return "July";
+            case 8: return "August";
+            case 9: return "September";
+            case 10: return "October";
+            case 11: return "November";
+            case 12: return "December";
+            default: return "";
+        }
+    }
+
     protected void FillGrid()
     {
         try
@@ -250,25 +279,25 @@ public partial class mis_Payroll_PayrollEarnDeductionDetailFullNew : System.Web.
                 if (dsNew != null && dsNew.Tables.Count > 0 && dsNew.Tables[0].Rows.Count > 0)
                 {
                     DataRow empRow = dsNew.Tables[0].Rows[0];
-                    decimal basic = decimal.Parse(empRow["Salary_Basic"].ToString());
-                    decimal emp_GrossSalery = decimal.Parse(empRow["Emp_GrossSalery"].ToString());
-                    decimal emp_BasicSalery = decimal.Parse(empRow["Emp_BasicSalery"].ToString());
+                    decimal basic = ParseDecimal(empRow["Salary_Basic"]);
+                    decimal emp_GrossSalery = ParseDecimal(empRow["Emp_GrossSalery"]);
+                    decimal emp_BasicSalery = ParseDecimal(empRow["Emp_BasicSalery"]);
                     
                     decimal permDaRate = 0;
                     decimal fixedDaRate = 0;
                     if (dsNew.Tables.Count > 1 && dsNew.Tables[1].Rows.Count > 0)
                     {
-                        permDaRate = decimal.Parse(dsNew.Tables[1].Rows[0]["Permanent_DARate"].ToString());
+                        permDaRate = ParseDecimal(dsNew.Tables[1].Rows[0]["Permanent_DARate"]);
                     }
                     if (dsNew.Tables.Count > 2 && dsNew.Tables[2].Rows.Count > 0)
                     {
-                        fixedDaRate = decimal.Parse(dsNew.Tables[2].Rows[0]["Fixed_DARate"].ToString());
+                        fixedDaRate = ParseDecimal(dsNew.Tables[2].Rows[0]["Fixed_DARate"]);
                     }
 
                     lblPermanent_DARate.Text = permDaRate.ToString();
                     lblFixed_DARate.Text = fixedDaRate.ToString();
 
-                    string postType = empRow["Emp_TypeOfPost"].ToString();
+                    string postType = empRow["Emp_TypeOfPost"] != null ? empRow["Emp_TypeOfPost"].ToString() : "";
                     ViewState["Emp_TypeOfPost"] = postType;
                     ViewState["Emp_BasicSalery"] = emp_BasicSalery;
                     decimal da = 0;
@@ -326,7 +355,7 @@ public partial class mis_Payroll_PayrollEarnDeductionDetailFullNew : System.Web.
                     decimal leave = 0;
                     if (dsNew.Tables.Count > 4 && dsNew.Tables[4].Rows.Count > 0)
                     {
-                        leave = decimal.Parse(dsNew.Tables[4].Rows[0]["LeaveAmount"].ToString());
+                        leave = ParseDecimal(dsNew.Tables[4].Rows[0]["LeaveAmount"]);
                     }
 
                     MonthCalculation calc = monthCalcs[m.MonthNo];
@@ -845,17 +874,60 @@ public partial class mis_Payroll_PayrollEarnDeductionDetailFullNew : System.Web.
             GridView3.DataBind();
             if (ddlYear.SelectedIndex > 0 && ddlOfficeName.SelectedIndex > 0 && ddlEmployee.SelectedIndex > 0)
             {
+                int mNo = 0;
+                int.TryParse(MonthNo, out mNo);
+
+                string targetYear = ddlYear.SelectedValue;
+                if (mNo > 0 && mNo < 4)
+                {
+                    int y = 0;
+                    if (int.TryParse(targetYear, out y))
+                    {
+                        targetYear = (y + 1).ToString();
+                    }
+                }
+
                 ds = objdb.ByProcedure("SpPayrollPolicyMonthWsDetail",
                     new string[] { "flag", "Emp_ID", "Year", "MonthNo" },
-                    new string[] { "0", ddlEmployee.SelectedValue, ddlYear.SelectedValue, MonthNo },
+                    new string[] { "0", ddlEmployee.SelectedValue, targetYear, MonthNo },
                     "dataset");
 
-                if (ds != null && ds.Tables.Count > 0)
+                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
                     GridView3.DataSource = ds;
                     GridView3.DataBind();
-                    Page.ClientScript.RegisterStartupScript(this.GetType(), "CallMyFunction", "MonthDetail();", true);
                 }
+                else
+                {
+                    // Fallback to base FY year if no records found under targetYear
+                    if (targetYear != ddlYear.SelectedValue)
+                    {
+                        ds = objdb.ByProcedure("SpPayrollPolicyMonthWsDetail",
+                            new string[] { "flag", "Emp_ID", "Year", "MonthNo" },
+                            new string[] { "0", ddlEmployee.SelectedValue, ddlYear.SelectedValue, MonthNo },
+                            "dataset");
+                    }
+
+                    if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                    {
+                        GridView3.DataSource = ds;
+                        GridView3.DataBind();
+                    }
+                    else
+                    {
+                        GridView3.DataSource = new DataTable();
+                        GridView3.DataBind();
+                    }
+                }
+
+                string monthName = GetMonthDisplayName(mNo);
+                lblModalPolicyTitle.Text = "Policy Detail - " + monthName + " (" + targetYear + ")";
+
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "CallMyFunction", "MonthDetail();", true);
+            }
+            else
+            {
+                lblMsg.Text = objdb.Alert("fa-warning", "alert-warning", "Warning!", "Please select Office, Employee, and Year.");
             }
         }
         catch (Exception ex)
@@ -872,6 +944,10 @@ public partial class mis_Payroll_PayrollEarnDeductionDetailFullNew : System.Web.
             {
                 FillGrid();
             }
+            else
+            {
+                lblMsg.Text = objdb.Alert("fa-warning", "alert-warning", "Warning!", "Please select Office Name, Employee Name, and Year.");
+            }
         }
         catch (Exception ex)
         {
@@ -881,29 +957,36 @@ public partial class mis_Payroll_PayrollEarnDeductionDetailFullNew : System.Web.
 
     protected void btnMonth_Click(object sender, EventArgs e)
     {
-        LinkButton btn = sender as LinkButton;
-        if (btn != null)
+        try
         {
-            string monthNo = btn.CommandArgument;
-            if (string.IsNullOrEmpty(monthNo))
+            LinkButton btn = sender as LinkButton;
+            if (btn != null)
             {
-                if (btn.ID.Contains("Apr")) monthNo = "4";
-                else if (btn.ID.Contains("May")) monthNo = "5";
-                else if (btn.ID.Contains("Jun")) monthNo = "6";
-                else if (btn.ID.Contains("Jul")) monthNo = "7";
-                else if (btn.ID.Contains("Aug")) monthNo = "8";
-                else if (btn.ID.Contains("Sep")) monthNo = "9";
-                else if (btn.ID.Contains("Oct")) monthNo = "10";
-                else if (btn.ID.Contains("Nov")) monthNo = "11";
-                else if (btn.ID.Contains("Dec")) monthNo = "12";
-                else if (btn.ID.Contains("Jan")) monthNo = "1";
-                else if (btn.ID.Contains("Feb")) monthNo = "2";
-                else if (btn.ID.Contains("Mar")) monthNo = "3";
+                string monthNo = btn.CommandArgument;
+                if (string.IsNullOrEmpty(monthNo))
+                {
+                    if (btn.ID.Contains("Apr")) monthNo = "4";
+                    else if (btn.ID.Contains("May")) monthNo = "5";
+                    else if (btn.ID.Contains("Jun")) monthNo = "6";
+                    else if (btn.ID.Contains("Jul")) monthNo = "7";
+                    else if (btn.ID.Contains("Aug")) monthNo = "8";
+                    else if (btn.ID.Contains("Sep")) monthNo = "9";
+                    else if (btn.ID.Contains("Oct")) monthNo = "10";
+                    else if (btn.ID.Contains("Nov")) monthNo = "11";
+                    else if (btn.ID.Contains("Dec")) monthNo = "12";
+                    else if (btn.ID.Contains("Jan")) monthNo = "1";
+                    else if (btn.ID.Contains("Feb")) monthNo = "2";
+                    else if (btn.ID.Contains("Mar")) monthNo = "3";
+                }
+                if (!string.IsNullOrEmpty(monthNo))
+                {
+                    MonthWiseReport(monthNo);
+                }
             }
-            if (!string.IsNullOrEmpty(monthNo))
-            {
-                MonthWiseReport(monthNo);
-            }
+        }
+        catch (Exception ex)
+        {
+            lblMsg.Text = objdb.Alert("fa-ban", "alert-danger", "Sorry!", ex.Message);
         }
     }
 

@@ -111,7 +111,50 @@ public partial class mis_Payroll_PayrollSalarySlip : System.Web.UI.Page
                 }
                 if (ds.Tables[2].Rows.Count > 0)
                 {
-                    RepeaterDeduction.DataSource = ds.Tables[2];
+                    bool isEPFDeduct = false;
+                    if (ds.Tables[0].Columns.Contains("IsEPFDeduct") && ds.Tables[0].Rows.Count > 0)
+                    {
+                        string epfVal = ds.Tables[0].Rows[0]["IsEPFDeduct"].ToString();
+                        isEPFDeduct = (epfVal == "1" || epfVal.ToLower() == "true");
+                    }
+                    else
+                    {
+                        try
+                        {
+                            DataSet dsAcc = objdb.ByProcedure("SpPayrollAccountInfo", new string[] { "flag", "Emp_ID" }, new string[] { "1", Emp_ID }, "dataset");
+                            if (dsAcc != null && dsAcc.Tables.Count > 0 && dsAcc.Tables[0].Rows.Count > 0)
+                            {
+                                object val = dsAcc.Tables[0].Rows[0]["IsEPFDeduct"];
+                                if (val != null && val != DBNull.Value)
+                                {
+                                    isEPFDeduct = (val.ToString() == "1" || val.ToString().ToLower() == "true");
+                                }
+                            }
+                        }
+                        catch { }
+                    }
+
+                    DataTable dtDeduction = ds.Tables[2].Clone();
+                    foreach (DataRow row in ds.Tables[2].Rows)
+                    {
+                        string dedName = row["EarnDeduction_Name"] != null ? row["EarnDeduction_Name"].ToString().Trim() : "";
+                        decimal dedAmt = 0;
+                        decimal.TryParse(row["Earning"] != null ? row["Earning"].ToString() : "0", out dedAmt);
+
+                        if (dedName.ToUpper().Contains("ESI") && dedAmt <= 0)
+                        {
+                            continue;
+                        }
+
+                        bool isEpfHead = dedName.ToUpper().Contains("PROVIDENT FUND") || dedName.ToUpper().Contains("EPF");
+                        if (isEpfHead && !isEPFDeduct)
+                        {
+                            continue;
+                        }
+
+                        dtDeduction.ImportRow(row);
+                    }
+                    RepeaterDeduction.DataSource = dtDeduction;
                     RepeaterDeduction.DataBind();
                 }
             }

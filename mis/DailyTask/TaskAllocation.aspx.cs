@@ -393,11 +393,11 @@ public partial class mis_DailyTask_TaskAllocation : System.Web.UI.Page
                     return;
                 }
 
-                if (allocationDate.DayOfWeek == DayOfWeek.Saturday || allocationDate.DayOfWeek == DayOfWeek.Sunday)
-                {
-                    WarningMsg("Task allocation is not allowed on weekends (Saturday / Sunday).");
-                    return;
-                }
+                //if (allocationDate.DayOfWeek == DayOfWeek.Saturday || allocationDate.DayOfWeek == DayOfWeek.Sunday)
+                //{
+                //    WarningMsg("Task allocation is not allowed on weekends (Saturday / Sunday).");
+                //    return;
+                //}
 
 
 

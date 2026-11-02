@@ -195,10 +195,10 @@
     height: 50px;
   }
   .alert-dismissible p {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 181px;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    max-width: 100%;
   }
   .bootstrap-touchspin .touchspin-vertical-tab .input-group {
     width: 96% !important;
@@ -1827,10 +1827,10 @@
     text-align: right !important;
   }
   .alert-dismissible p {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 294px;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    max-width: 100%;
   }
   .button-group-mb-sm {
     margin-bottom: 5px;
@@ -2164,7 +2164,8 @@
     padding-right: 30px;
   }
   .alert-dismissible p {
-    max-width: 102px;
+    max-width: 100%;
+    white-space: normal;
   }
   .customizer-links {
     display: none;

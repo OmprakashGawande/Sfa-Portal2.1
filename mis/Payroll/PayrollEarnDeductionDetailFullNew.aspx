@@ -413,23 +413,45 @@
 
         /* Policy Detail Modal Styling */
         #ModalPolicyDetail .modal-content {
-            border-radius: 6px !important;
+            border-radius: 8px !important;
             border: 1px solid #cbd5e1 !important;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
+            overflow: hidden !important;
         }
 
         #ModalPolicyDetail .modal-header {
             background-color: #f8fafc !important;
             border-bottom: 1px solid #e2e8f0 !important;
-            padding: 12px 16px !important;
-            border-top-left-radius: 6px !important;
-            border-top-right-radius: 6px !important;
+            padding: 14px 18px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
         }
 
         #ModalPolicyDetail .modal-title {
             font-weight: 700 !important;
             color: #1e293b !important;
             font-size: 15px !important;
+            margin: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        #ModalPolicyDetail .btn-close {
+            margin: 0 !important;
+            padding: 8px !important;
+            opacity: 0.7 !important;
+            cursor: pointer !important;
+        }
+
+        #ModalPolicyDetail .btn-close:hover {
+            opacity: 1 !important;
+        }
+
+        #ModalPolicyDetail .modal-footer {
+            border-top: 1px solid #e2e8f0 !important;
+            padding: 12px 18px !important;
+            background-color: #f8fafc !important;
         }
     </style>
 </asp:Content>
@@ -723,7 +745,7 @@
                                                 </ItemTemplate>
                                                 <FooterTemplate>
                                                     <asp:TextBox ID="txtApr_Amount" runat="server" class="form-control" MaxLength="9" Enabled="false" onblur="return checkvalue(this);" onkeypress="return validateDec(this,event)"></asp:TextBox>
-                                                    <center> <asp:LinkButton ID="btnApr_Amount" runat="server" CssClass="label label-info" CommandArgument="4" OnClick="btnMonth_Click">View</asp:LinkButton>
+                                                    <center> <asp:LinkButton ID="btnApr_Amount" runat="server" CssClass="label label-info" CommandArgument="4" OnClick="btnMonth_Click" CausesValidation="false">View</asp:LinkButton>
                                                 </center>
                                                 </FooterTemplate>
                                             </asp:TemplateField>
@@ -733,7 +755,7 @@
                                                 </ItemTemplate>
                                                 <FooterTemplate>
                                                     <asp:TextBox ID="txtMay_Amount" runat="server" class="form-control" Enabled="false" MaxLength="9" onblur="return checkvalue(this);" onkeypress="return validateDec(this,event)"></asp:TextBox>
-                                                    <center> <asp:LinkButton ID="btnMay_Amount" runat="server" CssClass="label label-info" CommandArgument="5" OnClick="btnMonth_Click">View</asp:LinkButton>
+                                                    <center> <asp:LinkButton ID="btnMay_Amount" runat="server" CssClass="label label-info" CommandArgument="5" OnClick="btnMonth_Click" CausesValidation="false">View</asp:LinkButton>
                                                 </center>
                                                 </FooterTemplate>
                                             </asp:TemplateField>
@@ -743,7 +765,7 @@
                                                 </ItemTemplate>
                                                 <FooterTemplate>
                                                     <asp:TextBox ID="txtJun_Amount" runat="server" class="form-control" Enabled="false" MaxLength="9" onblur="return checkvalue(this);" onkeypress="return validateDec(this,event)"></asp:TextBox>
-                                                    <center>  <asp:LinkButton ID="btnJun_Amount" runat="server" CssClass="label label-info" CommandArgument="6" OnClick="btnMonth_Click">View</asp:LinkButton>
+                                                    <center>  <asp:LinkButton ID="btnJun_Amount" runat="server" CssClass="label label-info" CommandArgument="6" OnClick="btnMonth_Click" CausesValidation="false">View</asp:LinkButton>
                                               </center>
                                                 </FooterTemplate>
                                             </asp:TemplateField>
@@ -753,7 +775,7 @@
                                                 </ItemTemplate>
                                                 <FooterTemplate>
                                                     <asp:TextBox ID="txtJul_Amount" runat="server" class="form-control" Enabled="false" MaxLength="9" onblur="return checkvalue(this);" onkeypress="return validateDec(this,event)"></asp:TextBox>
-                                                    <center>  <asp:LinkButton ID="btnJul_Amount" runat="server" CssClass="label label-info" CommandArgument="7" OnClick="btnMonth_Click">View</asp:LinkButton>
+                                                    <center>  <asp:LinkButton ID="btnJul_Amount" runat="server" CssClass="label label-info" CommandArgument="7" OnClick="btnMonth_Click" CausesValidation="false">View</asp:LinkButton>
                                                </center>
                                                 </FooterTemplate>
                                             </asp:TemplateField>
@@ -763,7 +785,7 @@
                                                 </ItemTemplate>
                                                 <FooterTemplate>
                                                     <asp:TextBox ID="txtAug_Amount" runat="server" class="form-control" Enabled="false" MaxLength="9" onblur="return checkvalue(this);" onkeypress="return validateDec(this,event)"></asp:TextBox>
-                                                    <center><asp:LinkButton ID="btnAug_Amount" runat="server" CssClass="label label-info" CommandArgument="8" OnClick="btnMonth_Click">View</asp:LinkButton>
+                                                    <center><asp:LinkButton ID="btnAug_Amount" runat="server" CssClass="label label-info" CommandArgument="8" OnClick="btnMonth_Click" CausesValidation="false">View</asp:LinkButton>
                                                 </center>
                                                 </FooterTemplate>
                                             </asp:TemplateField>
@@ -773,7 +795,7 @@
                                                 </ItemTemplate>
                                                 <FooterTemplate>
                                                     <asp:TextBox ID="txtSep_Amount" runat="server" class="form-control" Enabled="false" MaxLength="9" onblur="return checkvalue(this);" onkeypress="return validateDec(this,event)"></asp:TextBox>
-                                                    <center> <asp:LinkButton ID="btnSep_Amount" runat="server" CssClass="label label-info" CommandArgument="9" OnClick="btnMonth_Click">View</asp:LinkButton>
+                                                    <center> <asp:LinkButton ID="btnSep_Amount" runat="server" CssClass="label label-info" CommandArgument="9" OnClick="btnMonth_Click" CausesValidation="false">View</asp:LinkButton>
                                                 </center>
                                                 </FooterTemplate>
                                             </asp:TemplateField>
@@ -783,7 +805,7 @@
                                                 </ItemTemplate>
                                                 <FooterTemplate>
                                                     <asp:TextBox ID="txtOct_Amount" runat="server" class="form-control" Enabled="false" MaxLength="9" onblur="return checkvalue(this);" onkeypress="return validateDec(this,event)"></asp:TextBox>
-                                                    <center>  <asp:LinkButton ID="btnOct_Amount" runat="server" CssClass="label label-info" CommandArgument="10" OnClick="btnMonth_Click">View</asp:LinkButton>
+                                                    <center>  <asp:LinkButton ID="btnOct_Amount" runat="server" CssClass="label label-info" CommandArgument="10" OnClick="btnMonth_Click" CausesValidation="false">View</asp:LinkButton>
                                                 </center>
                                                 </FooterTemplate>
                                             </asp:TemplateField>
@@ -793,7 +815,7 @@
                                                 </ItemTemplate>
                                                 <FooterTemplate>
                                                     <asp:TextBox ID="txtNov_Amount" runat="server" class="form-control" Enabled="false" MaxLength="9" onblur="return checkvalue(this);" onkeypress="return validateDec(this,event)"></asp:TextBox>
-                                                    <center>  <asp:LinkButton ID="btnNov_Amount" runat="server" CssClass="label label-info" CommandArgument="11" OnClick="btnMonth_Click">View</asp:LinkButton>
+                                                    <center>  <asp:LinkButton ID="btnNov_Amount" runat="server" CssClass="label label-info" CommandArgument="11" OnClick="btnMonth_Click" CausesValidation="false">View</asp:LinkButton>
                                                </center>
                                                 </FooterTemplate>
                                             </asp:TemplateField>
@@ -803,7 +825,7 @@
                                                 </ItemTemplate>
                                                 <FooterTemplate>
                                                     <asp:TextBox ID="txtDec_Amount" runat="server" class="form-control" Enabled="false" MaxLength="9" onblur="return checkvalue(this);" onkeypress="return validateDec(this,event)"></asp:TextBox>
-                                                    <center>  <asp:LinkButton ID="btnDec_Amount" runat="server" CssClass="label label-info" CommandArgument="12" OnClick="btnMonth_Click">View</asp:LinkButton>
+                                                    <center>  <asp:LinkButton ID="btnDec_Amount" runat="server" CssClass="label label-info" CommandArgument="12" OnClick="btnMonth_Click" CausesValidation="false">View</asp:LinkButton>
                                                </center>
                                                 </FooterTemplate>
                                             </asp:TemplateField>
@@ -813,7 +835,7 @@
                                                 </ItemTemplate>
                                                 <FooterTemplate>
                                                     <asp:TextBox ID="txtJan_Amount" runat="server" class="form-control" Enabled="false" MaxLength="9" onblur="return checkvalue(this);" onkeypress="return validateDec(this,event)"></asp:TextBox>
-                                                    <center> <asp:LinkButton ID="btnJan_Amount" runat="server" CssClass="label label-info" CommandArgument="1" OnClick="btnMonth_Click">View</asp:LinkButton>
+                                                    <center> <asp:LinkButton ID="btnJan_Amount" runat="server" CssClass="label label-info" CommandArgument="1" OnClick="btnMonth_Click" CausesValidation="false">View</asp:LinkButton>
                                                </center>
                                                 </FooterTemplate>
                                             </asp:TemplateField>
@@ -823,7 +845,7 @@
                                                 </ItemTemplate>
                                                 <FooterTemplate>
                                                     <asp:TextBox ID="txtFeb_Amount" runat="server" class="form-control" Enabled="false" MaxLength="9" onblur="return checkvalue(this);" onkeypress="return validateDec(this,event)"></asp:TextBox>
-                                                    <center><asp:LinkButton ID="btnFeb_Amount" runat="server" CssClass="label label-info" CommandArgument="2" OnClick="btnMonth_Click">View</asp:LinkButton>
+                                                    <center><asp:LinkButton ID="btnFeb_Amount" runat="server" CssClass="label label-info" CommandArgument="2" OnClick="btnMonth_Click" CausesValidation="false">View</asp:LinkButton>
                                                 </center>
                                                 </FooterTemplate>
                                             </asp:TemplateField>
@@ -833,7 +855,7 @@
                                                 </ItemTemplate>
                                                 <FooterTemplate>
                                                     <asp:TextBox ID="txtMar_Amount" runat="server" class="form-control" Enabled="false" MaxLength="9" onblur="return checkvalue(this);" onkeypress="return validateDec(this,event)"></asp:TextBox>
-                                                    <center> <asp:LinkButton ID="btnMar_Amount" runat="server" CssClass="label label-info" CommandArgument="3" OnClick="btnMonth_Click">View</asp:LinkButton></center>
+                                                    <center> <asp:LinkButton ID="btnMar_Amount" runat="server" CssClass="label label-info" CommandArgument="3" OnClick="btnMonth_Click" CausesValidation="false">View</asp:LinkButton></center>
                                                 </FooterTemplate>
                                             </asp:TemplateField>
                                         </Columns>
@@ -905,28 +927,36 @@
             </div>
 
 
-            <div id="ModalPolicyDetail" class="modal fade" role="dialog">
-                <div class="modal-dialog">
+            <div id="ModalPolicyDetail" class="modal fade" role="dialog" tabindex="-1" aria-labelledby="modalPolicyTitle" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
                     <!-- Modal content-->
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Policy Detail</h4>
+                            <h5 class="modal-title" id="modalPolicyTitle">
+                                <i class="fa fa-file-text-o me-2 text-primary" style="margin-right: 6px;"></i>
+                                <asp:Label ID="lblModalPolicyTitle" runat="server" Text="Policy Detail"></asp:Label>
+                            </h5>
+                            <button type="button" class="btn-close close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close" style="border: none; background: transparent; font-size: 20px; font-weight: bold; cursor: pointer;">&times;</button>
                         </div>
-                        <div class="modal-body">
-                            <asp:GridView ID="GridView3" runat="server" class="table table-bordered table-striped" AutoGenerateColumns="true" AllowPaging="false">
-                                <Columns>
-                                    <asp:TemplateField HeaderText="SNo." ItemStyle-Width="10">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' runat="server" />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                </Columns>
-                            </asp:GridView>
+                        <div class="modal-body" style="padding: 15px;">
+                            <div class="table-responsive">
+                                <asp:GridView ID="GridView3" runat="server" class="table table-bordered table-striped table-hover" AutoGenerateColumns="true" AllowPaging="false" ShowHeaderWhenEmpty="true" EmptyDataText="No Policy Detail Found For Selected Month.">
+                                    <Columns>
+                                        <asp:TemplateField HeaderText="SNo." ItemStyle-Width="50" HeaderStyle-Width="50" ItemStyle-HorizontalAlign="Center">
+                                            <ItemTemplate>
+                                                <asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' runat="server" />
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                    </Columns>
+                                    <EmptyDataRowStyle CssClass="text-center text-muted py-4 fw-bold" HorizontalAlign="Center" />
+                                </asp:GridView>
+                            </div>
                         </div>
-                        <div class="modal-footer">
-                            <a type="button" class="btn btn-default" href="PayrollPolicyDetail.aspx" target="_blank">Edit Policy Detail</a>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <div class="modal-footer" style="padding: 10px 15px;">
+                            <a type="button" class="btn btn-info text-white" href="PayrollPolicyDetail.aspx" target="_blank" style="margin-right: 6px;">
+                                <i class="fa fa-pencil me-1"></i> Edit Policy Detail
+                            </a>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Close</button>
                         </div>
                     </div>
 
@@ -952,10 +982,26 @@
 
 
         function MonthDetail() {
-            $('#ModalPolicyDetail').modal('show');
+            try {
+                var modalEl = document.getElementById('ModalPolicyDetail');
+                if (modalEl) {
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        var myModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                        myModal.show();
+                    } else if (window.jQuery && typeof $(modalEl).modal === 'function') {
+                        $(modalEl).modal('show');
+                    }
+                }
+            } catch (err) {
+                console.error("MonthDetail error:", err);
+            }
         }
         function validateform1() {
             var msg = "";
+            var ddlOffice = document.getElementById('<%=ddlOfficeName.ClientID%>');
+            if (ddlOffice && ddlOffice.selectedIndex == 0) {
+                msg = msg + "Select Office Name. \n";
+            }
             if (document.getElementById('<%=ddlEmployee.ClientID%>').selectedIndex == 0) {
                 msg = msg + "Select Employee Name. \n";
             }

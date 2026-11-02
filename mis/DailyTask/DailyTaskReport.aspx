@@ -1,50 +1,91 @@
-﻿<%@ Page Title="Daily Task Report" Language="C#" MasterPageFile="~/mis/MainMaster.master" AutoEventWireup="true" CodeFile="DailyTaskReport.aspx.cs" Inherits="mis_DailyTask_DailyTaskReport" %>
+<%@ Page Title="Daily Task Report" Language="C#" MasterPageFile="~/mis/MainMaster.master" AutoEventWireup="true" CodeFile="DailyTaskReport.aspx.cs" Inherits="mis_DailyTask_DailyTaskReport" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentHeader" runat="Server">
     <style>
+        /* Complete Vertical Alignment fix for GridView */
+        .datatable th,
+        .datatable td,
+        #gvReport th,
+        #gvReport td {
+            vertical-align: middle !important;
+        }
+
+        .datatable th,
+        #gvReport th {
+            text-align: center !important;
+            vertical-align: middle !important;
+            white-space: nowrap !important;
+            padding: 10px 8px !important;
+        }
+
+        .datatable td,
+        #gvReport td {
+            vertical-align: middle !important;
+            padding: 8px 10px !important;
+        }
+
+        .text-nowrap {
+            white-space: nowrap !important;
+        }
+
         .badge-priority-high {
             background-color: #dc3545;
             color: #fff;
-            padding: 4px 8px;
+            padding: 5px 8px;
             border-radius: 4px;
             font-weight: 600;
             font-size: 11px;
+            white-space: nowrap !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
         }
 
         .badge-priority-medium {
             background-color: #fd7e14;
             color: #fff;
-            padding: 4px 8px;
+            padding: 5px 8px;
             border-radius: 4px;
             font-weight: 600;
             font-size: 11px;
+            white-space: nowrap !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
         }
 
         .badge-priority-low {
             background-color: #28a745;
             color: #fff;
-            padding: 4px 8px;
+            padding: 5px 8px;
             border-radius: 4px;
             font-weight: 600;
             font-size: 11px;
+            white-space: nowrap !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
         }
 
         .badge-priority-spot {
             background-color: #6f42c1;
             color: #fff;
-            padding: 4px 8px;
+            padding: 5px 8px;
             border-radius: 4px;
             font-weight: 600;
             font-size: 11px;
+            white-space: nowrap !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
         }
 
         .badge-priority-default {
             background-color: #6c757d;
             color: #fff;
-            padding: 4px 8px;
+            padding: 5px 8px;
             border-radius: 4px;
             font-weight: 600;
             font-size: 11px;
+            white-space: nowrap !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
         }
 
         /* High Priority Complete Row Red */
@@ -66,61 +107,146 @@
         .badge-ticket-a {
             background-color: #17a2b8;
             color: #fff;
+            white-space: nowrap !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
+            padding: 5px 8px;
+            font-size: 11px;
+            border-radius: 4px;
         }
 
         .badge-ticket-b {
             background-color: #007bff;
             color: #fff;
+            white-space: nowrap !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
+            padding: 5px 8px;
+            font-size: 11px;
+            border-radius: 4px;
         }
 
         .badge-ticket-c {
             background-color: #6f42c1;
             color: #fff;
+            white-space: nowrap !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
+            padding: 5px 8px;
+            font-size: 11px;
+            border-radius: 4px;
         }
 
         .badge-ticket-d {
             background-color: #e83e8c;
             color: #fff;
+            white-space: nowrap !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
+            padding: 5px 8px;
+            font-size: 11px;
+            border-radius: 4px;
         }
 
         .badge-ticket-e {
             background-color: #fd7e14;
             color: #fff;
+            white-space: nowrap !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
+            padding: 5px 8px;
+            font-size: 11px;
+            border-radius: 4px;
         }
 
         .badge-ticket-f {
             background-color: #20c997;
             color: #fff;
+            white-space: nowrap !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
+            padding: 5px 8px;
+            font-size: 11px;
+            border-radius: 4px;
         }
 
         .badge-status-complete {
             background-color: #d1e7dd;
             color: #0f5132;
-            padding: 4px 8px;
+            padding: 5px 8px;
             border-radius: 4px;
             font-weight: 600;
             font-size: 11px;
-            display: inline-block;
+            white-space: nowrap !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
         }
 
         .badge-status-partial {
             background-color: #fff3cd;
             color: #664d03;
-            padding: 4px 8px;
+            padding: 5px 8px;
             border-radius: 4px;
             font-weight: 600;
             font-size: 11px;
-            display: inline-block;
+            white-space: nowrap !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
         }
 
         .badge-status-pending {
             background-color: #f8d7da;
             color: #842029;
-            padding: 4px 8px;
+            padding: 5px 8px;
             border-radius: 4px;
             font-weight: 600;
             font-size: 11px;
-            display: inline-block;
+            white-space: nowrap !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
+        }
+
+        .table-responsive {
+            overflow-x: auto !important;
+        }
+
+        .dt-buttons {
+            margin-bottom: 12px;
+        }
+
+        .buttons-excel,
+        a.buttons-excel,
+        button.buttons-excel {
+            background-color: #ff5722 !important;
+            border-color: #ff5722 !important;
+            color: #fff !important;
+            font-weight: 600 !important;
+            border-radius: 4px !important;
+            padding: 6px 14px !important;
+            margin-right: 6px !important;
+            border: none !important;
+            box-shadow: 1px 2px 4px rgba(0,0,0,0.15) !important;
+        }
+
+        .buttons-pdf,
+        a.buttons-pdf,
+        button.buttons-pdf {
+            background-color: #e91e63 !important;
+            border-color: #e91e63 !important;
+            color: #fff !important;
+            font-weight: 600 !important;
+            border-radius: 4px !important;
+            padding: 6px 14px !important;
+            margin-right: 6px !important;
+            border: none !important;
+            box-shadow: 1px 2px 4px rgba(0,0,0,0.15) !important;
+        }
+
+        .buttons-print,
+        a.buttons-print,
+        button.buttons-print,
+        .dt-buttons .buttons-print {
+            display: none !important;
         }
     </style>
 </asp:Content>
@@ -206,10 +332,11 @@
                 <div class="card mt-4">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                         <h5 class="mb-0 text-white">
-                            <i class="fa fa-table text-primary me-2"></i>Task Entries Data (<asp:Label ID="lblRecordCount" runat="server" Text="0"></asp:Label>
+                            <i class="fa fa-table text-primary me-2"></i>Task Entries Data 
+                            (<asp:Label ID="lblRecordCount" runat="server" Text="0"></asp:Label>
                             records)
                         </h5>
-                        <div class="mt-2 mt-md-0">
+                        <div class="mt-2 mt-md-0" style="display:none">
                             <span class="badge bg-light text-dark border p-2">Total Hours: <strong class="text-primary">
                                 <asp:Label ID="lblTotalHours" runat="server" Text="0.00"></asp:Label>
                                 Hrs</strong>
@@ -222,85 +349,121 @@
                             <asp:GridView ID="gvReport" runat="server" AutoGenerateColumns="false"
                                 CssClass="datatable table table-bordered table-hover w-100"
                                 EmptyDataText="No task entries found for the selected date range and criteria."
-                                OnRowDataBound="gvReport_RowDataBound" ShowHeaderWhenEmpty="true">
+                                OnRowDataBound="gvReport_RowDataBound" OnPreRender="gvReport_PreRender" ShowHeaderWhenEmpty="true">
                                 <HeaderStyle CssClass="table-primary" />
                                 <Columns>
                                     <asp:TemplateField HeaderText="S. No." ItemStyle-HorizontalAlign="Center" ItemStyle-Width="45px">
                                         <ItemTemplate>
-                                            <asp:Label runat="server" Text="<%# Container.DataItemIndex + 1 %>"></asp:Label>
+                                            <span class="fw-bold"><%# Container.DataItemIndex + 1 %></span>
                                         </ItemTemplate>
                                     </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Employee" ItemStyle-Width="140px">
+                                    <asp:TemplateField HeaderText="Employee" ItemStyle-Width="150px">
                                         <ItemTemplate>
-                                            <div class="fw-bold"><%# Eval("EmployeeName") %></div>
-                                            <small class="text-muted"><%# Eval("EmployeeCode") != null && !string.IsNullOrEmpty(Eval("EmployeeCode").ToString()) ? Eval("EmployeeCode") : "" %></small>
+                                            <div class="fw-bold text-nowrap"><%# Eval("EmployeeName") %></div>
+                                            <small class="text-muted text-nowrap"><%# Eval("EmployeeCode") != null && !string.IsNullOrEmpty(Eval("EmployeeCode").ToString()) ? Eval("EmployeeCode") : "" %></small>
                                         </ItemTemplate>
                                     </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Task Fill Date" ItemStyle-Width="95px" ItemStyle-HorizontalAlign="Center">
+                                    <asp:TemplateField HeaderText="Allocation Date &amp; Time" ItemStyle-Width="120px" ItemStyle-HorizontalAlign="Center">
                                         <ItemTemplate>
-                                            <i class="fa fa-calendar-check-o text-primary me-1"></i>
-                                            <%# Eval("CreatedDate") != null && !string.IsNullOrEmpty(Eval("CreatedDate").ToString()) ? Eval("CreatedDate") : (Eval("CreatedOn") != null ? Convert.ToDateTime(Eval("CreatedOn")).ToString("dd/MM/yyyy") : "-") %>
+                                            <div class="fw-bold text-nowrap">
+                                                <i class="fa fa-calendar text-primary me-1"></i>
+                                                <%# Eval("AllocationDate") != null && !string.IsNullOrEmpty(Eval("AllocationDate").ToString()) ? Eval("AllocationDate") : "-" %>
+                                            </div>
+                                            <small class="text-muted text-nowrap">
+                                                <i class="fa fa-clock-o me-1"></i><%# Eval("AllocationTime") != null && !string.IsNullOrEmpty(Eval("AllocationTime").ToString()) && Eval("AllocationTime").ToString() != "-" ? Eval("AllocationTime") : "-" %>
+                                            </small>
                                         </ItemTemplate>
                                     </asp:TemplateField>
 
-                                    <asp:BoundField DataField="ProjectName" HeaderText="Project Name" ItemStyle-Font-Bold="true" />
-
-                                    <asp:TemplateField HeaderText="Start Date" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="90px">
+                                    <asp:TemplateField HeaderText="Requirement Duration" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="110px">
                                         <ItemTemplate>
-                                            <i class="fa fa-calendar text-muted me-1"></i><%# Eval("StartDate") %>
+                                            <span class="badge bg-light text-primary font-weight-bold fs-6 border text-nowrap">
+                                                <i class="fa fa-hourglass-half me-1"></i><%# Eval("RequirementDuration") != null && !string.IsNullOrEmpty(Eval("RequirementDuration").ToString()) ? Eval("RequirementDuration") : "-" %>
+                                            </span>
                                         </ItemTemplate>
                                     </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Start Time" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="85px">
+                                    <asp:TemplateField HeaderText="Project Name" ItemStyle-Width="130px">
                                         <ItemTemplate>
-                                            <i class="fa fa-clock-o text-muted me-1"></i><%# Eval("StartTime") %>
+                                            <span class="fw-bold text-dark text-nowrap"><%# Eval("ProjectName") %></span>
                                         </ItemTemplate>
                                     </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="End Date" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="90px">
+                                    <asp:TemplateField HeaderText="Requirement Point" ItemStyle-Width="160px">
                                         <ItemTemplate>
-                                            <i class="fa fa-calendar text-muted me-1"></i><%# Eval("EndDate") %>
+                                            <span class="fw-bold text-dark text-nowrap"><%# Eval("RequirementPoint") != null && !string.IsNullOrEmpty(Eval("RequirementPoint").ToString()) ? Eval("RequirementPoint") : "-" %></span>
                                         </ItemTemplate>
                                     </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="End Time" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="85px">
+                                    <asp:TemplateField HeaderText="Description" ItemStyle-Width="180px">
                                         <ItemTemplate>
-                                            <i class="fa fa-clock-o text-muted me-1"></i><%# Eval("EndTime") %>
+                                            <span class="text-secondary text-break"><%# Eval("TaskDescription") != null && !string.IsNullOrEmpty(Eval("TaskDescription").ToString()) ? Eval("TaskDescription") : "-" %></span>
                                         </ItemTemplate>
                                     </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Hours" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="75px">
+                                    <asp:TemplateField HeaderText="QA Name" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="100px">
                                         <ItemTemplate>
-                                            <span class="badge bg-light-success text-success font-weight-bold fs-6">
+                                            <%# GetQABadge(Eval("QAName")) %>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="Start Date" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="105px">
+                                        <ItemTemplate>
+                                            <span class="text-nowrap"><i class="fa fa-calendar text-muted me-1"></i><%# Eval("StartDate") %></span>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="Start Time" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="95px">
+                                        <ItemTemplate>
+                                            <span class="text-nowrap"><i class="fa fa-clock-o text-muted me-1"></i><%# Eval("StartTime") %></span>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="End Date" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="105px">
+                                        <ItemTemplate>
+                                            <span class="text-nowrap"><i class="fa fa-calendar text-muted me-1"></i><%# Eval("EndDate") %></span>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="End Time" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="95px">
+                                        <ItemTemplate>
+                                            <span class="text-nowrap"><i class="fa fa-clock-o text-muted me-1"></i><%# Eval("EndTime") %></span>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="Hours" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="85px">
+                                        <ItemTemplate>
+                                            <span class="badge bg-light-success text-success font-weight-bold fs-6 text-nowrap">
                                                 <%# Eval("WorkingHours") %> Hrs
                                             </span>
                                         </ItemTemplate>
                                     </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Priority" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="100px">
+                                    <asp:TemplateField HeaderText="Priority" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="110px">
                                         <ItemTemplate>
                                             <%# GetPriorityBadge(Eval("Priority"), Eval("PriorityId")) %>
                                         </ItemTemplate>
                                     </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Allocated / Assignee" ItemStyle-Width="130px">
+                                    <asp:TemplateField HeaderText="Allocated / Assignee" ItemStyle-Width="140px">
                                         <ItemTemplate>
-                                            <i class="fa fa-user-secret text-secondary me-1"></i>
-                                            <span><%# Eval("Allocated") %></span>
+                                            <span class="text-nowrap">
+                                                <i class="fa fa-user-secret text-secondary me-1"></i><%# Eval("Allocated") %>
+                                            </span>
                                         </ItemTemplate>
                                     </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Ticket Type" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="110px">
+                                    <asp:TemplateField HeaderText="Ticket Type" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="120px">
                                         <ItemTemplate>
-                                            <span class='badge <%# GetTicketTypeClass(Eval("TicketType")) %>'>
+                                            <span class='badge text-nowrap <%# GetTicketTypeClass(Eval("TicketType")) %>'>
                                                 <%# Eval("TicketType") %>
                                             </span>
                                         </ItemTemplate>
                                     </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Status" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="105px">
+                                    <asp:TemplateField HeaderText="Status" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="110px">
                                         <ItemTemplate>
                                             <%# GetStatusBadge(Eval("TaskStatus")) %>
                                         </ItemTemplate>
@@ -318,18 +481,38 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            function initReportDataTable() {
+                if (typeof initCustomDataTable === 'function') {
+                    if ($('.datatable').length > 0 && $('.datatable tr').length > 1) {
+                        initCustomDataTable('.datatable', 'Daily_Task_Report', 'Daily Task Report', [], { showPrint: false });
+                    }
+                }
+                if (window.jQuery && $.fn.select2 && $('.select2').length > 0) {
+                    $('.select2').select2();
+                }
+            }
+
+            $(document).ready(function () {
+                initReportDataTable();
+            });
+
+            window.addEventListener('load', function () {
+                initReportDataTable();
+            });
+        </script>
     </div>
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentFooter" runat="Server">
     <script>
-$(document).ready(function () {
-    if ($('.datatable tbody tr').length > 0 && $('.datatable td').length > 1) {
-        initCustomDataTable('.datatable', 'Daily_Task_Report', 'Daily Task Report', []);
-    }
-    if ($('.select2').length > 0) {
-        $('.select2').select2();
-    }
-});
-</script>
+        $(document).ready(function () {
+            if (typeof initCustomDataTable === 'function') {
+                if ($('.datatable').length > 0 && $('.datatable tr').length > 1) {
+                    initCustomDataTable('.datatable', 'Daily_Task_Report', 'Daily Task Report', [], { showPrint: false });
+                }
+            }
+        });
+    </script>
 </asp:Content>

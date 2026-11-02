@@ -95,28 +95,70 @@ public partial class mis_DailyTask_TaskAllocationEntry : System.Web.UI.Page
         try
         {
             ddlProject.Items.Clear();
-            ds = USP_TaskAllocation(new string[] { "Flag" }, new string[] { "2" });
-            if (IsNullDataSet(ds))
+            string currentEmpId = Convert.ToString(ViewState["Emp_ID"]);
+
+            // Get projects specifically allocated to this employee (only unfilled)
+            DataSet dsProj = null;
+            if (!string.IsNullOrEmpty(currentEmpId))
+            {
+                dsProj = USP_TaskAllocationEntry(new string[] { "Flag", "EmpId", "CreatedBy" }, new string[] { "8", currentEmpId, currentEmpId });
+            }
+
+            // Exclude projects currently staged in the added tasks grid
+            if (IsNullDataSet(dsProj))
+            {
+                DataTable dtStaged = ViewState["TasksTable"] as DataTable;
+                if (dtStaged != null && dtStaged.Rows.Count > 0)
+                {
+                    for (int i = dsProj.Tables[0].Rows.Count - 1; i >= 0; i--)
+                    {
+                        string pId = dsProj.Tables[0].Rows[i]["Project_Id"].ToString();
+                        foreach (DataRow sRow in dtStaged.Rows)
+                        {
+                            if (sRow["ProjectId"].ToString() == pId)
+                            {
+                                dsProj.Tables[0].Rows.RemoveAt(i);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (IsNullDataSet(dsProj))
             {
                 ddlProject.DataTextField = "Project_Name";
                 ddlProject.DataValueField = "Project_Id";
-                ddlProject.DataSource = ds.Tables[0];
+                ddlProject.DataSource = dsProj.Tables[0];
                 ddlProject.DataBind();
-            }
-            ddlProject.Items.Insert(0, new ListItem("Select Project", "0"));
+                ddlProject.Items.Insert(0, new ListItem("Select Project", "0"));
 
-            // Check if employee has allocated task(s) for a project
-            string currentEmpId = Convert.ToString(ViewState["Emp_ID"]);
-            if (!string.IsNullOrEmpty(currentEmpId))
-            {
-                DataSet dsProj = USP_TaskAllocationEntry(new string[] { "Flag", "EmpId", "CreatedBy" }, new string[] { "8", currentEmpId, currentEmpId });
-                if (IsNullDataSet(dsProj) && dsProj.Tables[0].Rows.Count == 1)
+                // If only 1 project is allocated, auto-select it
+                if (dsProj.Tables[0].Rows.Count == 1)
                 {
-                    string allocatedProjectId = dsProj.Tables[0].Rows[0]["ProjectId"].ToString();
-                    if (ddlProject.Items.FindByValue(allocatedProjectId) != null)
+                    ddlProject.SelectedIndex = 1;
+                }
+            }
+            else
+            {
+                // If no allocated project found, check if user is Admin or Manager
+                DataSet dsAdmin = USP_TaskAllocationEntry(new string[] { "Flag", "EmpId" }, new string[] { "7", currentEmpId });
+                if (IsNullDataSet(dsAdmin) && Convert.ToInt32(dsAdmin.Tables[0].Rows[0]["IsAdminOrManager"]) > 0)
+                {
+                    // Fallback for Admin/Manager who might not have tasks allocated to themselves
+                    ds = USP_TaskAllocation(new string[] { "Flag" }, new string[] { "2" });
+                    if (IsNullDataSet(ds))
                     {
-                        ddlProject.SelectedValue = allocatedProjectId;
+                        ddlProject.DataTextField = "Project_Name";
+                        ddlProject.DataValueField = "Project_Id";
+                        ddlProject.DataSource = ds.Tables[0];
+                        ddlProject.DataBind();
                     }
+                    ddlProject.Items.Insert(0, new ListItem("Select Project", "0"));
+                }
+                else
+                {
+                    ddlProject.Items.Insert(0, new ListItem("No Project Allocated", "0"));
                 }
             }
         }
@@ -162,8 +204,26 @@ public partial class mis_DailyTask_TaskAllocationEntry : System.Web.UI.Page
             }
             else
             {
-                // PMs from tasks allocated to employee
+                // PMs from unfilled tasks allocated to employee
                 dsAlloc = USP_TaskAllocationEntry(new string[] { "Flag", "EmpId", "CreatedBy" }, new string[] { "5", currentEmpId, currentEmpId });
+            }
+
+            // If not on spot, exclude managers if no projects remain in ddlProject
+            if (!isOnSpot && IsNullDataSet(dsAlloc))
+            {
+                bool hasAvailableProjects = false;
+                foreach (ListItem item in ddlProject.Items)
+                {
+                    if (item.Value != "0")
+                    {
+                        hasAvailableProjects = true;
+                        break;
+                    }
+                }
+                if (!hasAvailableProjects)
+                {
+                    dsAlloc.Tables[0].Rows.Clear();
+                }
             }
 
             if (IsNullDataSet(dsAlloc))
@@ -287,16 +347,55 @@ public partial class mis_DailyTask_TaskAllocationEntry : System.Web.UI.Page
         {
             gvSavedHistory.DataSource = null;
             gvSavedHistory.DataBind();
+            pnlSavedHistory.Visible = false;
 
             string currentEmpId = Convert.ToString(ViewState["Emp_ID"]);
+            string todayStr = DateTime.Now.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+
             DataSet dsHistory = USP_TaskAllocationEntry(
-                new string[] { "Flag", "CreatedBy" },
-                new string[] { "2", currentEmpId }
+                new string[] { "Flag", "CreatedBy", "FromDate" },
+                new string[] { "2", currentEmpId, todayStr }
             );
 
+            DataTable dtFiltered = null;
             if (IsNullDataSet(dsHistory))
             {
-                gvSavedHistory.DataSource = dsHistory.Tables[0];
+                DataTable dtSource = dsHistory.Tables[0];
+                dtFiltered = dtSource.Clone();
+
+                DateTime today = DateTime.Today;
+                foreach (DataRow row in dtSource.Rows)
+                {
+                    bool isToday = false;
+                    DateTime dtCreated, dtStart;
+
+                    if (row.Table.Columns.Contains("CreatedOn") && row["CreatedOn"] != DBNull.Value && DateTime.TryParse(row["CreatedOn"].ToString(), out dtCreated))
+                    {
+                        if (dtCreated.Date == today) isToday = true;
+                    }
+
+                    if (!isToday && row.Table.Columns.Contains("StartDate") && row["StartDate"] != DBNull.Value)
+                    {
+                        string sDate = row["StartDate"].ToString().Trim();
+                        string[] formats = new string[] { "dd/MM/yyyy", "dd-MM-yyyy", "yyyy-MM-dd", "d/M/yyyy", "d-M-yyyy" };
+                        if (DateTime.TryParseExact(sDate, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out dtStart) ||
+                            DateTime.TryParse(sDate, CultureInfo.InvariantCulture, DateTimeStyles.None, out dtStart))
+                        {
+                            if (dtStart.Date == today) isToday = true;
+                        }
+                    }
+
+                    if (isToday)
+                    {
+                        dtFiltered.ImportRow(row);
+                    }
+                }
+            }
+
+            if (dtFiltered != null && dtFiltered.Rows.Count > 0)
+            {
+                pnlSavedHistory.Visible = true;
+                gvSavedHistory.DataSource = dtFiltered;
                 gvSavedHistory.DataBind();
 
                 if (gvSavedHistory.Rows.Count > 0)
@@ -304,6 +403,12 @@ public partial class mis_DailyTask_TaskAllocationEntry : System.Web.UI.Page
                     gvSavedHistory.HeaderRow.TableSection = TableRowSection.TableHeader;
                     gvSavedHistory.UseAccessibleHeader = true;
                 }
+            }
+            else
+            {
+                pnlSavedHistory.Visible = false;
+                gvSavedHistory.DataSource = null;
+                gvSavedHistory.DataBind();
             }
         }
         catch
@@ -522,6 +627,10 @@ public partial class mis_DailyTask_TaskAllocationEntry : System.Web.UI.Page
             BindStagedGrid();
             SuccessMsg(string.Format("Task for '{0}' added to list successfully ({1:0.00} Hrs).", ddlProject.SelectedItem.Text, currentTaskHours));
 
+            // Refresh available projects and managers (staged project is removed)
+            FillProject();
+            FillAllocated(false);
+
             // Reset specific fields for convenient next entry
             ddlTicketType.SelectedIndex = 0;
             ddlStatus.SelectedIndex = 0;
@@ -553,6 +662,8 @@ public partial class mis_DailyTask_TaskAllocationEntry : System.Web.UI.Page
                     dt.Rows.RemoveAt(rowIndex);
                     ViewState["TasksTable"] = dt;
                     BindStagedGrid();
+                    FillProject();
+                    FillAllocated(false);
 
                     SuccessMsg(string.Format("Removed task for '{0}' ({1:0.00} Hrs).", projectName, hours));
                 }
@@ -635,6 +746,8 @@ public partial class mis_DailyTask_TaskAllocationEntry : System.Web.UI.Page
             {
                 SuccessMsg(string.Format("Thank You! Successfully saved {0} of {1} task(s) to the database.", savedCount, dt.Rows.Count));
                 InitializeTasksTable();
+                FillProject();
+                FillAllocated(false);
                 btnClearInput_Click(sender, e);
                 LoadSavedHistory();
             }
@@ -660,10 +773,19 @@ public partial class mis_DailyTask_TaskAllocationEntry : System.Web.UI.Page
                     new string[] { "Flag", "TaskEntryId" },
                     new string[] { "10", taskEntryId }, "ds");
 
-                if (IsNullDataSet(dsStatus) && Convert.ToString(dsStatus.Tables[0].Rows[0]["Stat"]).Equals("Ok"))
+                if (IsNullDataSet(dsStatus))
                 {
-                    SuccessMsg("Task status updated successfully.");
-                    LoadSavedHistory();
+                    if (Convert.ToString(dsStatus.Tables[0].Rows[0]["Stat"]).Equals("Ok"))
+                    {
+                        SuccessMsg("Task status updated successfully.");
+                        FillProject();
+                        FillAllocated(false);
+                        LoadSavedHistory();
+                    }
+                    else
+                    {
+                        WarningMsg(Convert.ToString(dsStatus.Tables[0].Rows[0]["Msg"]));
+                    }
                 }
                 else
                 {
@@ -800,6 +922,8 @@ public partial class mis_DailyTask_TaskAllocationEntry : System.Web.UI.Page
                 if (IsNullDataSet(dsDel) && Convert.ToString(dsDel.Tables[0].Rows[0]["Stat"]).Equals("Ok"))
                 {
                     SuccessMsg("Saved task record deleted successfully.");
+                    FillProject();
+                    FillAllocated(false);
                     LoadSavedHistory();
                 }
                 else
@@ -832,11 +956,11 @@ public partial class mis_DailyTask_TaskAllocationEntry : System.Web.UI.Page
     protected void btnClearInput_Click(object sender, EventArgs e)
     {
         ResetEditMode();
-        ddlProject.SelectedIndex = 0;
+        FillProject();
+        FillAllocated(false);
         ddlPriority.SelectedIndex = 0;
         ddlTicketType.SelectedIndex = 0;
         ddlStatus.SelectedIndex = 0;
-        FillAllocated(false);
         txtRemark.Text = string.Empty;
         txtRemark.Attributes.Remove("style");
         txtRemark.CssClass = txtRemark.CssClass.Replace("text-high-priority", "").Trim();
@@ -942,6 +1066,28 @@ public partial class mis_DailyTask_TaskAllocationEntry : System.Web.UI.Page
                 if (isActive == "False" || isActive == "0")
                 {
                     e.Row.CssClass = (e.Row.CssClass + " table-secondary text-muted").Trim();
+                }
+
+                // Active / Inactive button: Enabled only for 24 hours from task entry time (CreatedOn)
+                if (drv.Row.Table.Columns.Contains("CreatedOn") && drv["CreatedOn"] != DBNull.Value)
+                {
+                    DateTime createdOn;
+                    if (DateTime.TryParse(Convert.ToString(drv["CreatedOn"]), out createdOn))
+                    {
+                        double hoursElapsed = (DateTime.Now - createdOn).TotalHours;
+                        if (hoursElapsed > 24)
+                        {
+                            LinkButton btnToggle = e.Row.FindControl("btnToggleActive") as LinkButton;
+                            if (btnToggle != null)
+                            {
+                                btnToggle.Enabled = false;
+                                btnToggle.OnClientClick = "return false;";
+                                btnToggle.CssClass = "btn btn-sm btn-outline-secondary disabled";
+                                btnToggle.Attributes["style"] = "pointer-events: none; opacity: 0.55; cursor: not-allowed;";
+                                btnToggle.ToolTip = string.Format("Action disabled: 24 hours have passed since task was entered on {0:dd/MM/yyyy hh:mm tt}.", createdOn);
+                            }
+                        }
+                    }
                 }
             }
         }

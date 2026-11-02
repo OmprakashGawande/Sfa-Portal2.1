@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Globalization;
 using System.Web.UI.WebControls;
@@ -143,10 +143,11 @@ public partial class mis_Reports_RptRequirementsFilled : System.Web.UI.Page
     {
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
-            Label lblFillStatus = (Label)e.Row.FindControl("lblFillStatus");
-            if (lblFillStatus != null)
+            DataRowView drv = e.Row.DataItem as DataRowView;
+            if (drv != null && drv.Row.Table.Columns.Contains("FillStatus"))
             {
-                if (lblFillStatus.Text == "Filled")
+                string fillStatus = Convert.ToString(drv["FillStatus"]);
+                if (fillStatus == "Filled")
                 {
                     hfExcelHeader.Value = "Requirements Filled Report";
                 }

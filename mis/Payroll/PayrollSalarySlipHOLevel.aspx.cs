@@ -155,7 +155,25 @@ public partial class mis_Payroll_PayrollSalarySlipHOLevel : System.Web.UI.Page
                     lblBank_Name.Text = ds.Tables[0].Rows[0]["Bank_Name"].ToString();
                     lblIFSCCode.Text = ds.Tables[0].Rows[0]["Bank_IfscCode"].ToString();
                     //lblGroupInsurance_No.Text = ds.Tables[0].Rows[0]["GroupInsurance_No"].ToString();
-                    lblEPF_No.Text = ds.Tables[0].Rows[0]["EPF_No"].ToString() + " / " + ds.Tables[0].Rows[0]["UAN_No"].ToString();
+                    string epfNo = ds.Tables[0].Rows[0]["EPF_No"] != null ? ds.Tables[0].Rows[0]["EPF_No"].ToString().Trim() : "";
+                    string uanNo = ds.Tables[0].Rows[0]["UAN_No"] != null ? ds.Tables[0].Rows[0]["UAN_No"].ToString().Trim() : "";
+                    if (!string.IsNullOrEmpty(epfNo) && !string.IsNullOrEmpty(uanNo))
+                    {
+                        lblEPF_No.Text = epfNo + " / " + uanNo;
+                    }
+                    else if (!string.IsNullOrEmpty(epfNo))
+                    {
+                        lblEPF_No.Text = epfNo;
+                    }
+                    else if (!string.IsNullOrEmpty(uanNo))
+                    {
+                        lblEPF_No.Text = uanNo;
+                    }
+                    else
+                    {
+                        lblEPF_No.Text = "-";
+                    }
+
                     TotalDayOfMonth.InnerHtml = ds.Tables[0].Rows[0]["TotalDayOfMonth"].ToString();
                     NotPayableDays.InnerHtml = ds.Tables[0].Rows[0]["NotPayableDays"].ToString();
                     PayableDays.InnerHtml = ds.Tables[0].Rows[0]["PayableDays"].ToString();
@@ -177,6 +195,30 @@ public partial class mis_Payroll_PayrollSalarySlipHOLevel : System.Web.UI.Page
                 }
                 if (ds.Tables[2].Rows.Count > 0)
                 {
+                    // Check if EPF is deducted for this employee (IsEPFDeduct == 1)
+                    bool isEPFDeduct = false;
+                    if (ds.Tables[0].Columns.Contains("IsEPFDeduct") && ds.Tables[0].Rows.Count > 0)
+                    {
+                        string epfVal = ds.Tables[0].Rows[0]["IsEPFDeduct"].ToString();
+                        isEPFDeduct = (epfVal == "1" || epfVal.ToLower() == "true");
+                    }
+                    else
+                    {
+                        try
+                        {
+                            DataSet dsAcc = objdb.ByProcedure("SpPayrollAccountInfo", new string[] { "flag", "Emp_ID" }, new string[] { "1", Emp_ID }, "dataset");
+                            if (dsAcc != null && dsAcc.Tables.Count > 0 && dsAcc.Tables[0].Rows.Count > 0)
+                            {
+                                object val = dsAcc.Tables[0].Rows[0]["IsEPFDeduct"];
+                                if (val != null && val != DBNull.Value)
+                                {
+                                    isEPFDeduct = (val.ToString() == "1" || val.ToString().ToLower() == "true");
+                                }
+                            }
+                        }
+                        catch { }
+                    }
+
                     DataTable dtDeduction = ds.Tables[2].Clone();
                     foreach (DataRow row in ds.Tables[2].Rows)
                     {
@@ -186,6 +228,13 @@ public partial class mis_Payroll_PayrollSalarySlipHOLevel : System.Web.UI.Page
 
                         // ESI: jiska kat raha hai (dedAmt > 0) toh show honga, agr 0 aata hai toh show nahi honga
                         if (dedName.ToUpper().Contains("ESI") && dedAmt <= 0)
+                        {
+                            continue;
+                        }
+
+                        // EPF: EMPLOYEES PROVIDENT FUND (EPF) tabhi dikhenge jb vo emply ka PF kat raha hai mtlb IsEPFDeduct == 1 (0 mtlb nahi katata, toh show nahi hona chahiye)
+                        bool isEpfHead = dedName.ToUpper().Contains("PROVIDENT FUND") || dedName.ToUpper().Contains("EPF");
+                        if (isEpfHead && !isEPFDeduct)
                         {
                             continue;
                         }

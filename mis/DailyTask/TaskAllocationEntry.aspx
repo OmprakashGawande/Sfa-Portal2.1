@@ -204,6 +204,116 @@
                 border-right: 3.5px solid transparent !important;
                 border-top: 4px solid #495057 !important;
             }
+
+        /* =========================================================
+           Alert Message Box Styles (Full Visibility at 150% Zoom & Mobile)
+           ========================================================= */
+        #lblMsg,
+        span[id$='lblMsg'],
+        #ctl00_ContentBody_lblMsg {
+            display: block;
+            width: 100%;
+        }
+
+        .alert,
+        .alert-dismissible,
+        #lblMsg .alert,
+        span[id$='lblMsg'] .alert {
+            display: flex !important;
+            align-items: flex-start !important;
+            position: relative !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 12px 45px 12px 16px !important;
+            margin-top: 10px !important;
+            margin-bottom: 15px !important;
+            border-radius: 6px !important;
+            overflow: visible !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
+        }
+
+        .alert i,
+        .alert svg,
+        .alert [data-feather] {
+            flex-shrink: 0 !important;
+            margin-right: 12px !important;
+            margin-top: 2px !important;
+            font-size: 18px !important;
+            width: 20px !important;
+            height: 20px !important;
+            line-height: 1.2 !important;
+        }
+
+        .alert p,
+        .alert-dismissible p,
+        .alert strong ~ p,
+        #lblMsg .alert p,
+        span[id$='lblMsg'] .alert p {
+            flex: 1 1 auto !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            white-space: normal !important;
+            overflow: visible !important;
+            text-overflow: clip !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
+            line-height: 1.55 !important;
+            font-size: 14px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            display: block !important;
+        }
+
+        .alert strong,
+        .alert-dismissible strong {
+            font-weight: 700 !important;
+            font-size: 14.5px !important;
+            display: inline-block !important;
+            margin-bottom: 3px !important;
+        }
+
+        .alert-dismissible .btn-close {
+            position: absolute !important;
+            top: 12px !important;
+            right: 12px !important;
+            padding: 6px !important;
+            margin: 0 !important;
+            opacity: 0.7 !important;
+            cursor: pointer !important;
+            z-index: 5 !important;
+        }
+
+        .alert-dismissible .btn-close:hover {
+            opacity: 1 !important;
+        }
+
+        /* Confirmation Modal Alert Text Wrapping at 150% Zoom */
+        #myModal .modal-dialog {
+            max-width: 95vw !important;
+        }
+
+        #lblPopupAlert {
+            word-break: break-word !important;
+            white-space: normal !important;
+            line-height: 1.5 !important;
+        }
+
+        /* Responsive overrides for zoom levels (125%, 150%, 175%) and all screens */
+        @media (max-width: 1400px), (max-width: 1280px), (max-width: 991px), (max-width: 768px), (max-width: 575px) {
+            .alert-dismissible p,
+            .alert p,
+            .alert-dismissible strong ~ p,
+            #lblMsg .alert p,
+            span[id$='lblMsg'] .alert p {
+                max-width: 100% !important;
+                white-space: normal !important;
+                overflow: visible !important;
+                text-overflow: clip !important;
+                word-break: break-word !important;
+                overflow-wrap: break-word !important;
+            }
+        }
     </style>
 </asp:Content>
 
@@ -527,15 +637,16 @@
                             </div>
                         </div>
 
-                        <!-- Saved Database Records History Section -->
-                        <hr class="my-5" />
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-md-6">
-                                <h5 class="mb-0 text-dark">
-                                    <i class="fa fa-database text-success me-2"></i>Saved Task Allocations History
-                                </h5>
+                        <!-- Saved Database Records History Section (Current Date Only, Visible after Final Save) -->
+                        <asp:Panel ID="pnlSavedHistory" runat="server" Visible="false">
+                            <hr class="my-5" />
+                            <div class="row mb-3 align-items-center">
+                                <div class="col-md-6">
+                                    <h5 class="mb-0 text-dark">
+                                        <i class="fa fa-database text-success me-2"></i>Today's Saved Task Allocations
+                                    </h5>
+                                </div>
                             </div>
-                        </div>
 
                         <div class="table-responsive dt-ext">
                             <asp:GridView ID="gvSavedHistory" runat="server" AutoGenerateColumns="false"
@@ -576,7 +687,7 @@
 
                                     <asp:TemplateField HeaderText="Hours" ItemStyle-HorizontalAlign="Center">
                                         <ItemTemplate>
-                                            <span class="badge bg-light-info text-info font-weight-bold">
+                                            <span class="badge bg-light-info text-dark font-weight-bold">
                                                 <%# Eval("WorkingHours") %> Hrs
                                             </span>
                                         </ItemTemplate>
@@ -608,20 +719,10 @@
                                             </asp:LinkButton>
                                         </ItemTemplate>
                                     </asp:TemplateField>
-
-                                    <asp:TemplateField HeaderText="Action" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="80px">
-                                        <ItemTemplate>
-                                            <asp:LinkButton ID="btnEditSaved" runat="server" CommandName="EditTask"
-                                                CommandArgument='<%# Eval("TaskEntryId") %>'
-                                                CssClass="btn btn-sm btn-outline-primary"
-                                                ToolTip="Edit Task">
-                                                <i class="fa fa-pencil me-1"></i>Edit
-                                            </asp:LinkButton>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
                                 </Columns>
                             </asp:GridView>
                         </div>
+                        </asp:Panel>
 
                     </div>
                 </div>
@@ -853,5 +954,19 @@
         function closePopup(modalId) {
             $(modalId).modal('hide');
         }
+
+        $(document).ready(function () {
+            try {
+                if (typeof feather !== 'undefined') {
+                    feather.replace();
+                }
+                var $msg = $('[id$="lblMsg"] .alert');
+                if ($msg.length > 0 && $msg.is(':visible') && $msg.text().trim() !== '') {
+                    $('html, body').animate({
+                        scrollTop: $msg.offset().top - 90
+                    }, 350);
+                }
+            } catch (e) { }
+        });
     </script>
 </asp:Content>

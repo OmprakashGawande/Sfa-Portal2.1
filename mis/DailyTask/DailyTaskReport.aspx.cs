@@ -310,15 +310,15 @@ public partial class mis_DailyTask_DailyTaskReport : System.Web.UI.Page
         string pLower = p.ToLower();
 
         if (pLower.Contains("high") || pLower.Contains("critical") || pid == "1")
-            return string.Format("<span class='badge-priority-high'><i class='fa fa-bolt me-1'></i>{0}</span>", p);
+            return string.Format("<span class='badge-priority-high text-nowrap'><i class='fa fa-bolt me-1'></i>{0}</span>", p);
         if (pLower.Contains("medium") || pLower.Contains("normal") || pid == "2")
-            return string.Format("<span class='badge-priority-medium'>{0}</span>", p);
+            return string.Format("<span class='badge-priority-medium text-nowrap'>{0}</span>", p);
         if (pLower.Contains("low") || pid == "3")
-            return string.Format("<span class='badge-priority-low'>{0}</span>", p);
+            return string.Format("<span class='badge-priority-low text-nowrap'>{0}</span>", p);
         if (pLower.Contains("spot") || pid == "4")
-            return string.Format("<span class='badge-priority-spot'><i class='fa fa-crosshairs me-1'></i>{0}</span>", p);
+            return string.Format("<span class='badge-priority-spot text-nowrap'><i class='fa fa-crosshairs me-1'></i>{0}</span>", p);
 
-        return string.Format("<span class='badge-priority-default'>{0}</span>", p);
+        return string.Format("<span class='badge-priority-default text-nowrap'>{0}</span>", p);
     }
 
     protected string GetTicketTypeClass(object ticketType)
@@ -344,19 +344,38 @@ public partial class mis_DailyTask_DailyTaskReport : System.Web.UI.Page
         string s = taskStatus != null ? taskStatus.ToString().Trim() : "";
         if (s.Equals("Complete", StringComparison.OrdinalIgnoreCase))
         {
-            return "<span class='badge-status-complete'><i class='fa fa-check-circle me-1'></i>Complete</span>";
+            return "<span class='badge-status-complete text-nowrap'><i class='fa fa-check-circle me-1'></i>Complete</span>";
         }
         else if (s.Equals("Partially Complete", StringComparison.OrdinalIgnoreCase))
         {
-            return "<span class='badge-status-partial'><i class='fa fa-adjust me-1'></i>Partially Complete</span>";
+            return "<span class='badge-status-partial text-nowrap'><i class='fa fa-adjust me-1'></i>Partially Complete</span>";
         }
         else if (s.Equals("Pending", StringComparison.OrdinalIgnoreCase))
         {
-            return "<span class='badge-status-pending'><i class='fa fa-clock-o me-1'></i>Pending</span>";
+            return "<span class='badge-status-pending text-nowrap'><i class='fa fa-clock-o me-1'></i>Pending</span>";
         }
         else
         {
-            return string.Format("<span class='badge bg-secondary'>{0}</span>", s);
+            return string.Format("<span class='badge bg-secondary text-nowrap'>{0}</span>", s);
+        }
+    }
+
+    protected string GetQABadge(object qaName)
+    {
+        string qa = qaName != null ? qaName.ToString().Trim() : "";
+        if (string.IsNullOrEmpty(qa) || qa.Equals("NA", StringComparison.OrdinalIgnoreCase) || qa.Equals("0"))
+        {
+            return "<span class='badge bg-light text-muted border px-2 py-1 text-nowrap'>NA</span>";
+        }
+        return string.Format("<span class='badge bg-info text-white px-2 py-1 text-nowrap'><i class='fa fa-user-check me-1'></i>{0}</span>", qa);
+    }
+
+    protected void gvReport_PreRender(object sender, EventArgs e)
+    {
+        if (gvReport.Rows.Count > 0 && gvReport.HeaderRow != null)
+        {
+            gvReport.UseAccessibleHeader = true;
+            gvReport.HeaderRow.TableSection = TableRowSection.TableHeader;
         }
     }
 
