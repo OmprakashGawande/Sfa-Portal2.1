@@ -90,22 +90,31 @@ public partial class mis_DailyTask_TaskAllocationEntry : System.Web.UI.Page
         return lblMsg.Text;
     }
 
-    private void FillProject()
+    private void FillProject(bool isOnSpot = false)
     {
         try
         {
             ddlProject.Items.Clear();
             string currentEmpId = Convert.ToString(ViewState["Emp_ID"]);
 
-            // Get projects specifically allocated to this employee (only unfilled)
+            // Get projects
             DataSet dsProj = null;
-            if (!string.IsNullOrEmpty(currentEmpId))
+            if (isOnSpot)
             {
-                dsProj = USP_TaskAllocationEntry(new string[] { "Flag", "EmpId", "CreatedBy" }, new string[] { "8", currentEmpId, currentEmpId });
+                // User Requirement: When 'On-Spot Allotment' is selected, show ALL active projects!
+                dsProj = USP_TaskAllocation(new string[] { "Flag" }, new string[] { "2" });
+            }
+            else
+            {
+                // Get projects specifically allocated to this employee for the current date (only unfilled)
+                if (!string.IsNullOrEmpty(currentEmpId))
+                {
+                    dsProj = USP_TaskAllocationEntry(new string[] { "Flag", "EmpId", "CreatedBy" }, new string[] { "8", currentEmpId, currentEmpId });
+                }
             }
 
-            // Exclude projects currently staged in the added tasks grid
-            if (IsNullDataSet(dsProj))
+            // Exclude projects currently staged in the added tasks grid (only for regular allocations)
+            if (!isOnSpot && IsNullDataSet(dsProj))
             {
                 DataTable dtStaged = ViewState["TasksTable"] as DataTable;
                 if (dtStaged != null && dtStaged.Rows.Count > 0)
@@ -133,34 +142,37 @@ public partial class mis_DailyTask_TaskAllocationEntry : System.Web.UI.Page
                 ddlProject.DataBind();
                 ddlProject.Items.Insert(0, new ListItem("Select Project", "0"));
 
-                // If only 1 project is allocated, auto-select it
-                if (dsProj.Tables[0].Rows.Count == 1)
+                // If not on-spot and only 1 project is allocated, auto-select it
+                if (!isOnSpot && dsProj.Tables[0].Rows.Count == 1)
                 {
                     ddlProject.SelectedIndex = 1;
+                }
+                else
+                {
+                    ddlProject.SelectedIndex = 0;
                 }
             }
             else
             {
-                // If no allocated project found, check if user is Admin or Manager
-                DataSet dsAdmin = USP_TaskAllocationEntry(new string[] { "Flag", "EmpId" }, new string[] { "7", currentEmpId });
-                if (IsNullDataSet(dsAdmin) && Convert.ToInt32(dsAdmin.Tables[0].Rows[0]["IsAdminOrManager"]) > 0)
-                {
-                    // Fallback for Admin/Manager who might not have tasks allocated to themselves
-                    ds = USP_TaskAllocation(new string[] { "Flag" }, new string[] { "2" });
-                    if (IsNullDataSet(ds))
-                    {
-                        ddlProject.DataTextField = "Project_Name";
-                        ddlProject.DataValueField = "Project_Id";
-                        ddlProject.DataSource = ds.Tables[0];
-                        ddlProject.DataBind();
-                    }
-                    ddlProject.Items.Insert(0, new ListItem("Select Project", "0"));
-                }
-                else
-                {
-                    ddlProject.Items.Insert(0, new ListItem("No Project Allocated", "0"));
-                }
+                // User Requirement: Only current date allocated projects should appear. If none, do not show any project!
+                ddlProject.Items.Insert(0, new ListItem("No Project Allocated", "0"));
             }
+        }
+        catch (Exception ex)
+        {
+            ErrorMsg(ex);
+        }
+    }
+
+    protected void ddlProject_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        try
+        {
+            string selectedPriorityText = ddlPriority.SelectedItem != null ? ddlPriority.SelectedItem.Text.Trim() : "";
+            string selectedPriorityVal = ddlPriority.SelectedValue;
+            bool isOnSpot = (selectedPriorityVal == "4" || selectedPriorityText.IndexOf("On-Spot", StringComparison.OrdinalIgnoreCase) >= 0);
+
+            FillAllocated(isOnSpot);
         }
         catch (Exception ex)
         {
@@ -204,8 +216,16 @@ public partial class mis_DailyTask_TaskAllocationEntry : System.Web.UI.Page
             }
             else
             {
-                // PMs from unfilled tasks allocated to employee
-                dsAlloc = USP_TaskAllocationEntry(new string[] { "Flag", "EmpId", "CreatedBy" }, new string[] { "5", currentEmpId, currentEmpId });
+                // PMs from unfilled tasks allocated to employee for current date
+                string selectedProjId = ddlProject.SelectedValue;
+                if (!string.IsNullOrEmpty(selectedProjId) && selectedProjId != "0")
+                {
+                    dsAlloc = USP_TaskAllocationEntry(new string[] { "Flag", "EmpId", "CreatedBy", "ProjectId" }, new string[] { "5", currentEmpId, currentEmpId, selectedProjId });
+                }
+                else
+                {
+                    dsAlloc = USP_TaskAllocationEntry(new string[] { "Flag", "EmpId", "CreatedBy" }, new string[] { "5", currentEmpId, currentEmpId });
+                }
             }
 
             // If not on spot, exclude managers if no projects remain in ddlProject
@@ -264,6 +284,13 @@ public partial class mis_DailyTask_TaskAllocationEntry : System.Web.UI.Page
 
             bool isOnSpot = (selectedPriorityVal == "4" || selectedPriorityText.IndexOf("On-Spot", StringComparison.OrdinalIgnoreCase) >= 0);
             bool isHigh = (selectedPriorityVal == "1" || selectedPriorityText.IndexOf("High", StringComparison.OrdinalIgnoreCase) >= 0);
+
+            string prevProj = ddlProject.SelectedValue;
+            FillProject(isOnSpot);
+            if (!string.IsNullOrEmpty(prevProj) && ddlProject.Items.FindByValue(prevProj) != null)
+            {
+                ddlProject.SelectedValue = prevProj;
+            }
 
             string prevAllocated = ddlAllocated.SelectedValue;
             FillAllocated(isOnSpot);
@@ -628,8 +655,12 @@ public partial class mis_DailyTask_TaskAllocationEntry : System.Web.UI.Page
             SuccessMsg(string.Format("Task for '{0}' added to list successfully ({1:0.00} Hrs).", ddlProject.SelectedItem.Text, currentTaskHours));
 
             // Refresh available projects and managers (staged project is removed)
-            FillProject();
-            FillAllocated(false);
+            string curPriorityText = ddlPriority.SelectedItem != null ? ddlPriority.SelectedItem.Text.Trim() : "";
+            string curPriorityVal = ddlPriority.SelectedValue;
+            bool curIsOnSpot = (curPriorityVal == "4" || curPriorityText.IndexOf("On-Spot", StringComparison.OrdinalIgnoreCase) >= 0);
+
+            FillProject(curIsOnSpot);
+            FillAllocated(curIsOnSpot);
 
             // Reset specific fields for convenient next entry
             ddlTicketType.SelectedIndex = 0;
@@ -659,11 +690,15 @@ public partial class mis_DailyTask_TaskAllocationEntry : System.Web.UI.Page
                     string projectName = dt.Rows[rowIndex]["ProjectName"].ToString();
                     double hours = Convert.ToDouble(dt.Rows[rowIndex]["WorkingHours"]);
 
+                    string rmPriorityText = ddlPriority.SelectedItem != null ? ddlPriority.SelectedItem.Text.Trim() : "";
+                    string rmPriorityVal = ddlPriority.SelectedValue;
+                    bool rmIsOnSpot = (rmPriorityVal == "4" || rmPriorityText.IndexOf("On-Spot", StringComparison.OrdinalIgnoreCase) >= 0);
+
                     dt.Rows.RemoveAt(rowIndex);
                     ViewState["TasksTable"] = dt;
                     BindStagedGrid();
-                    FillProject();
-                    FillAllocated(false);
+                    FillProject(rmIsOnSpot);
+                    FillAllocated(rmIsOnSpot);
 
                     SuccessMsg(string.Format("Removed task for '{0}' ({1:0.00} Hrs).", projectName, hours));
                 }
@@ -804,22 +839,7 @@ public partial class mis_DailyTask_TaskAllocationEntry : System.Web.UI.Page
                     DataRow row = dsTask.Tables[0].Rows[0];
                     ViewState["EditTaskEntryId"] = taskEntryId;
 
-                    // 1. Project
-                    string projId = row["ProjectId"].ToString();
-                    if (ddlProject.Items.FindByValue(projId) != null)
-                    {
-                        ddlProject.ClearSelection();
-                        ddlProject.SelectedValue = projId;
-                    }
-
-                    // 2. Dates and Times
-                    txtStartDate.Text = row["StartDate"].ToString();
-                    txtStartTime.Text = row["StartTime"].ToString();
-                    txtEndDate.Text = row["EndDate"].ToString();
-                    txtEndTime.Text = row["EndTime"].ToString();
-                    txtWorkingHours.Text = Convert.ToString(row["WorkingHours"]) + " Hrs";
-
-                    // 3. Priority
+                    // 1. Priority
                     string prioId = row["PriorityId"].ToString();
                     string prioName = row["Priority"].ToString();
                     if (ddlPriority.Items.FindByValue(prioId) != null)
@@ -833,9 +853,25 @@ public partial class mis_DailyTask_TaskAllocationEntry : System.Web.UI.Page
                         ddlPriority.Items.FindByText(prioName).Selected = true;
                     }
 
-                    // 4. Fill Allocated dropdown based on priority (On-Spot vs Normal)
+                    // 2. Fill Project & Allocated dropdowns based on priority (On-Spot vs Normal)
                     bool isOnSpot = (prioName.ToLower().Contains("on-spot") || (ddlPriority.SelectedItem != null && ddlPriority.SelectedItem.Text.ToLower().Contains("on-spot")));
+                    FillProject(isOnSpot);
                     FillAllocated(isOnSpot);
+
+                    // 3. Project
+                    string projId = row["ProjectId"].ToString();
+                    if (ddlProject.Items.FindByValue(projId) != null)
+                    {
+                        ddlProject.ClearSelection();
+                        ddlProject.SelectedValue = projId;
+                    }
+
+                    // 4. Dates and Times
+                    txtStartDate.Text = row["StartDate"].ToString();
+                    txtStartTime.Text = row["StartTime"].ToString();
+                    txtEndDate.Text = row["EndDate"].ToString();
+                    txtEndTime.Text = row["EndTime"].ToString();
+                    txtWorkingHours.Text = Convert.ToString(row["WorkingHours"]) + " Hrs";
 
                     string alloc = row["Allocated"].ToString();
                     if (ddlAllocated.Items.FindByText(alloc) != null)

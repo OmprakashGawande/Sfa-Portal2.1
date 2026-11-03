@@ -415,12 +415,12 @@
                     minDate: "today",
                     allowInput: false,
                     enableTime: false,
-                    // disable: [
-                    //     function (date) {
-                    //         // Disable Saturdays (6) and Sundays (0)
-                    //         return (date.getDay() === 0 || date.getDay() === 6);
-                    //     }
-                    // ]
+                    disable: [
+                        function (date) {
+                            // Disable Saturdays (6) and Sundays (0)
+                            return (date.getDay() === 0 || date.getDay() === 6);
+                        }
+                    ]
                 });
             }
         }

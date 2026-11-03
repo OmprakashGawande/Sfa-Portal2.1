@@ -5,6 +5,14 @@ public partial class MainMaster : System.Web.UI.MasterPage
 {
     protected void Page_Init(object sender, EventArgs e)
     {
+        try
+        {
+            Response.Charset = "utf-8";
+            Response.ContentEncoding = System.Text.Encoding.UTF8;
+            Response.HeaderEncoding = System.Text.Encoding.UTF8;
+        }
+        catch { }
+
         if (Session["Emp_ID"] == null)
         {
             Response.Redirect("../Login.aspx");

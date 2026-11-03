@@ -376,7 +376,7 @@
                                     <label class="form-label font-weight-bold">
                                         Project Name <span class="required-star">*</span>
                                     </label>
-                                    <asp:DropDownList ID="ddlProject" runat="server" CssClass="form-select select2">
+                                    <asp:DropDownList ID="ddlProject" runat="server" CssClass="form-select select2" AutoPostBack="true" OnSelectedIndexChanged="ddlProject_SelectedIndexChanged">
                                     </asp:DropDownList>
                                 </div>
                             </div>
@@ -757,8 +757,8 @@
                 initCustomDataTable('.datatable', 'Saved_Task_Allocations', 'Saved Task Allocations', []);
             }
 
-            // Bind change on Priority dropdown (for Select2 & native select)
-            $(document).on('change select2:select', '#<%= ddlPriority.ClientID %>', function () {
+            // Bind change on Priority dropdown (for Select2)
+            $(document).on('select2:select', '#<%= ddlPriority.ClientID %>', function () {
                 updateActivityColor();
                 // Store times before postback so PM/AM are never lost
                 try {
@@ -768,12 +768,22 @@
                     if (eVal) sessionStorage.setItem('sfa_task_end_time', eVal);
                 } catch (e) { }
 
-                var val = $(this).val();
-                var text = ($(this).find('option:selected').text() || '').toLowerCase();
-                if (val === '4' || text.indexOf('on-spot') > -1) {
-                    if (typeof __doPostBack === 'function') {
-                        __doPostBack('<%= ddlPriority.UniqueID %>', '');
-                    }
+                if (typeof __doPostBack === 'function') {
+                    __doPostBack('<%= ddlPriority.UniqueID %>', '');
+                }
+            });
+
+            // Bind change on Project dropdown (for Select2)
+            $(document).on('select2:select', '#<%= ddlProject.ClientID %>', function () {
+                try {
+                    var sVal = $('#<%= txtStartTime.ClientID %>').val();
+                    var eVal = $('#<%= txtEndTime.ClientID %>').val();
+                    if (sVal) sessionStorage.setItem('sfa_task_start_time', sVal);
+                    if (eVal) sessionStorage.setItem('sfa_task_end_time', eVal);
+                } catch (e) { }
+
+                if (typeof __doPostBack === 'function') {
+                    __doPostBack('<%= ddlProject.UniqueID %>', '');
                 }
             });
 
